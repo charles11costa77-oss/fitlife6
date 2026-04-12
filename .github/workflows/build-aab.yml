@@ -17,7 +17,7 @@ jobs:
           cd twa
           bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json
           bubblewrap build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4!
         with:
           name: fitlife6-aab
           path: twa/app/build/outputs/bundle/release/*.aab
