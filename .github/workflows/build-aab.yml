@@ -37,10 +37,12 @@ jobs:
       - name: Init TWA (non-interactive)
         run: |
           mkdir -p twa && cd twa
-          printf 'Y\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' | bubblewrap init \
+          bubblewrap init \
             --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json \
             --directory=. \
-            --skipPwaValidation 2>&1 | tee init.log
+            --skipPwaValidation \
+            --android-sdk-path=$HOME/android-sdk \
+            --jdk-path=/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64 2>&1 | tee init.log
           cat init.log
 
       - name: Build AAB
