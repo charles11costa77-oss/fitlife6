@@ -7,15 +7,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - run: npm install -g @bubblewrap/cli
-      - run: |
+      - name: Build TWA
+        run: |
           mkdir -p twa
           cd twa
-          echo "Y" | bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json
+          echo '{"jdkPath":"/usr/lib/jvm/java-17-openjdk-amd64"}' > ~/.bubblewrap/config.json
+          bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json --directory=. <<EOF
+          Y
+          EOF
           bubblewrap build
       - uses: actions/upload-artifact@v4
         with:
