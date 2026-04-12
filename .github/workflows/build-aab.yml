@@ -23,9 +23,11 @@ jobs:
 
       - name: Accept Android SDK licenses
         run: |
+          echo "SDK path: $ANDROID_SDK_ROOT"
+          ls /usr/local/lib/android/sdk || echo "não existe"
+          ls /usr/local/lib/android/ || echo "pasta vazia"
           yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses || true
           yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0" || true
-
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
