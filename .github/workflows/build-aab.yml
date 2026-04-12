@@ -35,9 +35,10 @@ jobs:
           mkdir -p twa
           cd twa
           expect << 'EOF'
-          set timeout 120
+          set timeout 300
           spawn bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json --directory=. --skipPwaValidation
-          expect "Y/n" { send "Y\r" }
+          expect "Y/n" { send "Y\r" ; exp_continue }
+          expect "y/N" { send "\r" ; exp_continue }
           expect eof
           EOF
           bubblewrap build --skipSigning
