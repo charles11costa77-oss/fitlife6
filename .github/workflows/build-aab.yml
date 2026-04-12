@@ -15,7 +15,7 @@ jobs:
       - run: |
           mkdir -p twa
           cd twa
-          bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json
+          echo "Y" | bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json
           bubblewrap build
       - uses: actions/upload-artifact@v4
         with:
