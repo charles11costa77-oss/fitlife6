@@ -29,36 +29,20 @@ jobs:
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
-      - name: Configure Bubblewrap JDK
+      - name: Build TWA via expect
         run: |
-          mkdir -p ~/.bubblewrap
-          echo '{"jdkPath":"/usr/lib/jvm/java-17-openjdk-amd64"}' > ~/.bubblewrap/config.json
-
-      - name: Init TWA (non-interactive)
-        run: |
-          mkdir -p twa && cd twa
-          bubblewrap init \
-            --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json \
-            --directory=. \
-            --skipPwaValidation \
-            --android-sdk-path=$HOME/android-sdk \
-            --jdk-path=/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64 2>&1 | tee init.log
-          cat init.log
-
-      - name: Build AAB
-        run: |
+          sudo apt-get install -y expect
+          mkdir -p twa
           cd twa
-          bubblewrap build --skipSigning 2>&1 | tee build.log
+          expect << 'EOF'
+          set timeout 120
+          spawn bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json --directory=. --skipPwaValidation
+          expect "Y/n" { send "Y\r" }
+          expect eof
+          EOF
+          bubblewrap build --skipSigning
 
       - uses: actions/upload-artifact@v4
         with:
           name: fitlife6-aab
           path: twa/app/build/outputs/bundle/release/*.aab
-
-      - name: Upload logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-logs
-          path: twa/*.log
-        
