@@ -37,9 +37,12 @@ jobs:
           expect << 'EOF'
           set timeout 300
           spawn bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json --directory=. --skipPwaValidation
-          expect "Y/n" { send "Y\r" ; exp_continue }
-          expect "y/N" { send "\r" ; exp_continue }
-          expect eof
+          expect {
+            "(Y/n)" { send "Y\r" ; exp_continue }
+            "(y/N)" { send "y\r" ; exp_continue }
+            "Accept?" { send "y\r" ; exp_continue }
+            eof
+          }
           EOF
           bubblewrap build --skipSigning
 
