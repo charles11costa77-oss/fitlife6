@@ -39,7 +39,6 @@ jobs:
       - name: Init TWA
         run: |
           mkdir -p twa && cd twa
-          echo '{"jdkPath":"/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64","androidSdkPath":"/usr/local/lib/android/sdk"}' > ~/.bubblewrap/config.json
           sudo apt-get install -y expect
           expect << 'EOF'
           set timeout 300
@@ -48,6 +47,14 @@ jobs:
             "(Y/n)" { send "N\r" ; exp_continue }
             "(y/N)" { send "y\r" ; exp_continue }
             "Accept?" { send "y\r" ; exp_continue }
+            "Domain:" { send "\r" ; exp_continue }
+            "URL path:" { send "\r" ; exp_continue }
+            "Application name:" { send "\r" ; exp_continue }
+            "Short name:" { send "\r" ; exp_continue }
+            "Package id:" { send "\r" ; exp_continue }
+            "version:" { send "\r" ; exp_continue }
+            "color:" { send "\r" ; exp_continue }
+            "signing key" { send "\r" ; exp_continue }
             eof
           }
           EOF
