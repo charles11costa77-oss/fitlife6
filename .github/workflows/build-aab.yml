@@ -3,25 +3,51 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install -g @bubblewrap/cli
-      - name: Build TWA
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ hashFiles('**/*.gradle*') }}
+
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
+
+      - name: Configure Bubblewrap
         run: |
           mkdir -p ~/.bubblewrap
-          mkdir -p twa
-          cd twa
           echo '{"jdkPath":"/usr/lib/jvm/java-17-openjdk-amd64"}' > ~/.bubblewrap/config.json
-          bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json --directory=. <<EOF
-          Y
-          EOF
-          bubblewrap build
+
+      - name: Init TWA
+        run: |
+          mkdir -p twa && cd twa
+          bubblewrap init \
+            --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json \
+            --directory=. \
+            --skipPwaValidation
+
+      - name: Build AAB
+        run: |
+          cd twa
+          bubblewrap build --skipSigning
+
       - uses: actions/upload-artifact@v4
         with:
           name: fitlife6-aab
