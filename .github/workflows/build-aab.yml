@@ -37,11 +37,11 @@ jobs:
       - name: Init TWA (non-interactive)
         run: |
           mkdir -p twa && cd twa
-          yes "" | bubblewrap init \
+          printf 'Y\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' | bubblewrap init \
             --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json \
             --directory=. \
             --skipPwaValidation 2>&1 | tee init.log
-          echo "Exit: $?"
+          cat init.log
 
       - name: Build AAB
         run: |
