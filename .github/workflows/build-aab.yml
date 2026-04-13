@@ -18,19 +18,13 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android SDK
-        run: |
-          # Instala componentes essenciais e aceita licenças
-          sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "platform-tools"
-          yes | sdkmanager --licenses || true
-
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
       - name: Configure Bubblewrap
         run: |
           mkdir -p ~/.bubblewrap
-          # Aqui usamos as variáveis automáticas do sistema para evitar erros de caminho
+          # Usamos caminhos diretos que o GitHub garante que existem
           echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
 
       - name: Create TWA manifest and Build
@@ -72,13 +66,12 @@ jobs:
             "fingerprints": []
           }
           EOF
-          # O comando build gera o projeto Android e o arquivo AAB
-          bubblewrap build --skipSigning
+          # O Bubblewrap vai tentar baixar o que faltar no SDK automaticamente
+          yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: fitlife6-aab
-          # Caminho corrigido sem o underline no final
           path: twa/app/build/outputs/bundle/release/*.aab
           
