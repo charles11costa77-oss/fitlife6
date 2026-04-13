@@ -21,13 +21,14 @@ jobs:
 
       - name: Configure and Build
         run: |
-          # Força a configuração do SDK e JDK
-          bubblewrap doctor --skipCheck --jdkPath "${JAVA_HOME}" --androidSdkPath "${ANDROID_HOME}"
+          # Cria a pasta de configuração para não perguntar nada
+          mkdir -p ~/.bubblewrap
+          echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
           
-          # Cria o app do zero para evitar erros de diretório
-          bubblewrap init --manifest="https://melodious-sopapillas-b5d335.netlify.app/manifest.json" --metaData='{"packageId":"com.fitlife6.app"}' --directory="./" --skipCheck --confirmResign="no"
+          # Inicia o projeto respondendo "Não" para instalar novo JDK (usamos o do GitHub)
+          echo "n" | bubblewrap init --manifest="https://melodious-sopapillas-b5d335.netlify.app/manifest.json" --metaData='{"packageId":"com.fitlife6.app"}' --directory="./" --skipCheck
           
-          # Gera o build final
+          # Gera o build aceitando as licenças automaticamente
           yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
