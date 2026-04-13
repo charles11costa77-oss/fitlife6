@@ -23,12 +23,11 @@ jobs:
 
       - name: Configure and Build
         run: |
-          # 1. Força a configuração respondendo 'y' para tudo
-          # O comando 'yes' resolve o travamento do Exit Code 130
+          # 1. Configuração inicial silenciosa
           mkdir -p ~/.bubblewrap
           yes | bubblewrap init --jdkPath "$JAVA_HOME" --androidSdkPath "$ANDROID_HOME"
           
-          # 2. Cria a pasta do projeto e o manifesto
+          # 2. Criação da pasta e do manifesto
           mkdir -p twa && cd twa
           cat > twa-manifest.json << 'EOF'
           {
@@ -67,7 +66,11 @@ jobs:
           }
           EOF
 
-          # 3. Build final (também com 'yes' para licenças de última hora)
+          # 3. Importar o manifesto e gerar o projeto antes do build
+          # Isso resolve o erro de 'Missing required parameter'
+          bubblewrap init --manifest twa-manifest.json
+          
+          # 4. Build Final
           yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
