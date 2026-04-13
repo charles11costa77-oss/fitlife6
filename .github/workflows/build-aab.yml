@@ -23,9 +23,10 @@ jobs:
 
       - name: Configure and Build
         run: |
-          # 1. Configura o Bubblewrap sem fazer perguntas
+          # 1. Força a configuração respondendo 'y' para tudo
+          # O comando 'yes' resolve o travamento do Exit Code 130
           mkdir -p ~/.bubblewrap
-          bubblewrap init --ignore-verification --jdkPath "$JAVA_HOME" --androidSdkPath "$ANDROID_HOME"
+          yes | bubblewrap init --jdkPath "$JAVA_HOME" --androidSdkPath "$ANDROID_HOME"
           
           # 2. Cria a pasta do projeto e o manifesto
           mkdir -p twa && cd twa
@@ -66,7 +67,7 @@ jobs:
           }
           EOF
 
-          # 3. Build final (respondendo 'sim' para qualquer termo de licença)
+          # 3. Build final (também com 'yes' para licenças de última hora)
           yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
