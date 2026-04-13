@@ -23,10 +23,12 @@ jobs:
 
       - name: Configure and Build
         run: |
-          # 1. Cria a pasta do projeto
-          mkdir -p twa && cd twa
+          # 1. Configura o Bubblewrap sem fazer perguntas
+          mkdir -p ~/.bubblewrap
+          bubblewrap init --ignore-verification --jdkPath "$JAVA_HOME" --androidSdkPath "$ANDROID_HOME"
           
-          # 2. Cria o arquivo de manifesto
+          # 2. Cria a pasta do projeto e o manifesto
+          mkdir -p twa && cd twa
           cat > twa-manifest.json << 'EOF'
           {
             "packageId": "com.fitlife6.app",
@@ -64,11 +66,7 @@ jobs:
           }
           EOF
 
-          # 3. Força o Bubblewrap a aceitar os caminhos do GitHub sem validar o JSON manualmente
-          # Usamos o comando 'init' de forma automática para preparar o ambiente
-          bubblewrap doctor --skip-update-check
-          
-          # 4. Build
+          # 3. Build final (respondendo 'sim' para qualquer termo de licença)
           yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
