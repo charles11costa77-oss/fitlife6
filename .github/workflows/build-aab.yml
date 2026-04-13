@@ -12,8 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
@@ -21,13 +20,17 @@ jobs:
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
-      - name: Configure and Build
+      - name: Configure Bubblewrap
         run: |
-          # 1. Criar configuração global manualmente (evita o 'init' chato)
           mkdir -p ~/.bubblewrap
-          echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
-          
-          # 2. Criar o manifesto na raiz
+          echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"/usr/local/lib/android/sdk/cmdline-tools/latest\"}" > ~/.bubblewrap/config.json
+
+      - name: Accept SDK licenses
+        run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
+      - name: Create project and build
+        run: |
+          mkdir -p twa && cd twa
           cat > twa-manifest.json << 'EOF'
           {
             "packageId": "com.fitlife6.app",
@@ -43,10 +46,7 @@ jobs:
             "maskableIconUrl": "https://melodious-sopapillas-b5d335.netlify.app/icons/icon-512x512.png",
             "appVersion": "1",
             "appVersionCode": 1,
-            "signingKey": {
-              "path": "./android.keystore",
-              "alias": "android"
-            },
+            "signingKey": {"path": "./android.keystore", "alias": "android"},
             "generatorApp": "bubblewrap-cli",
             "webManifestUrl": "https://melodious-sopapillas-b5d335.netlify.app/manifest.json",
             "fallbackType": "customtabs",
@@ -55,16 +55,9 @@ jobs:
             "fingerprints": []
           }
           EOF
+          bubblewrap build --skipSigning
 
-          # 3. Gerar o projeto Android a partir do manifesto (Sem perguntas)
-          bubblewrap build --manifest twa-manifest.json --skipSigning || echo "Tentando build direto..."
-          
-          # 4. Se o comando acima falhar por falta de init, forçamos o build
-          yes | bubblewrap build --skipSigning
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: fitlife6-aab
-          path: ./*.aab
-          
+          path: twa/app/build/outputs/bundle/release/*.aab
