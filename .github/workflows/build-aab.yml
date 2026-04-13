@@ -34,35 +34,45 @@ jobs:
           mkdir -p ~/.bubblewrap
           echo "{\"jdkPath\":\"/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64\",\"androidSdkPath\":\"/usr/local/lib/android/sdk\"}" > ~/.bubblewrap/config.json
 
-      - name: Init TWA
+      - name: Create TWA manifest manually
         run: |
-          sudo apt-get install -y expect
           mkdir -p twa && cd twa
-          expect << 'EOF'
-          set timeout 300
-          spawn bubblewrap init --manifest=https://melodious-sopapillas-b5d335.netlify.app/manifest.json --directory=. --skipPwaValidation
-          expect {
-            "(Y/n)" { send "N\r" ; exp_continue }
-            "(y/N)" { send "y\r" ; exp_continue }
-            "Accept?" { send "y\r" ; exp_continue }
-            "Domain:" { send "\r" ; exp_continue }
-            "URL path:" { send "\r" ; exp_continue }
-            "Application name:" { send "\r" ; exp_continue }
-            "Short name:" { send "\r" ; exp_continue }
-            "Package id:" { send "\r" ; exp_continue }
-            "version:" { send "\r" ; exp_continue }
-            "color:" { send "\r" ; exp_continue }
-            "signing key" { send "\r" ; exp_continue }
-            eof
+          cat > twa-manifest.json << 'EOF'
+          {
+            "packageId": "com.fitlife6.app",
+            "host": "melodious-sopapillas-b5d335.netlify.app",
+            "name": "FitLife 6",
+            "launcherName": "FitLife 6",
+            "display": "standalone",
+            "themeColor": "#000000",
+            "navigationColor": "#000000",
+            "backgroundColor": "#ffffff",
+            "startUrl": "/",
+            "iconUrl": "https://melodious-sopapillas-b5d335.netlify.app/icons/icon-512x512.png",
+            "maskableIconUrl": "https://melodious-sopapillas-b5d335.netlify.app/icons/icon-512x512.png",
+            "appVersion": "1",
+            "appVersionCode": 1,
+            "signingKey": {
+              "path": "./android.keystore",
+              "alias": "android"
+            },
+            "splashScreenFadeOutDuration": 300,
+            "enableNotifications": false,
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli",
+            "webManifestUrl": "https://melodious-sopapillas-b5d335.netlify.app/manifest.json",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": {"enabled": false},
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "https://melodious-sopapillas-b5d335.netlify.app/",
+            "minSdkVersion": 19,
+            "orientation": "default",
+            "fingerprints": []
           }
           EOF
-          echo "=== arquivos gerados ==="
-          ls -la
-          cat twa-manifest.json || echo "MANIFEST NAO GERADO"
-
-      - name: Build AAB
-        run: |
-          cd twa
           bubblewrap build --skipSigning
 
       - uses: actions/upload-artifact@v4
