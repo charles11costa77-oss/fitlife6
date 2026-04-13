@@ -21,15 +21,12 @@ jobs:
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
-      - name: Configure Bubblewrap
+      - name: Configure and Build
         run: |
-          mkdir -p ~/.bubblewrap
-          # Usamos caminhos diretos que o GitHub garante que existem
-          echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
-
-      - name: Create TWA manifest and Build
-        run: |
+          # 1. Cria a pasta do projeto
           mkdir -p twa && cd twa
+          
+          # 2. Cria o arquivo de manifesto
           cat > twa-manifest.json << 'EOF'
           {
             "packageId": "com.fitlife6.app",
@@ -66,7 +63,12 @@ jobs:
             "fingerprints": []
           }
           EOF
-          # O Bubblewrap vai tentar baixar o que faltar no SDK automaticamente
+
+          # 3. Força o Bubblewrap a aceitar os caminhos do GitHub sem validar o JSON manualmente
+          # Usamos o comando 'init' de forma automática para preparar o ambiente
+          bubblewrap doctor --skip-update-check
+          
+          # 4. Build
           yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
