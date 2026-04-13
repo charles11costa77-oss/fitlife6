@@ -23,11 +23,11 @@ jobs:
 
       - name: Configure and Build
         run: |
-          # 1. Configuração global silenciosa
+          # 1. Criar configuração global manualmente (evita o 'init' chato)
           mkdir -p ~/.bubblewrap
-          yes | bubblewrap init --jdkPath "$JAVA_HOME" --androidSdkPath "$ANDROID_HOME"
+          echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
           
-          # 2. Criar o manifesto na raiz para evitar confusão de pastas
+          # 2. Criar o manifesto na raiz
           cat > twa-manifest.json << 'EOF'
           {
             "packageId": "com.fitlife6.app",
@@ -47,36 +47,24 @@ jobs:
               "path": "./android.keystore",
               "alias": "android"
             },
-            "splashScreenFadeOutDuration": 300,
-            "enableNotifications": false,
-            "shortcuts": [],
             "generatorApp": "bubblewrap-cli",
             "webManifestUrl": "https://melodious-sopapillas-b5d335.netlify.app/manifest.json",
             "fallbackType": "customtabs",
-            "features": {},
-            "alphaDependencies": {"enabled": false},
-            "enableSiteSettingsShortcut": true,
-            "isChromeOSOnly": false,
-            "isMetaQuest": false,
-            "fullScopeUrl": "https://melodious-sopapillas-b5d335.netlify.app/",
             "minSdkVersion": 19,
             "orientation": "default",
             "fingerprints": []
           }
           EOF
 
-          # 3. Inicializa o projeto a partir do manifesto
-          # Isso cria a estrutura necessária para o build
-          bubblewrap init --manifest twa-manifest.json --directory ./
+          # 3. Gerar o projeto Android a partir do manifesto (Sem perguntas)
+          bubblewrap build --manifest twa-manifest.json --skipSigning || echo "Tentando build direto..."
           
-          # 4. Build Final
+          # 4. Se o comando acima falhar por falta de init, forçamos o build
           yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: fitlife6-aab
-          # O caminho do arquivo gerado agora será relativo à raiz
-          path: app-release-bundle.aab
-          
+          path: ./*.aab
           
