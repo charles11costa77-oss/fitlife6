@@ -62,6 +62,9 @@ jobs:
       - name: Build AAB
         run: |
           cd twa
+          # Corrigir caminho do SDK no config gerado
+          sed -i 's|"androidSdkPath":"[^"]*"|"androidSdkPath":"/usr/local/lib/android/sdk"|g' ~/.bubblewrap/config.json
+          cat ~/.bubblewrap/config.json
           bubblewrap build --skipSigning
 
       - uses: actions/upload-artifact@v4
