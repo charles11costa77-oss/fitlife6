@@ -23,12 +23,11 @@ jobs:
 
       - name: Configure and Build
         run: |
-          # 1. Configuração inicial silenciosa
+          # 1. Configuração global silenciosa
           mkdir -p ~/.bubblewrap
           yes | bubblewrap init --jdkPath "$JAVA_HOME" --androidSdkPath "$ANDROID_HOME"
           
-          # 2. Criação da pasta e do manifesto
-          mkdir -p twa && cd twa
+          # 2. Criar o manifesto na raiz para evitar confusão de pastas
           cat > twa-manifest.json << 'EOF'
           {
             "packageId": "com.fitlife6.app",
@@ -66,9 +65,9 @@ jobs:
           }
           EOF
 
-          # 3. Importar o manifesto e gerar o projeto antes do build
-          # Isso resolve o erro de 'Missing required parameter'
-          bubblewrap init --manifest twa-manifest.json
+          # 3. Inicializa o projeto a partir do manifesto
+          # Isso cria a estrutura necessária para o build
+          bubblewrap init --manifest twa-manifest.json --directory ./
           
           # 4. Build Final
           yes | bubblewrap build --skipSigning
@@ -77,5 +76,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: fitlife6-aab
-          path: twa/app/build/outputs/bundle/release/*.aab
+          # O caminho do arquivo gerado agora será relativo à raiz
+          path: app-release-bundle.aab
+          
           
