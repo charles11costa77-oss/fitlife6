@@ -21,14 +21,34 @@ jobs:
 
       - name: Configure and Build
         run: |
-          # Cria a pasta de configuração para não perguntar nada
           mkdir -p ~/.bubblewrap
           echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
           
-          # Inicia o projeto respondendo "Não" para instalar novo JDK (usamos o do GitHub)
-          echo "n" | bubblewrap init --manifest="https://melodious-sopapillas-b5d335.netlify.app/manifest.json" --metaData='{"packageId":"com.fitlife6.app"}' --directory="./" --skipCheck
-          
-          # Gera o build aceitando as licenças automaticamente
+          # Criando o arquivo de projeto manualmente para ele NÃO perguntar nada
+          cat > twa-manifest.json << 'EOF'
+          {
+            "packageId": "com.fitlife6.app",
+            "host": "melodious-sopapillas-b5d335.netlify.app",
+            "name": "FitLife 6",
+            "launcherName": "FitLife 6",
+            "display": "standalone",
+            "themeColor": "#000000",
+            "navigationColor": "#000000",
+            "backgroundColor": "#ffffff",
+            "startUrl": "/",
+            "iconUrl": "https://melodious-sopapillas-b5d335.netlify.app/icon-512.png",
+            "maskableIconUrl": "https://melodious-sopapillas-b5d335.netlify.app/icon-512.png",
+            "appVersion": "4",
+            "appVersionCode": 4,
+            "signingKey": { "path": "./android.keystore", "alias": "android" },
+            "generatorApp": "bubblewrap-cli",
+            "webManifestUrl": "https://melodious-sopapillas-b5d335.netlify.app/manifest.json",
+            "fallbackType": "customtabs"
+          }
+          EOF
+
+          # Comando que pula as perguntas e vai direto para o build
+          bubblewrap update --manifest twa-manifest.json --skipSelection
           yes | bubblewrap build --skipSigning
 
       - name: Upload Artifact
