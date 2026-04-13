@@ -20,16 +20,19 @@ jobs:
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
+      - name: Accept SDK licenses
+        run: |
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
+
       - name: Configure Bubblewrap
         run: |
           mkdir -p ~/.bubblewrap
           echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"/usr/local/lib/android/sdk/cmdline-tools/latest\"}" > ~/.bubblewrap/config.json
 
-      - name: Accept SDK licenses
-        run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
-
       - name: Create project and build
         run: |
+          sudo apt-get install -y expect
           mkdir -p twa && cd twa
           cat > twa-manifest.json << 'EOF'
           {
@@ -55,7 +58,16 @@ jobs:
             "fingerprints": []
           }
           EOF
-          bubblewrap build --skipSigning
+          expect << 'EOF'
+          set timeout 60
+          spawn bubblewrap build --skipSigning
+          expect {
+            "(Y/n)" { send "Y\r" ; exp_continue }
+            "(y/N)" { send "y\r" ; exp_continue }
+            "Accept?" { send "y\r" ; exp_continue }
+            eof
+          }
+          EOF
 
       - uses: actions/upload-artifact@v4
         with:
