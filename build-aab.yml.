@@ -15,6 +15,7 @@ jobs:
       - run: |
           mkdir -p twa
           cd twa
+          rm -rf ~/.bubblewrap
           bubblewrap init --manifest=https://fitlife6.vercel.app/manifest.json
           bubblewrap build
       - uses: actions/upload-artifact@v3
