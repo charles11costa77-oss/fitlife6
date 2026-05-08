@@ -14,9 +14,8 @@ jobs:
       - run: npm install -g @bubblewrap/cli
       - run: |
           mkdir -p twa
+          cp twa-manifest.json twa/twa-manifest.json 
           cd twa
-          rm -rf ~/.bubblewrap
-          bubblewrap init --manifest=https://fitlife6.vercel.app/manifest.json
           bubblewrap build
       - uses: actions/upload-artifact@v3
         with:
