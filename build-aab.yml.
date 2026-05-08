@@ -16,8 +16,8 @@ jobs:
           mkdir -p twa
           cp twa-manifest.json twa/twa-manifest.json 
           cd twa
-          bubblewrap update
-          bubblewrap build
+        bubblewrap update --manifest=twa-manifest.json --skipConfig
+        bubblewrap build --skipConfig
       - uses: actions/upload-artifact@v3
         with:
           name: fitlife6-aab
