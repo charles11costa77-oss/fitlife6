@@ -1,5 +1,10 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/fitlife-v11.html" }
+    { "source": "/fitlife-v12.html", "destination": "/fitlife-v12.html" },
+    { "source": "/manifest.json", "destination": "/manifest.json" },
+    { "source": "/sw.js", "destination": "/sw.js" },
+    { "source": "/icon-192.png", "destination": "/icon-192.png" },
+    { "source": "/icon-512.png", "destination": "/icon-512.png" },
+    { "source": "/(.*)", "destination": "/fitlife-v12.html" }
   ]
 }
