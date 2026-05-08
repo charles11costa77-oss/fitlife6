@@ -13,11 +13,8 @@ jobs:
           node-version: 18
       - run: npm install -g @bubblewrap/cli
       - run: |
-          mkdir -p twa
-          cp twa-manifest.json twa/twa-manifest.json 
-          cd twa
-        bubblewrap update --manifest=twa-manifest.json --skipConfig
-        bubblewrap build --skipConfig
+          npx @bubblewrap/cli init --manifest=https://fitlife6.vercel.app/manifest.json --quiet
+          npx @bubblewrap/cli build --skipConfig
       - uses: actions/upload-artifact@v3
         with:
           name: fitlife6-aab
