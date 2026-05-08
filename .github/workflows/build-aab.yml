@@ -1,59 +1,38 @@
 name: Build AAB
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-node@v4
         with:
-          distribution: temurin
-          java-version: 17
+          node-version: 20
 
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
-      - name: Configure and Build
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build AAB
         run: |
-          mkdir -p ~/.bubblewrap
-          echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
-          
-          # Criando o arquivo de projeto manualmente para ele NÃO perguntar nada
-          cat > twa-manifest.json << 'EOF'
-          {
-            "packageId": "com.fitlife6.app",
-            "host": "melodious-sopapillas-b5d335.netlify.app",
-            "name": "FitLife 6",
-            "launcherName": "FitLife 6",
-            "display": "standalone",
-            "themeColor": "#000000",
-            "navigationColor": "#000000",
-            "backgroundColor": "#ffffff",
-            "startUrl": "/",
-            "iconUrl": "https://melodious-sopapillas-b5d335.netlify.app/icon-512.png",
-            "maskableIconUrl": "https://melodious-sopapillas-b5d335.netlify.app/icon-512.png",
-            "appVersion": "4",
-            "appVersionCode": 4,
-            "signingKey": { "path": "./android.keystore", "alias": "android" },
-            "generatorApp": "bubblewrap-cli",
-            "webManifestUrl": "https://melodious-sopapillas-b5d335.netlify.app/manifest.json",
-            "fallbackType": "customtabs"
-          }
-          EOF
+          mkdir -p twa
+          cp twa-manifest.json twa/twa-manifest.json
+          cd twa
+          bubblewrap build --skipPwaValidation
 
-          # Comando que pula as perguntas e vai direto para o build
-          bubblewrap update --manifest twa-manifest.json --skipSelection
-          yes | bubblewrap build --skipSigning
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: fitlife6-aab
-          path: ./*.aab
-
+          path: twa/app/build/outputs/bundle/release/*.aab
