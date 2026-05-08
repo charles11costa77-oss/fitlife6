@@ -16,6 +16,7 @@ jobs:
           mkdir -p twa
           cp twa-manifest.json twa/twa-manifest.json 
           cd twa
+          bubblewrap update
           bubblewrap build
       - uses: actions/upload-artifact@v3
         with:
