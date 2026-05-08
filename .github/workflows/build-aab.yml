@@ -30,7 +30,7 @@ jobs:
           mkdir -p twa
           cp twa-manifest.json twa/twa-manifest.json
           cd twa
-          bubblewrap build --skipPwaValidation
+          echo "n" | bubblewrap build --skipPwaValidation
 
       - uses: actions/upload-artifact@v4
         with:
