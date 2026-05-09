@@ -1239,7 +1239,7 @@ function updateProfileUI(){
  if(goalBadge) goalBadge.textContent=p.goal||'Configure seu perfil';
  // Email do Firebase
  var emailEl=document.getElementById('sideEmail');
- if(emailEl && auth.currentUser) emailEl.textContent=auth.currentUser.email||'';
+  try{ if(emailEl && auth && auth.currentUser) emailEl.textContent=auth.currentUser.email||''; }catch(e){}
  document.getElementById('pfWeight').textContent=p.weight?(p.weight+' kg'):'—';
  document.getElementById('pfAge').textContent=p.age?(p.age+' anos'):'—';
  document.getElementById('pfHealth').textContent=p.health.join(', ')||'—';
