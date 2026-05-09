@@ -1242,7 +1242,7 @@ function updateProfileUI(){
   try{ if(emailEl && auth && auth.currentUser) emailEl.textContent=auth.currentUser.email||''; }catch(e){}
  document.getElementById('pfWeight').textContent=p.weight?(p.weight+' kg'):'—';
  document.getElementById('pfAge').textContent=p.age?(p.age+' anos'):'—';
- document.getElementById('pfHealth').textContent=p.health.join(', ')||'—';
+  document.getElementById('pfHealth').textContent=(p.health&&p.health.length?p.health.join(', '):'—');
  document.getElementById('pfGoal').textContent=p.goal||'—';
  // Tema por sexo: Feminino = rosa, demais = amarelo
  var isFem = (p.gender||'').toLowerCase().indexOf('feminino') !== -1;
