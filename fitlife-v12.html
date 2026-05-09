@@ -989,12 +989,12 @@ input, textarea {
 
 <!-- MODAL EDITAR PERFIL -->
 <div class="modal-overlay" id="editModal" onclick="closeEditModal()">
- <div class="edit-modal" onclick="event.stopPropagation()">
+ <div class="edit-modal" onclick="event.stopPropagation()" style="padding-bottom:16px">
  <div class="modal-handle"></div>
  <button class="modal-close" onclick="closeEditModal()" style="float:right;background:none;border:none;color:var(--muted);font-size:28px;cursor:pointer">×</button>
  <h3 id="editModalTitle" style="font-size:22px;font-weight:900;margin-bottom:16px"></h3>
  <div id="editModalBody"></div>
- <button class="save-edit-btn" onclick="saveEdit()">SALVAR </button>
+ <button class="save-edit-btn" onclick="event.stopPropagation();saveEdit()" style="margin-top:16px;position:relative;z-index:999">SALVAR </button>
  </div>
 </div>
 
