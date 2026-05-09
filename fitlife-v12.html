@@ -1226,6 +1226,7 @@ function saveEdit(){
  else if(currentEditField === 'health') userProfile.health = val.split(',').map(s=>s.trim()).filter(Boolean);
  else if(currentEditField === 'goal') userProfile.goal = val;
 
+ localStorage.setItem('fitlife_profile', JSON.stringify(userProfile));
  updateProfileUI();
  closeEditModal();
  showToast(' Perfil atualizado!');
