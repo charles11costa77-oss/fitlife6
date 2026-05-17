@@ -543,7 +543,7 @@ input, textarea {
  <h3> Escolha seu <span>Idioma</span></h3>
  <div class="lang-grid">
  <div class="lang-card selected" onclick="selectLang(this,'🇧🇷','Português')"><div class="lc-flag">🇧🇷</div><div><div class="lc-name">Português</div><div class="lc-native">Brasil</div></div></div>
- <div class="lang-card" onclick="selectLang(this,'🇺🇸','English')"><div class="lc-flag">🇺🇸</div><div><div class="lc-name">English</div><div class="lc-native">Coming soon! </div></div></div>
+ <div class="lang-card" onclick="selectLang(this,'🇺🇸','English')"><div class="lc-flag">🇺🇸</div><div><div class="lc-name">English</div><div class="lc-native">United States</div></div></div>
  </div>
  <button class="btn-main" onclick="nextStep(1)">CONTINUAR →</button>
  </div>
@@ -1120,20 +1120,182 @@ function nextStep(n){
  document.documentElement.scrollTop = 0;
  document.getElementById('onboarding').scrollTop = 0;
 }
-function selectLang(el,flag,name){
- document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
- el.classList.add('selected');
- if(name==='English'){
- document.getElementById('ob-sub').textContent=' English — Coming soon! ';
- // Revert to Portuguese after 2s
- setTimeout(()=>{
- document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
- document.querySelector('.lang-card').classList.add('selected');
- document.getElementById('ob-sub').textContent=' Português selecionado';
- }, 2000);
- } else {
- document.getElementById('ob-sub').textContent=flag+' '+name+' selecionado';
+
+// ─── SISTEMA DE IDIOMAS ───────────────────────────────
+let currentLang = "pt";
+const t = {
+ pt: {
+  obSub: "Português selecionado",
+  chooseLanguage: "Escolha seu Idioma",
+  step1Title: " Seus dados",
+  name: "Nome", namePlaceholder: "Como posso te chamar?",
+  age: "Idade", agePlaceholder: "Ex: 28",
+  gender: "Sexo", genderDefault: "Selecione...", genderM: "Masculino", genderF: "Feminino", genderN: "Prefiro não informar",
+  weight: "Peso (kg)", weightPlaceholder: "Ex: 70",
+  next: "PRÓXIMO →", back: "← Voltar", start: "COMEÇAR AGORA! ",
+  step2Title: " Saúde & Limitações",
+  fitnessLabel: "Estado físico atual",
+  fitnessDefault: "Selecione...", fitnessSed: "Sedentário", fitnessIni: "Iniciante", fitnessMed: "Intermediário", fitnessAdv: "Avançado",
+  restrictLabel: "Restrições ou problemas?",
+  chips: ["Nenhuma","Joelho","Coluna","Cotovelo","Hipertensão","Diabetes","Ombro","Lesão recente"],
+  step3Title: " Seu objetivo",
+  goalLabel: "O que você quer alcançar?",
+  goals: [" Ganhar massa"," Perder gordura"," Condicionamento"," Ganhar força"," Saúde geral"," Resistência"],
+  timeLabel: "Tempo por sessão",
+  freqLabel: "Frequência",
+  freqs: ["2x semana","3x semana","4x semana","5x semana","Diário"],
+  step4Title: " Tudo pronto!",
+  step4Msg: "Seu perfil foi configurado! O FitLife vai personalizar seus treinos e sugestões nutricionais. Lembre-se: os resultados dependem da sua dedicação! ",
+  step4Disclaimer: " As orientações deste app são educativas. Consulte sempre um profissional de saúde antes de iniciar qualquer programa.",
+  navHome: "Início", navHomeS: "Treino do dia e estatísticas",
+  navWorkouts: "Treinos", navWorkoutsS: "Grupamentos e séries",
+  navNutrition: "Nutrição", navNutritionS: "Macros e receitas fitness",
+  navDiary: "Diário", navDiaryS: "Anotações e progresso",
+  menuLogout: "Sair", menuLogoutS: "Encerrar sessão",
+  editWeight: "Editar Peso", editAge: "Editar Idade", editHealth: "Editar Limitações", editGoal: "Editar Objetivo",
+  save: "SALVAR", edit: "Editar",
+  profileUpdated: " Perfil atualizado!",
+  active: "⚡ Ativo", configProfile: "Configure seu perfil",
+  pfWeight: "PESO", pfAge: "IDADE", pfHealth: "LIMITAÇÕES", pfGoal: "OBJETIVO",
+  greetSub: "Pronto para treinar hoje?",
+ },
+ en: {
+  obSub: "English selected",
+  chooseLanguage: "Choose your Language",
+  step1Title: " Your data",
+  name: "Name", namePlaceholder: "What can I call you?",
+  age: "Age", agePlaceholder: "Ex: 28",
+  gender: "Gender", genderDefault: "Select...", genderM: "Male", genderF: "Female", genderN: "Prefer not to say",
+  weight: "Weight (kg)", weightPlaceholder: "Ex: 70",
+  next: "NEXT →", back: "← Back", start: "START NOW! ",
+  step2Title: " Health & Limitations",
+  fitnessLabel: "Current fitness level",
+  fitnessDefault: "Select...", fitnessSed: "Sedentary", fitnessIni: "Beginner", fitnessMed: "Intermediate", fitnessAdv: "Advanced",
+  restrictLabel: "Restrictions or issues?",
+  chips: ["None","Knee","Spine","Elbow","Hypertension","Diabetes","Shoulder","Recent injury"],
+  step3Title: " Your goal",
+  goalLabel: "What do you want to achieve?",
+  goals: [" Gain muscle"," Lose fat"," Conditioning"," Gain strength"," General health"," Endurance"],
+  timeLabel: "Time per session",
+  freqLabel: "Frequency",
+  freqs: ["2x week","3x week","4x week","5x week","Daily"],
+  step4Title: " All set!",
+  step4Msg: "Your profile is ready! FitLife will personalize your workouts and nutrition suggestions. Remember: results depend on your dedication! ",
+  step4Disclaimer: " The guidance in this app is educational. Always consult a health professional before starting any program.",
+  navHome: "Home", navHomeS: "Today's workout and stats",
+  navWorkouts: "Workouts", navWorkoutsS: "Muscle groups and sets",
+  navNutrition: "Nutrition", navNutritionS: "Macros and fitness recipes",
+  navDiary: "Diary", navDiaryS: "Notes and progress",
+  menuLogout: "Logout", menuLogoutS: "End session",
+  editWeight: "Edit Weight", editAge: "Edit Age", editHealth: "Edit Limitations", editGoal: "Edit Goal",
+  save: "SAVE", edit: "Edit",
+  profileUpdated: " Profile updated!",
+  active: "⚡ Active", configProfile: "Set up your profile",
+  pfWeight: "WEIGHT", pfAge: "AGE", pfHealth: "LIMITATIONS", pfGoal: "GOAL",
+  greetSub: "Ready to train today?",
  }
+};
+
+function selectLang(el, flag, lang) {
+ document.querySelectorAll(".lang-card").forEach(c => c.classList.remove("selected"));
+ el.classList.add("selected");
+ currentLang = lang === "English" ? "en" : "pt";
+ document.getElementById("ob-sub").textContent = t[currentLang].obSub;
+ applyLang();
+}
+
+function applyLang() {
+ const l = t[currentLang];
+ // Onboarding
+ const s1 = document.getElementById("step1");
+ if(s1) {
+  s1.querySelector("h3").innerHTML = l.step1Title;
+  const labels = s1.querySelectorAll("label");
+  if(labels[0]) labels[0].textContent = l.name;
+  if(labels[1]) labels[1].textContent = l.age;
+  if(labels[2]) labels[2].textContent = l.gender;
+  if(labels[3]) labels[3].textContent = l.weight;
+  const userName = document.getElementById("userName");
+  if(userName) userName.placeholder = l.namePlaceholder;
+  const userAge = document.getElementById("userAge");
+  if(userAge) userAge.placeholder = l.agePlaceholder;
+  const userWeight = document.getElementById("userWeight");
+  if(userWeight) userWeight.placeholder = l.weightPlaceholder;
+  const gender = document.getElementById("userGender");
+  if(gender) { gender.options[0].text = l.genderDefault; gender.options[1].text = l.genderM; gender.options[2].text = l.genderF; gender.options[3].text = l.genderN; }
+  const btns = s1.querySelectorAll("button");
+  if(btns[0]) btns[0].textContent = l.next;
+  if(btns[1]) btns[1].textContent = l.back;
+ }
+ const s2 = document.getElementById("step2");
+ if(s2) {
+  s2.querySelector("h3").innerHTML = l.step2Title;
+  const labels = s2.querySelectorAll("label");
+  if(labels[0]) labels[0].textContent = l.fitnessLabel;
+  if(labels[1]) labels[1].textContent = l.restrictLabel;
+  const fitness = document.getElementById("userFitness");
+  if(fitness) { fitness.options[0].text = l.fitnessDefault; fitness.options[1].text = l.fitnessSed; fitness.options[2].text = l.fitnessIni; fitness.options[3].text = l.fitnessMed; fitness.options[4].text = l.fitnessAdv; }
+  const chips = s2.querySelectorAll("#healthChips .chip");
+  chips.forEach((c,i) => { if(l.chips[i]) c.textContent = l.chips[i]; });
+  const btns = s2.querySelectorAll("button");
+  if(btns[0]) btns[0].textContent = l.next;
+  if(btns[1]) btns[1].textContent = l.back;
+ }
+ const s3 = document.getElementById("step3");
+ if(s3) {
+  s3.querySelector("h3").innerHTML = l.step3Title;
+  const labels = s3.querySelectorAll("label");
+  if(labels[0]) labels[0].textContent = l.goalLabel;
+  if(labels[1]) labels[1].textContent = l.timeLabel;
+  if(labels[2]) labels[2].textContent = l.freqLabel;
+  const goalChips = s3.querySelectorAll("#goalChips .chip");
+  goalChips.forEach((c,i) => { if(l.goals[i]) c.textContent = l.goals[i]; });
+  const freqChips = s3.querySelectorAll("#freqChips .chip");
+  freqChips.forEach((c,i) => { if(l.freqs[i]) c.textContent = l.freqs[i]; });
+  const btns = s3.querySelectorAll("button");
+  if(btns[0]) btns[0].textContent = l.next;
+  if(btns[1]) btns[1].textContent = l.back;
+ }
+ const s4 = document.getElementById("step4");
+ if(s4) {
+  s4.querySelector("h3").innerHTML = l.step4Title;
+  const ps = s4.querySelectorAll("p");
+  if(ps[0]) ps[0].textContent = l.step4Msg;
+  if(ps[1]) ps[1].textContent = l.step4Disclaimer;
+  const btns = s4.querySelectorAll("button");
+  if(btns[0]) btns[0].textContent = l.start;
+  if(btns[1]) btns[1].textContent = l.back;
+ }
+ // Bottom nav
+ const navItems = document.querySelectorAll(".nav-item");
+ if(navItems[0]) { navItems[0].querySelector("span") && (navItems[0].querySelector("span").textContent = l.navHome); }
+ // Menu lateral
+ const slLabels = document.querySelectorAll(".sl-label");
+ const slSubs = document.querySelectorAll(".sl-sub");
+ if(slLabels[0]) { slLabels[0].textContent = l.navHome; if(slSubs[0]) slSubs[0].textContent = l.navHomeS; }
+ if(slLabels[1]) { slLabels[1].textContent = l.navWorkouts; if(slSubs[1]) slSubs[1].textContent = l.navWorkoutsS; }
+ if(slLabels[2]) { slLabels[2].textContent = l.navNutrition; if(slSubs[2]) slSubs[2].textContent = l.navNutritionS; }
+ if(slLabels[3]) { slLabels[3].textContent = l.navDiary; if(slSubs[3]) slSubs[3].textContent = l.navDiaryS; }
+ if(slLabels[4]) { slLabels[4].style.color = "#f87171"; slLabels[4].textContent = l.menuLogout; if(slSubs[4]) slSubs[4].textContent = l.menuLogoutS; }
+ // Perfil
+ const pfLabels = document.querySelectorAll(".pf-label");
+ if(pfLabels[0]) pfLabels[0].textContent = l.pfWeight;
+ if(pfLabels[1]) pfLabels[1].textContent = l.pfAge;
+ if(pfLabels[2]) pfLabels[2].textContent = l.pfHealth;
+ if(pfLabels[3]) pfLabels[3].textContent = l.pfGoal;
+ const editBtns = document.querySelectorAll(".pf-edit-btn");
+ editBtns.forEach(b => b.textContent = l.edit);
+ // Badge
+ const goalBadge = document.getElementById("sideGoalBadge");
+ if(goalBadge && goalBadge.textContent === t["pt"].configProfile) goalBadge.textContent = l.configProfile;
+ // Botão salvar modal
+ const saveBtn = document.querySelector(".save-edit-btn");
+ if(saveBtn) saveBtn.textContent = l.save;
+ // Subtítulo home
+ const greetSub = document.getElementById("greetSub");
+ if(greetSub) greetSub.textContent = l.greetSub;
+ // Salva idioma
+ localStorage.setItem("fitlife_lang", currentLang);
 }
 function toggleChip(el){el.classList.toggle('selected')}
 function toggleGoal(el){el.classList.toggle('selected')}
@@ -3350,6 +3512,9 @@ window.loginComGoogle = function() {
       document.documentElement.scrollTop = 0;
 
       var onboardingDone = localStorage.getItem('fitlife_onboarding_done');
+      // Carrega idioma salvo
+      var savedLang = localStorage.getItem("fitlife_lang");
+      if(savedLang) { currentLang = savedLang; applyLang(); }
       var savedProfile = localStorage.getItem('fitlife_profile');
 
       if(onboardingDone && savedProfile) {
