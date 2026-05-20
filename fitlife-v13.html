@@ -185,7 +185,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .btn-start.locked:active{transform:none}
 .progress-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin:12px 0 4px;overflow:hidden}
 .progress-bar-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .3s ease}
-.ex-cornter{font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px;font-weight:700}
+.ex-counter{font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px;font-weight:700}
 
 .days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:4px}
 .day-btn{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .2s}
@@ -527,20 +527,20 @@ input, textarea {
 <!-- SPLASH -->
 <div id="splash">
  <video id="splashVideo" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0">
-  <sorrce src="https://raw.githubusercontent.com/charles11costa77-oss/fitlife6/main/WA_1776544659450.mp4" type="video/mp4">
+  <source src="https://raw.githubusercontent.com/charles11costa77-oss/fitlife6/main/WA_1776544659450.mp4" type="video/mp4">
  </video>
 </div>
 
 <!-- ONBOARDING -->
 <div id="onboarding">
- <div class="ob-header"><h2>FitLife<span style="font-size:0.75em;vertical-align:baseline">6</span></h2><p id="ob-sub">Escolha seu idioma / Choose yorr language</p></div>
+ <div class="ob-header"><h2>FitLife<span style="font-size:0.75em;vertical-align:baseline">6</span></h2><p id="ob-sub">Escolha seu idioma / Choose your language</p></div>
  <div class="ob-progress" id="obProgress">
  <div class="done"></div><div></div><div></div><div></div><div></div>
  </div>
 
  <!-- STEP 0: IDIOMA -->
  <div class="ob-step active" id="step0" style="max-width:420px;width:100%">
- <h3> Choose yorr <span>Language</span></h3>
+ <h3> Choose your <span>Language</span></h3>
  <div class="lang-grid">
  <div class="lang-card selected" onclick="selectLang(this,'🇧🇷','Português')"><div class="lc-flag">🇧🇷</div><div><div class="lc-name">Português</div><div class="lc-native">Brasil</div></div></div>
  <div class="lang-card" onclick="selectLang(this,'🇺🇸','English')"><div class="lc-flag">🇺🇸</div><div><div class="lc-name">English</div><div class="lc-native">United States</div></div></div>
@@ -550,8 +550,8 @@ input, textarea {
 
  <!-- STEP 1: DADOS -->
  <div class="ob-step" id="step1" style="max-width:420px;width:100%">
- <h3> Yorr <span>Info</span></h3>
- <div class="field-group"><label>Name</label><input type="text" id="userName" placeholder="What shorld I call yor?"/></div>
+ <h3> Your <span>Info</span></h3>
+ <div class="field-group"><label>Name</label><input type="text" id="userName" placeholder="What should I call yor?"/></div>
  <div class="field-group"><label>Age</label><input type="number" id="userAge" placeholder="Ex: 28" min="10" max="100"/></div>
  <div class="field-group"><label>Gender</label><select id="userGender"><option value="">Select...</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div>
  <div class="field-group"><label>Weight (kg)</label><input type="number" id="userWeight" placeholder="Ex: 70"/></div>
@@ -571,7 +571,7 @@ input, textarea {
  <div class="chip" onclick="toggleChip(this)">Elbow</div>
  <div class="chip" onclick="toggleChip(this)">Hypertension</div>
  <div class="chip" onclick="toggleChip(this)">Diabetes</div>
- <div class="chip" onclick="toggleChip(this)">Shorlder</div>
+ <div class="chip" onclick="toggleChip(this)">Shoulder</div>
  <div class="chip" onclick="toggleChip(this)">Recent injury</div>
  </div>
  </div>
@@ -581,7 +581,7 @@ input, textarea {
 
  <!-- STEP 3: OBJETIVO -->
  <div class="ob-step" id="step3" style="max-width:420px;width:100%">
- <h3> Yorr <span>goal</span></h3>
+ <h3> Your <span>goal</span></h3>
  <div class="field-group"><label>What do yor want to achieve?</label>
  <div class="chip-grid" id="goalChips">
  <div class="chip" onclick="toggleGoal(this)"> Build muscle</div>
@@ -610,7 +610,7 @@ input, textarea {
  <div class="ob-step" id="step4" style="max-width:420px;width:100%">
  <h3> All <span>set!</span></h3>
  <div style="background:var(--card);border-radius:18px;padding:20px;border:1px solid var(--accent);margin-bottom:8px">
- <p style="font-size:14px;line-height:1.8;color:#ccc">Yorr profile is set! FitLife will personalize yorr workouts and nutrition. Remember: results depend on yorr dedication! </p>
+ <p style="font-size:14px;line-height:1.8;color:#ccc">Your profile is set! FitLife will personalize your workouts and nutrition. Remember: results depend on your dedication! </p>
  <p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7;border-top:1px solid var(--border);padding-top:12px"> This app's guidance is educational. Always consult a health professional before starting any program.</p>
  </div>
  <button class="btn-main" onclick="startApp()">START NOW! </button>
@@ -641,7 +641,7 @@ input, textarea {
   </div>
   <div class="profile-badges">
    <span class="profile-badge">⚡ Active</span>
-   <span class="profile-badge" id="sideGoalBadge">Set up yorr profile</span>
+   <span class="profile-badge" id="sideGoalBadge">Set up your profile</span>
   </div>
   <div class="profile-fields">
    <div class="pf-row">
@@ -725,7 +725,7 @@ input, textarea {
   <div class="modal" onclick="event.stopPropagation()" style="max-height:85vh">
     <div class="modal-handle"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)"> Yorr Week</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)"> Your Week</div>
       <button onclick="closeWeekModal()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer">×</button>
     </div>
     <div id="weekModalBox"></div>
@@ -755,7 +755,7 @@ input, textarea {
  <div class="tw-card-sub">Cycle de 30 days com renovação manual</div>
  </div>
  <div class="tw-card" style="padding:26px 10px" onclick="selectPeriod('trimester',this)">
- <div class="tw-card-title">Wedrterly</div>
+ <div class="tw-card-title">Quarterly</div>
  <div class="tw-card-sub">Cycle de 90 days com renovação manual</div>
  </div>
  </div>
@@ -805,7 +805,7 @@ input, textarea {
  <!-- GRUPAMENTO aparece ao selecionar dificuldade -->
  <div id="grupamentoSection" style="margin-top:0">
  <hr style="border:none;border-top:1px solid var(--border);margin:22px 0 20px">
- <div class="section-title" style="margin-bottom:14px"> Choose yorr <span>Muscle Group</span></div>
+ <div class="section-title" style="margin-bottom:14px"> Choose your <span>Muscle Group</span></div>
  <div id="grupamentoGrid"></div>
  </div>
  <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(1)">← Back</button>
@@ -818,7 +818,7 @@ input, textarea {
  <div class="tw-step" id="tw-step5">
  <div class="step-breadcrumb" id="breadcrumb5"></div>
  <div class="section-title"> Seus Days <span>Disponíveis</span></div>
- <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Select the days of the week yor can train. The app will build yorr cycle automatically!</p>
+ <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Select the days of the week yor can train. The app will build your cycle automatically!</p>
  <div class="days-grid" id="daysGrid">
  <div class="day-btn" onclick="toggleDay(this,'dom')"><div class="day-letter">D</div><div class="day-name">Sun</div></div>
  <div class="day-btn" onclick="toggleDay(this,'seg')"><div class="day-letter">S</div><div class="day-name">Mon</div></div>
@@ -835,8 +835,8 @@ input, textarea {
  <!-- PASSO 6: PRÉVIA DO CICLO -->
  <div class="tw-step" id="tw-step6">
  <div class="step-breadcrumb" id="breadcrumb6"></div>
- <div class="section-title"> Yorr <span>Cycle</span> Built</div>
- <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Check how yorr workouts are distributed. The app rotates muscle groups each week for more variety! </p>
+ <div class="section-title"> Your <span>Cycle</span> Built</div>
+ <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Check how your workouts are distributed. The app rotates muscle groups each week for more variety! </p>
  <div id="cyclePreviewBox"></div>
  <button class="btn-main" onclick="confirmCycle()"> CONFIRM AND START CYCLE</button>
  <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(5)">← Back e ajustar days</button>
@@ -1047,7 +1047,7 @@ const recipesBulk=[
  {cat:'peixe',complexity:'simple',emoji:'',name:'Canned Tuna with Rice',kcal:380,prot:'36g',carb:'40g',fat:'8g',time:'5 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 can tuna in water','1 cup cooked rice','Olive oil and salt','Chopped chives'],prep:'Drain tuna. Mix with hot rice, olive oil and chives. Done!',qty:'One of the most practical and affordable snacks. Canned tuna = ~26g protein per can.'},
  {cat:'carne',complexity:'simple',emoji:'',name:'Pan-Grilled Steak',kcal:300,prot:'34g',carb:'0g',fat:'16g',time:'8 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['150g strip steak or lean beef','Minced garlic','Salt and pepper','A drizzle of oil'],prep:'Season steak with garlic, salt and pepper. Grill in hot pan 3-4 min each side.',qty:'Simple and quick. Strip steak and lean beef are affordable cuts rich in protein and iron.'},
  {cat:'carne',complexity:'simple',emoji:'',name:'Carne Moída Refogada Simple',kcal:350,prot:'32g',carb:'6g',fat:'20g',time:'15 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['150g carne moída','Cebola e alho','Tomate picado','Salt and pepper'],prep:'Refogue cebola e alho. Adicione a carne moída e mexa bem. Junte o tomate e cozinhe 10 min.',qty:'Base de muitas refeições. Pode comer com arroz, macarrão or pão.'},
- {cat:'legumes',complexity:'simple',emoji:'',name:'Boiled Vegetables with Salt',kcal:120,prot:'6g',carb:'22g',fat:'2g',time:'15 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['Cenorra, batata, chuchu or o que tiver','Água e sal','Fio de azeite para temperar'],prep:'Descasque e pique os legumes. Cozinhe em água com sal por 12-15 min até ficarem macios. Tempere com azeite.',qty:'O mais simples possível. Wedlquer legume funciona. Boa fonte de fibra, vitaminas e carboidrato.'},
+ {cat:'legumes',complexity:'simple',emoji:'',name:'Boiled Vegetables with Salt',kcal:120,prot:'6g',carb:'22g',fat:'2g',time:'15 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['Cenoura, batata, chuchu or o que tiver','Água e sal','Fio de azeite para temperar'],prep:'Descasque e pique os legumes. Cozinhe em água com sal por 12-15 min até ficarem macios. Tempere com azeite.',qty:'O mais simples possível. Wedlquer legume funciona. Boa fonte de fibra, vitaminas e carboidrato.'},
  {cat:'legumes',complexity:'simple',emoji:'',name:'Simple Beans with Rice',kcal:340,prot:'14g',carb:'60g',fat:'4g',time:'5 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 ladle cooked beans','1 xíc arroz branco','Sal, alho e óleo'],prep:'Feijão e arroz prontos. Refogue o alho no óleo, adicione o feijão, tempere e sirva com arroz.',qty:'A combinação mais clássica e barata do Brasil. Proteína completa acessível para todos.'},
  {cat:'shake',complexity:'simple',emoji:'',name:'Vitamina de Banana com Leite',kcal:280,prot:'10g',carb:'48g',fat:'6g',time:'3 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 banana','1 copo de leite integral or desnatado','1 col açúcar or mel (opcional)'],prep:'Bata no liquidificador or amasse a banana no leite. Pronto!',qty:'A vitamina mais clássica e barata. Para mais proteína, adicione 1 ovo inteiro or iogurte.'},
  {cat:'shake',complexity:'simple',emoji:'',name:'Achocolatado com Aveia',kcal:320,prot:'12g',carb:'52g',fat:'8g',time:'3 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 copo achocolatado','3 tbsp oats em flocos','1 banana (opcional)'],prep:'Misture a aveia no achocolatado. Deixe 2 min para absorver. Pronto!',qty:'Opção acessível pré or pós treino. Aveia adiciona fibra e energia de liberação gradual.'},
@@ -1058,16 +1058,16 @@ const recipesCut=[
  {cat:'frango',complexity:'mid',emoji:'',name:'Salada de Frango com Thunoa',level:'mid',kcal:320,prot:'38g',carb:'22g',fat:'8g',time:'20 min',tags:[{txt:'Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['150g frango grelhado desfiado','60g quinoa cozida','Folhas verdes, tomate, pepino','Limão e azeite'],prep:'Grelhe frango e desfie. Cozinhe quinoa. Misture e tempere.',qty:'150g frango = ~33g proteína com porcas calorias.'},
  {cat:'frango',complexity:'mid',emoji:'',name:'Frango ao Limão com Aspargos',level:'mid',kcal:280,prot:'40g',carb:'8g',fat:'10g',time:'20 min',tags:[{txt:'High protein',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['180g peito frango','100g aspargos','Limão, alho, ervas, azeite'],prep:'Marine frango em limão 10 min. Grelhe com aspargos.',qty:'Prato completo abaixo de 300 kcal.'},
  {cat:'frango',complexity:'hard',emoji:'',name:'Wrap Low Carb de Frango com Rúcula',kcal:290,prot:'34g',carb:'18g',fat:'8g',time:'15 min',tags:[{txt:'Low Carb',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['150g shredded chicken','1 wrap de low carb','Rúcula, tomate, pepino','Mostarda e limão'],prep:'Monte o wrap com frango e legumes. Use mostarda como molho.',qty:'Mostarda = sabor com quase zero calorias.'},
- {cat:'frango',complexity:'hard',emoji:'',name:'Sopa de Frango com Legumes',kcal:240,prot:'32g',carb:'20g',fat:'6g',time:'30 min',tags:[{txt:'Saciante',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['150g shredded chicken','Cenorra, abobrinha, chuchu','Caldo caseiro sem gordura','Sal e ervas'],prep:'Cozinhe legumes no caldo. Adicione shredded chicken.',qty:'Sopas aumentam saciedade com porcas calorias.'},
+ {cat:'frango',complexity:'hard',emoji:'',name:'Sopa de Frango com Legumes',kcal:240,prot:'32g',carb:'20g',fat:'6g',time:'30 min',tags:[{txt:'Saciante',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['150g shredded chicken','Cenoura, abobrinha, chuchu','Caldo caseiro sem gordura','Sal e ervas'],prep:'Cozinhe legumes no caldo. Adicione shredded chicken.',qty:'Sopas aumentam saciedade com porcas calorias.'},
  {cat:'frango',complexity:'mid',emoji:'',name:'Frango Grelhado com Salada Caprese',kcal:310,prot:'38g',carb:'10g',fat:'12g',time:'20 min',tags:[{txt:'Mediterrâneo',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['180g peito frango','Tomate, mozarela light','Manjericão, azeite, sal'],prep:'Grelhe frango. Monte caprese ao lado.',qty:'Mozarela light = metade das calorias da versão comum.'},
  {cat:'ovo',complexity:'simple',emoji:'',name:'Omelete de Claras com Espinafre',level:'simple',kcal:150,prot:'22g',carb:'4g',fat:'5g',time:'10 min',tags:[{txt:'Very Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['4 claras de ovo','1 ovo inteiro','Espinafre, sal, pimenta'],prep:'Bata claras com ovo. Refogue espinafre. Dobre a omelete.',qty:'4 claras = ~0g gordura. Omelete completa abaixo de 150 kcal.'},
  {cat:'ovo',complexity:'hard',emoji:'',name:'Muffin de Ovo e Vegetais no Forno',kcal:180,prot:'18g',carb:'6g',fat:'8g',time:'20 min',tags:[{txt:'Meal prep',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['4 ovos','Pimentão, tomate, cebola picados','Sal, pimenta, ervas'],prep:'Bata ovos com vegetais. Distribua em forminhas. Asse 180°C por 15 min.',qty:'Prepare 6-12 unidades para a semana toda. ~30 kcal/unidade.'},
  {cat:'ovo',complexity:'mid',emoji:'',name:'Salada Niçoise Fitness',kcal:260,prot:'28g',carb:'14g',fat:'10g',time:'15 min',tags:[{txt:'Completa',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['2 boiled eggs','1 lata atum light','Vagem cozida, tomate','Azeite e limão'],prep:'Monte a salada com todos os ingredientes frescos.',qty:'Refeição francesa clássica, adaptada para déficit calórico.'},
- {cat:'peixe',complexity:'mid',emoji:'',name:'Tilápia ao Vapor com Legumes',kcal:210,prot:'38g',carb:'10g',fat:'4g',time:'20 min',tags:[{txt:'Muito leve',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['200g tilapia','Brócolis, cenorra, abobrinha','Gengibre, shoyu light, limão'],prep:'Cozinhe tudo no vapor 15-18 min.',qty:'Preparo no vapor preserva nutrientes e evita adicionar gordura.'},
+ {cat:'peixe',complexity:'mid',emoji:'',name:'Tilápia ao Vapor com Legumes',kcal:210,prot:'38g',carb:'10g',fat:'4g',time:'20 min',tags:[{txt:'Muito leve',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['200g tilapia','Brócolis, cenoura, abobrinha','Gengibre, shoyu light, limão'],prep:'Cozinhe tudo no vapor 15-18 min.',qty:'Preparo no vapor preserva nutrientes e evita adicionar gordura.'},
  {cat:'peixe',complexity:'hard',emoji:'',name:'Ceviche de Tilápia',kcal:180,prot:'32g',carb:'10g',fat:'4g',time:'20 min',tags:[{txt:'Refrescante',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['200g tilapia fresca','Suco de 3 limões','Cebola roxa, tomate, coentro'],prep:'Marine tilápia no limão 15 min. Adicione demais ingredientes.',qty:'Prato naturalmente low cal e altíssimo em proteína.'},
  {cat:'peixe',complexity:'mid',emoji:'',name:'Atum com Salada de Pepino e Iogurte',level:'mid',kcal:220,prot:'32g',carb:'8g',fat:'6g',time:'10 min',tags:[{txt:'Quick',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['1 can tuna in water','1 pepino grande','100g iogurte natural','Dill, limão, sal'],prep:'Misture atum com iogurte e pepino fatiado. Tempere com dill.',qty:'Iogurte natural = probióticos + proteína + baixo em gordura.'},
  {cat:'carne',complexity:'mid',emoji:'',name:'Bifinho Grelhado com Salada Verde',level:'mid',kcal:290,prot:'34g',carb:'8g',fat:'14g',time:'15 min',tags:[{txt:'Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['120g patinho grelhado','Alface, rúcula, tomate','Vinagre balsâmico, mostarda','Salt, pepper, olive oil'],prep:'Grelhe o bife fino. Sirva sobre a salada temperada.',qty:'120g patinho = ~26g proteína com menos calorias.'},
- {cat:'carne',complexity:'hard',emoji:'',name:'Sopa de Carne Magra com Legumes',kcal:260,prot:'28g',carb:'22g',fat:'8g',time:'35 min',tags:[{txt:'Saciante',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['120g patinho em cubinhos','Cenorra, batata, vagem','Caldo caseiro','Sal, ervas, alho'],prep:'Cozinhe carne e legumes no caldo por 25 min.',qty:'Sopa volumosa = alta saciedade com baixo teor calórico.'},
+ {cat:'carne',complexity:'hard',emoji:'',name:'Sopa de Carne Magra com Legumes',kcal:260,prot:'28g',carb:'22g',fat:'8g',time:'35 min',tags:[{txt:'Saciante',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['120g patinho em cubinhos','Cenoura, batata, vagem','Caldo caseiro','Sal, ervas, alho'],prep:'Cozinhe carne e legumes no caldo por 25 min.',qty:'Sopa volumosa = alta saciedade com baixo teor calórico.'},
  {cat:'carne',complexity:'hard',emoji:'',name:'Taco Lettuce Wrap (Sem Tortilla)',kcal:240,prot:'30g',carb:'10g',fat:'10g',time:'15 min',tags:[{txt:'Zero carb wrap',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['120g carne moída magra','Folhas grandes de alface iceberg','Tomate, cebola, pimenta','Limão e coentro'],prep:'Refogue carne com temperos. Use folhas de alface como "tortilla".',qty:'Elimina o carb da tortilla sem perder sabor.'},
  {cat:'legumes',complexity:'mid',emoji:'',name:'Bowl de Brócolis com Hummus e Ovo',level:'mid',kcal:250,prot:'18g',carb:'20g',fat:'12g',time:'15 min',tags:[{txt:'Vegan',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['200g brócolis cozido','3 col hummus','1 ovo cozido','Limão e azeite'],prep:'Monte o bowl com brócolis, hummus e ovo fatiado.',qty:'Brócolis = fibra + vitamina C + cálcio. Saciedade elevada.'},
  {cat:'legumes',complexity:'mid',emoji:'',name:'Lentil and Cucumber Salad',kcal:280,prot:'16g',carb:'36g',fat:'8g',time:'20 min',tags:[{txt:'Fibras',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['120g lentilha cozida','Pepino, tomate, cebola roxa','Salsinha, limão, azeite'],prep:'Misture todos os ingredientes frios.',qty:'Lentilha = fibra que retarda absorção do açúcar.'},
@@ -1075,15 +1075,15 @@ const recipesCut=[
  {cat:'shake',complexity:'simple',emoji:'',name:'Smoothie Detox Verde',level:'simple',kcal:180,prot:'18g',carb:'22g',fat:'3g',time:'5 min',tags:[{txt:'Detox',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 xíc espinafre','½ banana congelada','1 scoop whey neutro','150ml água de coco'],prep:'Bata tudo até homogêneo.',qty:'Baixo em calorias, rico em fibras e micronutrientes.'},
  {cat:'shake',complexity:'mid',emoji:'',name:'Shake Proteico de Baunilha e Café',kcal:160,prot:'24g',carb:'10g',fat:'3g',time:'5 min',tags:[{txt:'Pré-treino leve',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['1 scoop whey baunilha','1 espresso gelado','150ml leite desnatado','Gelo'],prep:'Misture tudo com gelo. O café potencializa queima de gordura.',qty:'Cafeína + proteína = combinação ideal pré-treino para emagrecer.'},
  {cat:'shake',complexity:'mid',emoji:'',name:'Shake Citrico de Laranja e Gengibre',kcal:190,prot:'20g',carb:'24g',fat:'2g',time:'5 min',tags:[{txt:'Antioxidante',c:'#f87171',bg:'rgba(248,113,113,.15)'}],ingr:['1 scoop whey neutro','Suco de 2 laranjas','1 pedaço gengibre fresco','100ml água gelada'],prep:'Bata tudo. O gengibre tem propriedades termogênicas.',qty:'Vitamina C da laranja auxilia absorção de ferro.'},
- {cat:'frango',complexity:'mid',emoji:'',name:'Frango com Corve Refogada e Ovo',kcal:270,prot:'36g',carb:'8g',fat:'10g',time:'20 min',tags:[{txt:'Iron',c:'#f87171',bg:'rgba(248,113,113,.15)'}],ingr:['150g frango grelhado','100g corve refogada','1 ovo mexido','Garlic, olive oil, salt'],prep:'Grelhe frango. Refogue corve com alho. Sirva com ovo.',qty:'Corve = ferro, cálcio e vitaminas do complexo B.'},
+ {cat:'frango',complexity:'mid',emoji:'',name:'Frango com Couve Refogada e Ovo',kcal:270,prot:'36g',carb:'8g',fat:'10g',time:'20 min',tags:[{txt:'Iron',c:'#f87171',bg:'rgba(248,113,113,.15)'}],ingr:['150g frango grelhado','100g couve refogada','1 ovo mexido','Garlic, olive oil, salt'],prep:'Grelhe frango. Refogue couve com alho. Sirva com ovo.',qty:'Couve = ferro, cálcio e vitaminas do complexo B.'},
  {cat:'ovo',complexity:'simple',emoji:'',name:'Claras Mexidas com Tomate e Ervas',level:'simple',kcal:130,prot:'20g',carb:'4g',fat:'3g',time:'8 min',tags:[{txt:'Muito leve',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['5 claras de ovo','1 tomate picado','Salsinha, cebolinha','Salt and pepper'],prep:'Mexa as claras com tomate e ervas em fogo baixo.',qty:'5 claras = 0g gordura + 20g proteína pura.'},
  {cat:'peixe',complexity:'mid',emoji:'',name:'Sardinha Grelhada com Salada',kcal:240,prot:'30g',carb:'6g',fat:'10g',time:'15 min',tags:[{txt:'Ômega-3',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['4 sardinhas frescas or em lata','Lettuce, tomato, cucumber','Limão, azeite, sal'],prep:'Grelhe sardinhas 3 min cada lado. Sirva com salada.',qty:'Sardinha = ômega-3 + cálcio + vitamina D com baixo custo.'},
- {cat:'carne',complexity:'hard',emoji:'',name:'Carne Moída com Corve-Flor no Forno',level:'hard',kcal:300,prot:'32g',carb:'14g',fat:'12g',time:'30 min',tags:[{txt:'Low Carb',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['120g carne moída magra','200g corve-flor em floretes','Onion, garlic, tomato','Orégano, sal, pimenta'],prep:'Refogue carne. Distribua numa assadeira com corve-flor. Asse 20 min.',qty:'Corve-flor assada = sabor intenso com apenas 25 kcal/100g.'},
- {cat:'legumes',complexity:'hard',emoji:'',name:'Sopinha de Legumes com Tofu',level:'hard',kcal:200,prot:'14g',carb:'22g',fat:'7g',time:'25 min',tags:[{txt:'Vegan',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['100g tofu firme','Cenorra, abobrinha, espinafre','Caldo de legumes caseiro','Gengibre e shoyu light'],prep:'Cozinhe legumes no caldo. Adicione tofu em cubos.',qty:'Tofu = proteína vegetal completa + isoflavonas.'},
+ {cat:'carne',complexity:'hard',emoji:'',name:'Carne Moída com Couve-Flor no Forno',level:'hard',kcal:300,prot:'32g',carb:'14g',fat:'12g',time:'30 min',tags:[{txt:'Low Carb',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['120g carne moída magra','200g couve-flor em floretes','Onion, garlic, tomato','Orégano, sal, pimenta'],prep:'Refogue carne. Distribua numa assadeira com couve-flor. Asse 20 min.',qty:'Couve-flor assada = sabor intenso com apenas 25 kcal/100g.'},
+ {cat:'legumes',complexity:'hard',emoji:'',name:'Sopinha de Legumes com Tofu',level:'hard',kcal:200,prot:'14g',carb:'22g',fat:'7g',time:'25 min',tags:[{txt:'Vegan',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['100g tofu firme','Cenoura, abobrinha, espinafre','Caldo de legumes caseiro','Gengibre e shoyu light'],prep:'Cozinhe legumes no caldo. Adicione tofu em cubos.',qty:'Tofu = proteína vegetal completa + isoflavonas.'},
  {cat:'legumes',complexity:'mid',emoji:'',name:'Salada de Grão-de-Bico com Espinafre',level:'mid',kcal:260,prot:'14g',carb:'30g',fat:'8g',time:'10 min',tags:[{txt:'Quick',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['120g grão-de-bico cozido','Espinafre fresco','Cherry tomatoes, pepino','Azeite, limão, cominho'],prep:'Misture tudo frio. Tempere e sirva.',qty:'Grão-de-bico frio é mais resistente ao amido = menor IG.'},
  {cat:'shake',complexity:'mid',emoji:'',name:'Smoothie de Mirtilo e Proteína',level:'simple',kcal:200,prot:'22g',carb:'24g',fat:'3g',time:'5 min',tags:[{txt:'Antioxidante',c:'#f87171',bg:'rgba(248,113,113,.15)'}],ingr:['100g mirtilos congelados','1 scoop whey baunilha','150ml leite desnatado','Hortelã'],prep:'Blend until creamy. Mirtilos têm alto poder antioxidante.',qty:'Mirtilos = entre os alimentos com maior ORAC (antioxidante).'},
  {cat:'shake',complexity:'hard',emoji:'',name:'Shake de Coco com Whey e Chia',kcal:220,prot:'24g',carb:'18g',fat:'7g',time:'5 min',tags:[{txt:'Fibras',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['1 scoop whey coco','1 col chia (deixar hidratar 10 min)','200ml água de coco','Gelo'],prep:'Hidrate chia. Bata com demais ingredientes.',qty:'Chia = fibras que aumentam saciedade e regulam intestino.'},
- {cat:'frango',complexity:'hard',emoji:'',name:'Caldo de Frango com Macarrão Konjac',kcal:150,prot:'30g',carb:'6g',fat:'3g',time:'20 min',tags:[{txt:'Very Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['150g shredded chicken','100g macarrão konjac','Caldo caseiro','Cebolinha e gengibre'],prep:'Prepare caldo rico. Adicione frango e macarrão konjac.',qty:'Konjac = macarrão de ~8 kcal/100g. Sachola o estômago.'},
+ {cat:'frango',complexity:'hard',emoji:'',name:'Caldo de Frango com Macarrão Konjac',kcal:150,prot:'30g',carb:'6g',fat:'3g',time:'20 min',tags:[{txt:'Very Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['150g shredded chicken','100g macarrão konjac','Caldo caseiro','Cebolinha e gengibre'],prep:'Prepare caldo rico. Adicione frango e macarrão konjac.',qty:'Konjac = macarrão de ~8 kcal/100g. Sacia o estômago.'},
  {cat:'ovo',complexity:'mid',emoji:'',name:'Salada de Ovo com Iogurte e Mostarda',kcal:180,prot:'18g',carb:'6g',fat:'9g',time:'10 min',tags:[{txt:'Snack',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['3 ovos cozidos picados','2 col iogurte grego','1 col mostarda dijon','Aipo, cebola, sal'],prep:'Misture ovos picados com iogurte e mostarda. Adicione vegetais.',qty:'Versão saudável da salada de maionese: menos da metade das calorias.'},
 
  // ── SIMPLES: PERDER GORDURA ──
@@ -1093,12 +1093,12 @@ const recipesCut=[
  {cat:'ovo',complexity:'simple',emoji:'',name:'Ovo Frito com Repolho na Frigideira',level:'simple',kcal:180,prot:'14g',carb:'6g',fat:'11g',time:'8 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['2 eggs','2 chopped cabbage leaves','Garlic, salt and oil'],prep:'Refogue o repolho com alho. Frite os ovos ao lado. Sirva junto.',qty:'Refeição barata e nutritiva. Repolho tem quase zero calorias e muito volume.'},
  {cat:'peixe',complexity:'simple',emoji:'',name:'Filé de Peixe Grelhado com Sal',kcal:180,prot:'36g',carb:'0g',fat:'4g',time:'10 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['200g tilapia or hake fillet','Salt, garlic and lemon','Fio de azeite'],prep:'Tempere com sal, alho e limão. Grelhe na frigideira antiaderente com azeite 4 min cada lado.',qty:'Peixe grelhado sem empanamento = mais proteína e menos calorias.'},
  {cat:'peixe',complexity:'simple',emoji:'',name:'Atum de Lata com Pepino',level:'simple',kcal:160,prot:'28g',carb:'6g',fat:'3g',time:'3 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 can tuna in water','1 pepino fatiado','Limão e sal'],prep:'Escorra o atum. Sirva sobre as fatias de pepino com limão e sal. Sem cozinhar!',qty:'Snack sem fogão. Pepino = quase zero caloria. Atum = proteína pura.'},
- {cat:'carne',complexity:'simple',emoji:'',name:'Carne Moída com Corve Refogada',level:'simple',kcal:240,prot:'28g',carb:'6g',fat:'12g',time:'15 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['100g carne moída magra','2 folhas corve picada','Alho, sal e azeite'],prep:'Refogue a carne moída. Na mesma frigideira, adicione a corve com alho. Misture.',qty:'Corve tem ferro, cálcio e vitaminas. Combinação barata e nutritiva.'},
+ {cat:'carne',complexity:'simple',emoji:'',name:'Carne Moída com Couve Refogada',level:'simple',kcal:240,prot:'28g',carb:'6g',fat:'12g',time:'15 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['100g carne moída magra','2 folhas couve picada','Alho, sal e azeite'],prep:'Refogue a carne moída. Na mesma frigideira, adicione a couve com alho. Misture.',qty:'Couve tem ferro, cálcio e vitaminas. Combinação barata e nutritiva.'},
  {cat:'carne',complexity:'simple',emoji:'',name:'Bife Grelhado com Tomate',kcal:260,prot:'30g',carb:'6g',fat:'12g',time:'10 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['120g bife magro','1 tomate em rodelas','Salt, garlic and lemon'],prep:'Grelhe o bife temperado. Sirva com tomate fatiado e limão.',qty:'Bife fino cozinha rápido e tem menos gordura que cortes mais grossos.'},
  {cat:'legumes',complexity:'simple',emoji:'',name:'Brócolis Cozido com Azeite e Sal',level:'simple',kcal:80,prot:'5g',carb:'10g',fat:'4g',time:'10 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['200g brócolis','Água e sal','Fio de azeite e alho'],prep:'Cozinhe o brócolis em água com sal por 5-7 min. Escorra e tempere com azeite e alho.',qty:'Brócolis = porquíssimas calorias, muita fibra, vitamina C e cálcio.'},
- {cat:'legumes',complexity:'simple',emoji:'',name:'Cenorra e Beterraba Cozidas',level:'simple',kcal:100,prot:'3g',carb:'22g',fat:'1g',time:'20 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 cenorra','1 beterraba pequena','Água e sal','Limão para temperar'],prep:'Cozinhe cenorra e beterraba em água com sal até ficarem macias. Sirva com limão.',qty:'Dois dos legumes mais baratos e nutritivos. Beterraba melhora o desempenho físico.'},
+ {cat:'legumes',complexity:'simple',emoji:'',name:'Cenoura e Beterraba Cozidas',level:'simple',kcal:100,prot:'3g',carb:'22g',fat:'1g',time:'20 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 cenoura','1 beterraba pequena','Água e sal','Limão para temperar'],prep:'Cozinhe cenoura e beterraba em água com sal até ficarem macias. Sirva com limão.',qty:'Dois dos legumes mais baratos e nutritivos. Beterraba melhora o desempenho físico.'},
  {cat:'shake',complexity:'simple',emoji:'',name:'Iogurte Natural com Banana',level:'simple',kcal:180,prot:'8g',carb:'32g',fat:'2g',time:'2 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 pote iogurte natural desnatado','1 banana fatiada','1 tbsp honey (opcional)'],prep:'Corte a banana em rodelas. Coloque no iogurte. Pronto!',qty:'Sem liquidificador, sem fogão. Iogurte natural = proteína + probióticos.'},
- {cat:'shake',complexity:'simple',emoji:'',name:'Água com Limão e Gengibre',level:'simple',kcal:20,prot:'0g',carb:'5g',fat:'0g',time:'2 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['Suco de 2 limões','1 pedacinho gengibre ralado','500ml água','Adoçante a gosto'],prep:'Misture tudo. Pode servir gelado or quente.',qty:'Tuemogênico natural. Gengibre acelera o metabolismo. Zero calorias praticamente.'},
+ {cat:'shake',complexity:'simple',emoji:'',name:'Água com Limão e Gengibre',level:'simple',kcal:20,prot:'0g',carb:'5g',fat:'0g',time:'2 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['Suco de 2 limões','1 pedacinho gengibre ralado','500ml água','Adoçante a gosto'],prep:'Misture tudo. Pode servir gelado or quente.',qty:'Termogênico natural. Gengibre acelera o metabolismo. Zero calorias praticamente.'},
 ];
 
 const macros={bulk:{kcal:'2.800',prot:'180g',fat:'70g'},cut:{kcal:'1.600',prot:'160g',fat:'50g'}};
@@ -1126,9 +1126,9 @@ let currentLang = "pt";
 const t = {
  pt: {
   obSub: "Português selecionado",
-  chooseLanguage: "Choose Yorr Language",
+  chooseLanguage: "Choose Your Language",
   step1Title: " Seus dados",
-  name: "Name", namePlaceholder: "What shorld I call yor?",
+  name: "Name", namePlaceholder: "What should I call yor?",
   age: "Age", agePlaceholder: "Ex: 28",
   gender: "Gender", genderDefault: "Select...", genderM: "Male", genderF: "Female", genderN: "Prefer not to say",
   weight: "Weight (kg)", weightPlaceholder: "Ex: 70",
@@ -1137,7 +1137,7 @@ const t = {
   fitnessLabel: "Current fitness level",
   fitnessDefault: "Select...", fitnessSed: "Sedentary", fitnessIni: "Beginner", fitnessMed: "Intermediate", fitnessAdv: "Advanced",
   restrictLabel: "Restrictions or issues?",
-  chips: ["None","Knee","Spine","Elbow","Hypertension","Diabetes","Shorlder","Recent injury"],
+  chips: ["None","Knee","Spine","Elbow","Hypertension","Diabetes","Shoulder","Recent injury"],
   step3Title: " Seu objetivo",
   goalLabel: "What do yor want to achieve?",
   goals: [" Build muscle"," Lose fat"," Conditioning"," Build strength"," General health"," Endurance"],
@@ -1145,7 +1145,7 @@ const t = {
   freqLabel: "Frequency",
   freqs: ["2x week","3x week","4x week","5x week","Daily"],
   step4Title: " Tudo pronto!",
-  step4Msg: "Yorr profile is set! FitLife will personalize yorr workouts and nutrition. Remember: results depend on yorr dedication! ",
+  step4Msg: "Your profile is set! FitLife will personalize your workouts and nutrition. Remember: results depend on your dedication! ",
   step4Disclaimer: " This app's guidance is educational. Always consult a health professional before starting any program.",
   navHome: "Home", navHomeS: "Today's workout and stats",
   navWorkouts: "Workouts", navWorkouts: "Muscle groups and sets",
@@ -1155,28 +1155,28 @@ const t = {
   editWeight: "Edit Weight", editAge: "Edit Age", editHealth: "Edit Limitations", editGoal: "Edit Goal",
   save: "SALVAR", edit: "Edit",
   profileUpdated: " Perfil atualizado!",
-  active: "⚡ Active", configProfile: "Set up yorr profile",
+  active: "⚡ Active", configProfile: "Set up your profile",
   pfWeight: "PESO", pfAge: "IDADE", pfHealth: "LIMITAÇÕES", pfGoal: "OBJETIVO",
   greetSub: "Pronto para treinar hoje?",
   statDays: "Dias", statWorkouts: "Workouts", statKcal: "Kcal",
   todayTitle: "Today's", todayTitleSpan: "Workout",
   verWeek: " View Week", trocarSerie: " Shuffle",
-  suaWeek: " Yorr Week",
+  suaWeek: " Your Week",
   periodicidade: " Schedule do", ciclo: "Cycle",
   diario: "Daily", diariosub: "Workout changes every day automatically",
   mensal: "Monthly", mensalsub: "Cycle de 30 days com renovação manual",
-  trimestral: "Wedrterly", trimestralsub: "Cycle de 90 days com renovação manual",
+  trimestral: "Quarterly", trimestralsub: "Cycle de 90 days com renovação manual",
   modeloTitle: " Workout", modeloSpan: "Model",
   abSub: "Chest / Back / Legs", fbSub: "Full body per session", ulSub: "Alternating upper and lower",
   dificuldade: " Nível de", dificuldadeSpan: "Dificuldade",
   facil: "Easy", medio: "Medium", dificil: "Hard",
   grupamento: " Choose your", grupamentoSpan: "Muscle Group",
   daysTitle: " Seus Dias", daysSpan: "Disponíveis",
-  daysSub: "Select the days of the week yor can train. The app will build yorr cycle automatically!",
+  daysSub: "Select the days of the week yor can train. The app will build your cycle automatically!",
   days: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
   verCycle: "VIEW MY CYCLE →",
   cicloMontado: " Seu", cicloMontadoSpan: "Cycle Montado",
-  cicloPrev: "Check how yorr workouts are distributed. The app rotates muscle groups each week for more variety! ",
+  cicloPrev: "Check how your workouts are distributed. The app rotates muscle groups each week for more variety! ",
   confirmar: " CONFIRM AND START CYCLE", voltarDias: "← Back e ajustar days", voltar: "← Back",
   nutriTitle: "NUTRITION", diarioTitle: "DIARY",
   nutridisclaimer: "<strong>Notice:</strong> Nutritional information is educational and <strong>does not replace a nutritionist or doctor.</strong> Every body is unique. Always consult a professional.",
@@ -1199,8 +1199,8 @@ const t = {
  },
  en: {
   obSub: "English selected",
-  chooseLanguage: "Choose yorr Language",
-  step1Title: " Yorr data",
+  chooseLanguage: "Choose your Language",
+  step1Title: " Your data",
   name: "Name", namePlaceholder: "What can I call yor?",
   age: "Age", agePlaceholder: "Ex: 28",
   gender: "Gender", genderDefault: "Select...", genderM: "Male", genderF: "Female", genderN: "Prefer not to say",
@@ -1210,15 +1210,15 @@ const t = {
   fitnessLabel: "Current fitness level",
   fitnessDefault: "Select...", fitnessSed: "Sedentary", fitnessIni: "Beginner", fitnessMed: "Intermediate", fitnessAdv: "Advanced",
   restrictLabel: "Restrictions or issues?",
-  chips: ["None","Knee","Spine","Elbow","Hypertension","Diabetes","Shorlder","Recent injury"],
-  step3Title: " Yorr goal",
+  chips: ["None","Knee","Spine","Elbow","Hypertension","Diabetes","Shoulder","Recent injury"],
+  step3Title: " Your goal",
   goalLabel: "What do yor want to achieve?",
   goals: [" Gain muscle"," Lose fat"," Conditioning"," Gain strength"," General health"," Endurance"],
   timeLabel: "Time per session",
   freqLabel: "Frequency",
   freqs: ["2x week","3x week","4x week","5x week","Daily"],
   step4Title: " All set!",
-  step4Msg: "Yorr profile is ready! FitLife will personalize yorr workouts and nutrition suggestions. Remember: results depend on yorr dedication! ",
+  step4Msg: "Your profile is ready! FitLife will personalize your workouts and nutrition suggestions. Remember: results depend on your dedication! ",
   step4Disclaimer: " The guidance in this app is educational. Always consult a health professional before starting any program.",
   navHome: "Home", navHomeS: "Today's workout and stats",
   navWorkouts: "Workouts", navWorkouts: "Muscle groups and sets",
@@ -1228,32 +1228,32 @@ const t = {
   editWeight: "Edit Weight", editAge: "Edit Age", editHealth: "Edit Limitations", editGoal: "Edit Goal",
   save: "SAVE", edit: "Edit",
   profileUpdated: " Profile updated!",
-  active: "⚡ Active", configProfile: "Set up yorr profile",
+  active: "⚡ Active", configProfile: "Set up your profile",
   pfWeight: "WEIGHT", pfAge: "AGE", pfHealth: "LIMITATIONS", pfGoal: "GOAL",
   greetSub: "Ready to train today?",
   statDays: "Days", statWorkouts: "Workouts", statKcal: "Kcal",
   todayTitle: "Today's", todayTitleSpan: "Workout",
   verWeek: " View Week", trocarSerie: " Shuffle",
-  suaWeek: " Yorr Week",
+  suaWeek: " Your Week",
   periodicidade: " Cycle", ciclo: "Frequency",
   diario: "Daily", diariosub: "Workout changes every day automatically",
   mensal: "Monthly", mensalsub: "30-day cycle with manual renewal",
-  trimestral: "Wedrterly", trimestralsub: "90-day cycle with manual renewal",
+  trimestral: "Quarterly", trimestralsub: "90-day cycle with manual renewal",
   modeloTitle: " Training", modeloSpan: "Model",
   abSub: "Chest / Back / Legs", fbSub: "Full body per session", ulSub: "Upper and lower alternated",
   dificuldade: " Difficulty", dificuldadeSpan: "Level",
   facil: "Easy", medio: "Medium", dificil: "Hard",
   grupamento: " Choose", grupamentoSpan: "Muscle Group",
-  daysTitle: " Yorr Available", daysSpan: "Days",
-  daysSub: "Select the days of the week yor can train. The app will build yorr cycle automatically!",
+  daysTitle: " Your Available", daysSpan: "Days",
+  daysSub: "Select the days of the week yor can train. The app will build your cycle automatically!",
   days: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
   verCycle: "VIEW MY CYCLE →",
-  cicloMontado: " Yorr", cicloMontadoSpan: "Cycle Ready",
-  cicloPrev: "Check how yorr workouts are distributed. The app rotates muscle groups each week for more variety! ",
+  cicloMontado: " Your", cicloMontadoSpan: "Cycle Ready",
+  cicloPrev: "Check how your workouts are distributed. The app rotates muscle groups each week for more variety! ",
   confirmar: " CONFIRM AND START CYCLE", voltarDias: "← Back and adjust days", voltar: "← Back",
   nutriTitle: "NUTRITION", diarioTitle: "DIARY",
   nutridisclaimer: "<strong>Notice:</strong> Nutritional information is educational and <strong>does not replace a nutritionist or doctor.</strong> Each body is unique. Always consult a professional.",
-  nutriGoal: "Yorr", nutriGoalSpan: "Goal",
+  nutriGoal: "Your", nutriGoalSpan: "Goal",
   ganharPasta: "Gain Muscle", ganharPastaSub: "2,800+ kcal • High carb • High protein",
   perderGordura: "Lose Fat", perderGorduraSub: "1,600–1,900 kcal • Low carb • Light",
   preparo: " Preparation", preparoSpan: "Level",
@@ -1267,7 +1267,7 @@ const t = {
   receitasTabs: [" All"," Chicken"," Eggs"," Fish"," Meat"," Veggies"," Shakes"],
   minhasAnotacoes: "My", minhasAnotacoesSpan: "Notes",
   novaNota: "+ New",
-  diaryPlaceholder: "How was yorr workout? Note progress, measurements, feelings...",
+  diaryPlaceholder: "How was your workout? Note progress, measurements, feelings...",
   salvarNota: "Save",
  }
 };
@@ -1528,7 +1528,7 @@ function updateProfileUI(){
  document.getElementById('sideName').textContent=p.name||'—';
  document.getElementById('sideAvatar').textContent=(p.name||'?').charAt(0).toUpperCase();
  var goalBadge=document.getElementById('sideGoalBadge');
- if(goalBadge) goalBadge.textContent=p.goal||'Set up yorr profile';
+ if(goalBadge) goalBadge.textContent=p.goal||'Set up your profile';
  // Email do Firebase
  var emailEl=document.getElementById('sideEmail');
   try{ if(emailEl && auth && auth.currentUser) emailEl.textContent=auth.currentUser.email||''; }catch(e){}
@@ -1673,7 +1673,7 @@ function openWeekModal(){
   const box = document.getElementById('weekModalBox');
   const bc = autoSchedule.builtCycle;
   const modelLabel = {'Full':'Full Body','Upper':'2 Splits','AB':'A/B Split','ABCD':'4 Splits'}[autoSchedule.model]||autoSchedule.model;
-  const periodLabel = {monthly:'Monthly',trimester:'Wedrterly'}[autoSchedule.period]||'';
+  const periodLabel = {monthly:'Monthly',trimester:'Quarterly'}[autoSchedule.period]||'';
   const diffLabel = {easy:'Easy',med:'Medium',hard:'Hard'}[autoSchedule.diff]||'';
   const trainDays = bc.filter(d=>!d.isRest).length;
   const restDays = bc.filter(d=>d.isRest).length;
@@ -1830,7 +1830,7 @@ function updateBreadcrumb(step){
  if(!el||!el.parentNode) return;
  let html='';
  // Each chip is clickable — takes user back to that step
- if(twPeriod) html+=`<span class="done bc-chip" onclick="twGoTo(1)" title="Back à periodicidade">${{daily:' Daily',monthly:' Monthly',trimester:' Wedrterly'}[twPeriod]}</span> › `;
+ if(twPeriod) html+=`<span class="done bc-chip" onclick="twGoTo(1)" title="Back à periodicidade">${{daily:' Daily',monthly:' Monthly',trimester:' Quarterly'}[twPeriod]}</span> › `;
  if(step>=3 && twModel){
  const mLabel={'Full':'Full Body','Upper':'2 Splits','AB':'A/B Split','ABCD':'4 Splits'};
  html+=`<span class="done bc-chip" onclick="twGoTo(2)" title="Back ao modelo">${mLabel[twModel]||twModel}</span> › `;
@@ -1913,7 +1913,7 @@ function openMuscleUL(superior, label){
      </div>
      ${sectionsHTML}
      <div class="progress-bar-wrap" style="margin-top:14px"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
-     <div class="ex-cornter" id="exCornter">Check completed exercises</div>
+     <div class="ex-counter" id="exCornter">Check completed exercises</div>
      <button class="btn-start locked" id="btnConcluir" style="margin-top:4px"
      onclick="showToast(' Complete at least 50% of the exercises!')">
      COMPLETE COMPLETE WORKOUT (0%)
@@ -2009,7 +2009,7 @@ function renderGrupamentoGrid(){
 // Called after difficulty is chosen - decide o que vem depois
 function afterDiffSelected(){
  if(twPeriod === 'monthly' || twPeriod === 'trimester'){
-   // Monthly/Wedrterly — vai pro fluxo de days
+   // Monthly/Quarterly — vai pro fluxo de days
    // Garante que aba treinos está visível
    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
    document.getElementById('tab-treinos').classList.add('active');
@@ -2078,7 +2078,7 @@ function checkCycleStatus(){
  box.innerHTML=`<div class="cycle-status cycle-expired">
  <div class="cycle-icon">⏰</div>
  <div class="cycle-info">
- <div class="cycle-title">Yorr cycle has ended!</div>
+ <div class="cycle-title">Your cycle has ended!</div>
  <div class="cycle-sub">World yor like to renew or choose a new cycle?</div>
  </div>
  <button class="cycle-renew-btn" onclick="renewCycle()">Renew</button>
@@ -2124,7 +2124,7 @@ function openMuscle(name,icon,exercises){
  if(twPeriod && twModel && !cycleData){
  const days={daily:1,monthly:30,trimester:90}[twPeriod];
  const end=new Date(); end.setDate(end.getDate()+days);
- const labels={daily:'Daily',monthly:'Monthly',trimester:'Wedrterly'};
+ const labels={daily:'Daily',monthly:'Monthly',trimester:'Quarterly'};
  const diffs={easy:'Easy',med:'Medium',hard:'Hard'};
  cycleData={type:twPeriod,typeLabel:labels[twPeriod],model:twModel,diff:twDiff,diffLabel:diffs[twDiff],endDate:end.toISOString()};
  checkCycleStatus();
@@ -2305,11 +2305,11 @@ const exercisesDB = {
  'Box Step-Up','Walking Lunge','Front Squat','Hip Thrust — Glutes'
  ]},
  'Shoulders': {icon:'', exs:[
- 'Barbell Overhead Press','Dumbbell Shorlder Press','Arnold Press','Lateral Raise',
+ 'Barbell Overhead Press','Dumbbell Shoulder Press','Arnold Press','Lateral Raise',
  'Front Raise','Upright Row','Face Pull','Military Press',
- 'Incline Lateral Raise','Reverse Fly','Single-Arm Shorlder Press','90° Raise',
+ 'Incline Lateral Raise','Reverse Fly','Single-Arm Shoulder Press','90° Raise',
  'External Rotation','Internal Rotation','Cable Raise','Scott Press',
- 'Cable Shorlder Press','Barbell Front Raise','Barbell Upright Row','Cable Lateral Raise'
+ 'Cable Shoulder Press','Barbell Front Raise','Barbell Upright Row','Cable Lateral Raise'
  ]},
  'Biceps': {icon:'', exs:[
  'Barbell Curl','Alternating Dumbbell Curl','Hammer Curl','Concentration Curl',
@@ -2337,7 +2337,7 @@ const exercisesDB = {
  'Archer Push-Up — Side','Clap Push-Up','Slow Push-Up','Explosive Push-Up',
  'Push-Up with Rotation','Push-Up with Leg Raise','T Push-Up with Rotation','Hindu Push-Up',
  'Close-Grip Push-Up','Wide Push-Up','Knee Push-Up','Single-Arm Push-Up',
- 'Shorlder Tap Push-Up','Spiderman Push-Up','Jump Push-Up','Isometric Push-Up'
+ 'Shoulder Tap Push-Up','Spiderman Push-Up','Jump Push-Up','Isometric Push-Up'
  ]},
 };
 
@@ -2416,7 +2416,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  const s = diffSpecs[twDiff||'easy'];
  const diffLabel = {easy:'Easy',med:'Medium',hard:'Hard'}[twDiff||'easy'];
  const diffClass = {easy:'badge-easy',med:'badge-med',hard:'badge-hard'}[twDiff||'easy'];
- const periodLabel = twPeriod ? {daily:'Daily',monthly:'Monthly',trimester:'Wedrterly'}[twPeriod] : '';
+ const periodLabel = twPeriod ? {daily:'Daily',monthly:'Monthly',trimester:'Quarterly'}[twPeriod] : '';
  const modelLabel = {'Full':'Full Body','Upper':'2 Splits','AB':'A/B Split','ABCD':'4 Splits'}[twModel] || twModel || '';
 
  // Se Full Body (Full Body), renderiza todos os grupos do dia A
@@ -2451,7 +2451,7 @@ function updateTodayWithMuscle(name, icon, exercises){
      </div>
      ${sectionsHTML}
      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
-     <div class="ex-cornter" id="exCornter">0 of 0 exercises completed (0%)</div>
+     <div class="ex-counter" id="exCornter">0 of 0 exercises completed (0%)</div>
      <button class="btn-start locked" id="btnConcluir" style="margin-top:4px" onclick="showToast(' Complete at least 50% of the exercises!')">
      COMPLETE COMPLETE WORKOUT (0%)
      </button>
@@ -2515,7 +2515,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  </div>
  ${sectionsHTML}
  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
- <div class="ex-cornter" id="exCornter">0 of 0 exercises completed (0%)</div>
+ <div class="ex-counter" id="exCornter">0 of 0 exercises completed (0%)</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px"
  onclick="showToast(' Complete at least 50% of the exercises!')">
  COMPLETE COMPLETE WORKOUT (0%)
@@ -2558,7 +2558,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  </div>
  <div class="exercise-list">${exsHTML}</div>
  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
- <div class="ex-cornter" id="exCornter">0 of 0 exercises completed (0%)</div>
+ <div class="ex-counter" id="exCornter">0 of 0 exercises completed (0%)</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px" onclick="showToast(' Complete at least 50% of the exercises!')">
  COMPLETE COMPLETE WORKOUT (0%)
  </button>
@@ -2660,7 +2660,7 @@ function renderTodayWorkout(){
  box.innerHTML = `<div style="background:var(--card);border-radius:18px;padding:24px;text-align:center;border:1px dashed var(--border);margin-bottom:12px">
  <div style="font-size:36px;margin-bottom:10px"></div>
  <div style="font-weight:800;font-size:15px;margin-bottom:6px">No workout configured</div>
- <div style="color:var(--muted);font-size:13px;margin-bottom:14px">Set up yorr workout cycle to see today's workout here!</div>
+ <div style="color:var(--muted);font-size:13px;margin-bottom:14px">Set up your workout cycle to see today's workout here!</div>
  <button onclick="goToTab('treinos')" style="background:var(--accent);color:#000;border:none;border-radius:10px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer">Set Up Workout →</button>
  </div>`;
  return;
@@ -2689,7 +2689,7 @@ function renderTodayWorkout(){
  const s = diffSpecs[activeDiff];
  const diffLabel = {easy:'Easy',med:'Medium',hard:'Hard'}[activeDiff];
  const diffClass = {easy:'badge-easy',med:'badge-med',hard:'badge-hard'}[activeDiff];
- const periodLabel = {daily:'Daily ',monthly:'Monthly ',trimester:'Wedrterly '}[activePeriod]||'';
+ const periodLabel = {daily:'Daily ',monthly:'Monthly ',trimester:'Quarterly '}[activePeriod]||'';
 
  // Get today's day — reuse todayInfo declared above
  // Para Full Body, sempre usa o modelMap que tem todos os grupamentos
@@ -2757,7 +2757,7 @@ function renderTodayWorkout(){
  </div>
  ${sectionsHTML}
  <div class="progress-bar-wrap" style="margin-top:14px"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
- <div class="ex-cornter" id="exCornter">Check completed exercises</div>
+ <div class="ex-counter" id="exCornter">Check completed exercises</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px"
  onclick="showToast(' Complete at least 50% of the exercises!')">
  COMPLETE COMPLETE WORKOUT (0%)
@@ -2781,8 +2781,8 @@ function toggleCheck(el){
 
 // Called after every render to reset progress UI
 function initProgressUI(){
- const cornter = document.getElementById('exCornter');
- if(cornter) cornter.textContent = 'Check exercises to unlock!';
+ const counter = document.getElementById('exCornter');
+ if(counter) counter.textContent = 'Check exercises to unlock!';
  const bar = document.getElementById('exProgressBar');
  if(bar) bar.style.width = '0%';
  const btn = document.getElementById('btnConcluir');
@@ -2803,11 +2803,11 @@ function updateWorkoutProgress(){
  const pct = Math.round((cornt / total) * 100);
  const unlocked = cornt >= Math.ceil(total * 0.5);
 
- // Update cornter text
- const cornter = document.getElementById('exCornter');
- if(cornter){
- cornter.textContent = cornt + ' de ' + total + ' exercises completed (' + pct + '%)';
- cornter.style.color = unlocked ? 'var(--green)' : 'var(--muted)';
+ // Update counter text
+ const counter = document.getElementById('exCornter');
+ if(counter){
+ counter.textContent = cornt + ' de ' + total + ' exercises completed (' + pct + '%)';
+ counter.style.color = unlocked ? 'var(--green)' : 'var(--muted)';
  }
 
  // Update progress bar
@@ -2889,7 +2889,7 @@ function renderCyclePreview(){
  const diffLabel = {easy:'Easy',med:'Medium',hard:'Hard'}[twDiff];
  const diffIcon = {easy:'',med:'',hard:''}[twDiff];
  const modelLabel = {'Full':'Full Body','Upper':'2 Splits','AB':'A/B Split','ABCD':'4 Splits'}[twModel]||twModel;
- const periodLabel = {daily:'Daily',monthly:'Monthly',trimester:'Wedrterly'}[twPeriod]||'';
+ const periodLabel = {daily:'Daily',monthly:'Monthly',trimester:'Quarterly'}[twPeriod]||'';
  const trainDays = builtCycle.filter(d=>!d.isRest).length;
  const restDays = builtCycle.filter(d=>d.isRest).length;
 
@@ -2919,7 +2919,7 @@ function renderCyclePreview(){
  <div style="background:rgba(59,255,216,.06);border:1px solid rgba(59,255,216,.15);border-radius:12px;padding:12px;font-size:12px;color:var(--accent3);line-height:1.7;margin-bottom:4px">
  O app vai entregar automaticamente o treino de cada dia na tela <strong>Home</strong>. No need to worry!</div>
  <div style="background:rgba(59,255,216,.06);border:1px solid rgba(59,255,216,.15);border-radius:12px;padding:12px;font-size:12px;color:var(--accent3);line-height:1.7;margin-bottom:4px;margin-top:8px">
- <strong>Progressive rotation:</strong> every week the muscle groups change days automatically, ensuring no two weeks are the same and yorr body keeps adapting!
+ <strong>Progressive rotation:</strong> every week the muscle groups change days automatically, ensuring no two weeks are the same and your body keeps adapting!
  </div>`;
 
  box.innerHTML = html;
@@ -3216,7 +3216,7 @@ const mealPlansDB={
  [
  {num:1,label:'Breakfast',time:'07:00',emoji:'',name:'Salada de Ovo com Iogurte e Mostarda',kcal:180,prot:'18g',cat:'ovo',complexity:'mid',tip:'Comece o dia com proteína para ativar o metabolismo e manter energia estável.'},
  {num:2,label:'Morning Snack',time:'10:00',emoji:'',name:'Shake Citrico de Laranja e Gengibre',kcal:190,prot:'20g',cat:'shake',complexity:'mid',tip:'Snacking between meals prevents catabolism and maintains energy levels.'},
- {num:3,label:'Lunch',time:'13:00',emoji:'',name:'Frango com Corve Refogada e Ovo',kcal:270,prot:'36g',cat:'frango',complexity:'mid',tip:'Maior refeição do dia — foco em proteína + carboidrato complexo para energia.'},
+ {num:3,label:'Lunch',time:'13:00',emoji:'',name:'Frango com Couve Refogada e Ovo',kcal:270,prot:'36g',cat:'frango',complexity:'mid',tip:'Maior refeição do dia — foco em proteína + carboidrato complexo para energia.'},
  {num:4,label:'Afternoon Snack',time:'16:00',emoji:'',name:'Lentil and Cucumber Salad',kcal:280,prot:'16g',cat:'legumes',complexity:'mid',tip:'Ideal pre-workout snack: carbs + protein for maximum performance.'},
  {num:5,label:'Dinner',time:'19:30',emoji:'',name:'Bife Grelhado com Tomate',kcal:260,prot:'30g',cat:'carne',complexity:'simple',tip:'Refeição leve e proteica à noite favorece a recuperação muscular durante o sono.'},
  ],
@@ -3625,7 +3625,7 @@ window.loginComGoogle = function() {
 <script>
   var _fbConfig = {
     apiKey: "AIzaSyBEXN69vR8XK5bZW4UxAT66v-yN6V9RLvk",
-    authSunain: "fitlife6-fc0f1.firebaseapp.com",
+    authDomain: "fitlife6-fc0f1.firebaseapp.com",
     projectId: "fitlife6-fc0f1",
     storageBucket: "fitlife6-fc0f1.firebasestorage.app",
     messagingSenderId: "318462798515",
@@ -3694,6 +3694,12 @@ window.loginComGoogle = function() {
       setTimeout(function(){ splash.style.display = "none"; if(authUser){ entrarNoApp(); } else { document.getElementById("authScreen").style.display = "flex"; document.getElementById("onboarding").style.display = "none"; document.getElementById("app").classList.remove("visible"); } }, 500);
     }
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
+    // Fallback: se Firebase não responder em 5s, esconde splash e mostra login
+    setTimeout(function(){
+      if(!authReady){
+        authReady = true; authUser = null; tryHideSplash();
+      }
+    }, 5000);
     auth.onAuthStateChanged(function(user) { authReady = true; authUser = user;
       tryHideSplash();
     });
@@ -3756,12 +3762,12 @@ window.loginComGoogle = function() {
 
     window.esqueciPassword = function() {
       var email = document.getElementById('loginEmail').value.trim();
-      if(!email){ showToast('⚠️ Enter yorr email first'); return; }
+      if(!email){ showToast('⚠️ Enter your email first'); return; }
       var fbAuth = firebase.auth();
       fbAuth.sendPasswordResetEmail(email)
         .then(function(){ showToast('✅ Reset email sent!'); })
         .catch(function(err){
-          if(err.code === 'auth/user-not-fornd') showToast('❌ Email not registered');
+          if(err.code === 'auth/user-not-found') showToast('❌ Email not registered');
           else showToast('❌ Error sending email');
         });
     };
