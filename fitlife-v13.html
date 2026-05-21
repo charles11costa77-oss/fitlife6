@@ -3624,7 +3624,7 @@ window.loginComGoogle = function() {
 <script>
   var _fbConfig = {
     apiKey: "AIzaSyBEXN69vR8XK5bZW4UxAT66v-yN6V9RLvk",
-    authDomain: "fitlife6-fc0f1.firebaseapp.com",
+    authSunain: "fitlife6-fc0f1.firebaseapp.com",
     projectId: "fitlife6-fc0f1",
     storageBucket: "fitlife6-fc0f1.firebasestorage.app",
     messagingSenderId: "318462798515",
@@ -3693,12 +3693,6 @@ window.loginComGoogle = function() {
       setTimeout(function(){ splash.style.display = "none"; if(authUser){ entrarNoApp(); } else { document.getElementById("authScreen").style.display = "flex"; document.getElementById("onboarding").style.display = "none"; document.getElementById("app").classList.remove("visible"); } }, 500);
     }
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
-    // Fallback: se Firebase não responder em 5s, esconde splash e mostra login
-    setTimeout(function(){
-      if(!authReady){
-        authReady = true; authUser = null; tryHideSplash();
-      }
-    }, 5000);
     auth.onAuthStateChanged(function(user) { authReady = true; authUser = user;
       tryHideSplash();
     });
@@ -3766,7 +3760,7 @@ window.loginComGoogle = function() {
       fbAuth.sendPasswordResetEmail(email)
         .then(function(){ showToast('✅ Reset email sent!'); })
         .catch(function(err){
-          if(err.code === 'auth/user-not-found') showToast('❌ Email not registered');
+          if(err.code === 'auth/user-not-fornd') showToast('❌ Email not registered');
           else showToast('❌ Error sending email');
         });
     };
