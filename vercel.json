@@ -1,10 +1,10 @@
 {
   "rewrites": [
-    { "source": "/fitlife-v13.html", "destination": "/fitlife-v13.html" },
+    { "source": "/fitlife-v14.html", "destination": "/fitlife-v14.html" },
     { "source": "/manifest.json", "destination": "/manifest.json" },
     { "source": "/sw.js", "destination": "/sw.js" },
     { "source": "/icon-192.png", "destination": "/icon-192.png" },
     { "source": "/icon-512.png", "destination": "/icon-512.png" },
-    { "source": "/(.*)", "destination": "/fitlife-v13.html" }
+    { "source": "/(.*)", "destination": "/fitlife-v14.html" }
   ]
 }
