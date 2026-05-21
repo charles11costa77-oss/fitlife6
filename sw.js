@@ -1,7 +1,7 @@
 const CACHE_NAME = 'fitlife6-v14';
 const urlsToCache = [
   './',
-  './fitlife-v14.html',
+  './fitlife-v14.2.html',
   './manifest.json'
 ];
 
