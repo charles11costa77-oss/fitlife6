@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fitlife6-v13';
+const CACHE_NAME = 'fitlife6-v14';
 const urlsToCache = [
   './',
   './fitlife-v14.html',
