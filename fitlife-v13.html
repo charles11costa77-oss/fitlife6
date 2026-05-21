@@ -959,7 +959,6 @@ input, textarea {
  <div class="nav-item" id="nav-treinos" onclick="goToTab('treinos')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14M18 5v14"/><rect x="3" y="8" width="3" height="8" rx="1"/><rect x="18" y="8" width="3" height="8" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/></svg></div><div class="nav-label">TREINOS</div></div>
  <div class="nav-item" id="nav-nutri" onclick="goToTab('nutri')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></div><div class="nav-label">NUTRITION</div></div>
  <div class="nav-item" id="nav-diario" onclick="goToTab('diario')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg></div><div class="nav-label">DIARY</div></div>
-</div><div class="nav-label">DIARY</div></div>
  </nav>
 </div>
 
@@ -3677,23 +3676,11 @@ window.loginComGoogle = function() {
         renderRecipes("todos");
         renderBuilder();
       } else {
-        // Primeira vez ou localStorage vazio (Vercel, cache limpo)
+        // Primeira vez — vai direto pro onboarding sem splash
         document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('app').classList.remove('visible');
-        document.getElementById('app').style.display = 'none';
-        document.getElementById('splash').style.display = 'none';
-        var onboarding = document.getElementById('onboarding');
+        const onboarding = document.getElementById('onboarding');
         onboarding.style.display = 'flex';
-        onboarding.style.position = 'fixed';
-        onboarding.style.inset = '0';
         onboarding.style.zIndex = '90';
-        onboarding.style.background = 'var(--bg)';
-        onboarding.style.flexDirection = 'column';
-        onboarding.style.alignItems = 'center';
-        onboarding.style.overflowY = 'auto';
-        onboarding.style.padding = '24px 20px 40px';
-        document.querySelectorAll('.ob-step').forEach(function(s){ s.classList.remove('active'); });
-        document.getElementById('step0').classList.add('active');
       }
     }
 
