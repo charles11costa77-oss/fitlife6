@@ -551,7 +551,7 @@ input, textarea {
  <!-- STEP 1: DADOS -->
  <div class="ob-step" id="step1" style="max-width:420px;width:100%">
  <h3> Your <span>Info</span></h3>
- <div class="field-group"><label>Name</label><input type="text" id="userName" placeholder="What should I call yor?"/></div>
+ <div class="field-group"><label>Name</label><input type="text" id="userName" placeholder="What should I call you?"/></div>
  <div class="field-group"><label>Age</label><input type="number" id="userAge" placeholder="Ex: 28" min="10" max="100"/></div>
  <div class="field-group"><label>Gender</label><select id="userGender"><option value="">Select...</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div>
  <div class="field-group"><label>Weight (kg)</label><input type="number" id="userWeight" placeholder="Ex: 70"/></div>
@@ -582,7 +582,7 @@ input, textarea {
  <!-- STEP 3: OBJETIVO -->
  <div class="ob-step" id="step3" style="max-width:420px;width:100%">
  <h3> Your <span>goal</span></h3>
- <div class="field-group"><label>What do yor want to achieve?</label>
+ <div class="field-group"><label>What do you want to achieve?</label>
  <div class="chip-grid" id="goalChips">
  <div class="chip" onclick="toggleGoal(this)"> Build muscle</div>
  <div class="chip" onclick="toggleGoal(this)"> Lose fat</div>
@@ -818,7 +818,7 @@ input, textarea {
  <div class="tw-step" id="tw-step5">
  <div class="step-breadcrumb" id="breadcrumb5"></div>
  <div class="section-title"> Seus Days <span>Disponíveis</span></div>
- <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Select the days of the week yor can train. The app will build your cycle automatically!</p>
+ <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Select the days of the week you can train. The app will build your cycle automatically!</p>
  <div class="days-grid" id="daysGrid">
  <div class="day-btn" onclick="toggleDay(this,'dom')"><div class="day-letter">D</div><div class="day-name">Sun</div></div>
  <div class="day-btn" onclick="toggleDay(this,'seg')"><div class="day-letter">S</div><div class="day-name">Mon</div></div>
@@ -1054,10 +1054,10 @@ const recipesBulk=[
 
 // ─── RECEITAS: PERDER GORDURA ────────────────────────
 const recipesCut=[
- {cat:'frango',complexity:'mid',emoji:'',name:'Salada de Frango com Thunoa',level:'mid',kcal:320,prot:'38g',carb:'22g',fat:'8g',time:'20 min',tags:[{txt:'Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['150g frango grelhado desfiado','60g quinoa cozida','Folhas verdes, tomate, pepino','Limão e azeite'],prep:'Grelhe frango e desfie. Cozinhe quinoa. Misture e tempere.',qty:'150g frango = ~33g proteína com porcas calorias.'},
+ {cat:'frango',complexity:'mid',emoji:'',name:'Salada de Frango com Quinoa',level:'mid',kcal:320,prot:'38g',carb:'22g',fat:'8g',time:'20 min',tags:[{txt:'Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['150g frango grelhado desfiado','60g quinoa cozida','Folhas verdes, tomate, pepino','Limão e azeite'],prep:'Grelhe frango e desfie. Cozinhe quinoa. Misture e tempere.',qty:'150g frango = ~33g proteína com poucas calorias.'},
  {cat:'frango',complexity:'mid',emoji:'',name:'Frango ao Limão com Aspargos',level:'mid',kcal:280,prot:'40g',carb:'8g',fat:'10g',time:'20 min',tags:[{txt:'High protein',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['180g peito frango','100g aspargos','Limão, alho, ervas, azeite'],prep:'Marine frango em limão 10 min. Grelhe com aspargos.',qty:'Prato completo abaixo de 300 kcal.'},
  {cat:'frango',complexity:'hard',emoji:'',name:'Wrap Low Carb de Frango com Rúcula',kcal:290,prot:'34g',carb:'18g',fat:'8g',time:'15 min',tags:[{txt:'Low Carb',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['150g shredded chicken','1 wrap de low carb','Rúcula, tomate, pepino','Mostarda e limão'],prep:'Monte o wrap com frango e legumes. Use mostarda como molho.',qty:'Mostarda = sabor com quase zero calorias.'},
- {cat:'frango',complexity:'hard',emoji:'',name:'Sopa de Frango com Legumes',kcal:240,prot:'32g',carb:'20g',fat:'6g',time:'30 min',tags:[{txt:'Saciante',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['150g shredded chicken','Cenoura, abobrinha, chuchu','Caldo caseiro sem gordura','Sal e ervas'],prep:'Cozinhe legumes no caldo. Adicione shredded chicken.',qty:'Sopas aumentam saciedade com porcas calorias.'},
+ {cat:'frango',complexity:'hard',emoji:'',name:'Sopa de Frango com Legumes',kcal:240,prot:'32g',carb:'20g',fat:'6g',time:'30 min',tags:[{txt:'Saciante',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['150g shredded chicken','Cenoura, abobrinha, chuchu','Caldo caseiro sem gordura','Sal e ervas'],prep:'Cozinhe legumes no caldo. Adicione shredded chicken.',qty:'Sopas aumentam saciedade com poucas calorias.'},
  {cat:'frango',complexity:'mid',emoji:'',name:'Frango Grelhado com Salada Caprese',kcal:310,prot:'38g',carb:'10g',fat:'12g',time:'20 min',tags:[{txt:'Mediterrâneo',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['180g peito frango','Tomate, mozarela light','Manjericão, azeite, sal'],prep:'Grelhe frango. Monte caprese ao lado.',qty:'Mozarela light = metade das calorias da versão comum.'},
  {cat:'ovo',complexity:'simple',emoji:'',name:'Omelete de Claras com Espinafre',level:'simple',kcal:150,prot:'22g',carb:'4g',fat:'5g',time:'10 min',tags:[{txt:'Very Low Cal',c:'#3bffd8',bg:'rgba(59,255,216,.12)'}],ingr:['4 claras de ovo','1 ovo inteiro','Espinafre, sal, pimenta'],prep:'Bata claras com ovo. Refogue espinafre. Dobre a omelete.',qty:'4 claras = ~0g gordura. Omelete completa abaixo de 150 kcal.'},
  {cat:'ovo',complexity:'hard',emoji:'',name:'Muffin de Ovo e Vegetais no Forno',kcal:180,prot:'18g',carb:'6g',fat:'8g',time:'20 min',tags:[{txt:'Meal prep',c:'#e8ff3b',bg:'rgba(232,255,59,.1)'}],ingr:['4 ovos','Pimentão, tomate, cebola picados','Sal, pimenta, ervas'],prep:'Bata ovos com vegetais. Distribua em forminhas. Asse 180°C por 15 min.',qty:'Prepare 6-12 unidades para a semana toda. ~30 kcal/unidade.'},
@@ -1127,7 +1127,7 @@ const t = {
   obSub: "Português selecionado",
   chooseLanguage: "Choose Your Language",
   step1Title: " Seus dados",
-  name: "Name", namePlaceholder: "What should I call yor?",
+  name: "Name", namePlaceholder: "What should I call you?",
   age: "Age", agePlaceholder: "Ex: 28",
   gender: "Gender", genderDefault: "Select...", genderM: "Male", genderF: "Female", genderN: "Prefer not to say",
   weight: "Weight (kg)", weightPlaceholder: "Ex: 70",
@@ -1138,7 +1138,7 @@ const t = {
   restrictLabel: "Restrictions or issues?",
   chips: ["None","Knee","Spine","Elbow","Hypertension","Diabetes","Shoulder","Recent injury"],
   step3Title: " Seu objetivo",
-  goalLabel: "What do yor want to achieve?",
+  goalLabel: "What do you want to achieve?",
   goals: [" Build muscle"," Lose fat"," Conditioning"," Build strength"," General health"," Endurance"],
   timeLabel: "Time per session",
   freqLabel: "Frequency",
@@ -1147,7 +1147,7 @@ const t = {
   step4Msg: "Your profile is set! FitLife will personalize your workouts and nutrition. Remember: results depend on your dedication! ",
   step4Disclaimer: " This app's guidance is educational. Always consult a health professional before starting any program.",
   navHome: "Home", navHomeS: "Today's workout and stats",
-  navWorkouts: "Workouts", navWorkouts: "Muscle groups and sets",
+  navWorkouts: "Workouts", navWorkoutsS: "Muscle groups and sets",
   navNutrition: "Nutrition", navNutritionS: "Macros and fitness recipes",
   navDiary: "Daily", navDiaryS: "Notes and progress",
   menuLogout: "Sign Out", menuLogoutS: "End session",
@@ -1171,7 +1171,7 @@ const t = {
   facil: "Easy", medio: "Medium", dificil: "Hard",
   grupamento: " Choose your", grupamentoSpan: "Muscle Group",
   daysTitle: " Seus Dias", daysSpan: "Disponíveis",
-  daysSub: "Select the days of the week yor can train. The app will build your cycle automatically!",
+  daysSub: "Select the days of the week you can train. The app will build your cycle automatically!",
   days: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
   verCycle: "VIEW MY CYCLE →",
   cicloMontado: " Seu", cicloMontadoSpan: "Cycle Montado",
@@ -1200,7 +1200,7 @@ const t = {
   obSub: "English selected",
   chooseLanguage: "Choose your Language",
   step1Title: " Your data",
-  name: "Name", namePlaceholder: "What can I call yor?",
+  name: "Name", namePlaceholder: "What can I call you?",
   age: "Age", agePlaceholder: "Ex: 28",
   gender: "Gender", genderDefault: "Select...", genderM: "Male", genderF: "Female", genderN: "Prefer not to say",
   weight: "Weight (kg)", weightPlaceholder: "Ex: 70",
@@ -1211,7 +1211,7 @@ const t = {
   restrictLabel: "Restrictions or issues?",
   chips: ["None","Knee","Spine","Elbow","Hypertension","Diabetes","Shoulder","Recent injury"],
   step3Title: " Your goal",
-  goalLabel: "What do yor want to achieve?",
+  goalLabel: "What do you want to achieve?",
   goals: [" Gain muscle"," Lose fat"," Conditioning"," Gain strength"," General health"," Endurance"],
   timeLabel: "Time per session",
   freqLabel: "Frequency",
@@ -1220,7 +1220,7 @@ const t = {
   step4Msg: "Your profile is ready! FitLife will personalize your workouts and nutrition suggestions. Remember: results depend on your dedication! ",
   step4Disclaimer: " The guidance in this app is educational. Always consult a health professional before starting any program.",
   navHome: "Home", navHomeS: "Today's workout and stats",
-  navWorkouts: "Workouts", navWorkouts: "Muscle groups and sets",
+  navWorkouts: "Workouts", navWorkoutsS: "Muscle groups and sets",
   navNutrition: "Nutrition", navNutritionS: "Macros and fitness recipes",
   navDiary: "Diary", navDiaryS: "Notes and progress",
   menuLogout: "Logout", menuLogoutS: "End session",
@@ -1244,7 +1244,7 @@ const t = {
   facil: "Easy", medio: "Medium", dificil: "Hard",
   grupamento: " Choose", grupamentoSpan: "Muscle Group",
   daysTitle: " Your Available", daysSpan: "Days",
-  daysSub: "Select the days of the week yor can train. The app will build your cycle automatically!",
+  daysSub: "Select the days of the week you can train. The app will build your cycle automatically!",
   days: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
   verCycle: "VIEW MY CYCLE →",
   cicloMontado: " Your", cicloMontadoSpan: "Cycle Ready",
@@ -1915,7 +1915,7 @@ function openMuscleUL(superior, label){
      <div class="ex-counter" id="exCornter">Check completed exercises</div>
      <button class="btn-start locked" id="btnConcluir" style="margin-top:4px"
      onclick="showToast(' Complete at least 50% of the exercises!')">
-     COMPLETE COMPLETE WORKOUT (0%)
+     COMPLETE WORKOUT (0%)
      </button>
      </div>
      <div style="background:var(--surface);border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between">
@@ -2452,7 +2452,7 @@ function updateTodayWithMuscle(name, icon, exercises){
      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
      <div class="ex-counter" id="exCornter">0 of 0 exercises completed (0%)</div>
      <button class="btn-start locked" id="btnConcluir" style="margin-top:4px" onclick="showToast(' Complete at least 50% of the exercises!')">
-     COMPLETE COMPLETE WORKOUT (0%)
+     COMPLETE WORKOUT (0%)
      </button>
      </div>
      <div style="background:var(--surface);border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between">
@@ -2517,7 +2517,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div class="ex-counter" id="exCornter">0 of 0 exercises completed (0%)</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px"
  onclick="showToast(' Complete at least 50% of the exercises!')">
- COMPLETE COMPLETE WORKOUT (0%)
+ COMPLETE WORKOUT (0%)
  </button>
  </div>
  <div style="background:var(--surface);border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between">
@@ -2559,7 +2559,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
  <div class="ex-counter" id="exCornter">0 of 0 exercises completed (0%)</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px" onclick="showToast(' Complete at least 50% of the exercises!')">
- COMPLETE COMPLETE WORKOUT (0%)
+ COMPLETE WORKOUT (0%)
  </button>
  </div>
  <div style="background:var(--surface);border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between">
@@ -2759,7 +2759,7 @@ function renderTodayWorkout(){
  <div class="ex-counter" id="exCornter">Check completed exercises</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px"
  onclick="showToast(' Complete at least 50% of the exercises!')">
- COMPLETE COMPLETE WORKOUT (0%)
+ COMPLETE WORKOUT (0%)
  </button>
  </div>
  <div style="background:var(--surface);border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between">
@@ -2787,7 +2787,7 @@ function initProgressUI(){
  const btn = document.getElementById('btnConcluir');
  if(btn){
  btn.classList.add('locked');
- btn.textContent = " COMPLETE COMPLETE WORKOUT (0%)";
+ btn.textContent = " COMPLETE WORKOUT (0%)";
  btn.onclick = ()=>showToast(' Complete at least 50% of the exercises!');
  }
 }
@@ -2818,11 +2818,11 @@ function updateWorkoutProgress(){
  if(!btn) return;
  if(unlocked){
  btn.classList.remove('locked');
- btn.textContent = " COMPLETE COMPLETE WORKOUT";
+ btn.textContent = " COMPLETE WORKOUT";
  btn.onclick = recordWorkout;
  } else {
  btn.classList.add('locked');
- btn.textContent = " COMPLETE COMPLETE WORKOUT (" + pct + "%)" + ";";
+ btn.textContent = " COMPLETE WORKOUT (" + pct + "%)" + ";";
  btn.onclick = ()=>showToast(' Complete at least 50% of the exercises!');
  }
 }
