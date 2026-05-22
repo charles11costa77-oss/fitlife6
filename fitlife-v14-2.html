@@ -545,7 +545,7 @@ input, textarea {
  <div class="lang-card selected" onclick="selectLang(this,'🇧🇷','Português')"><div class="lc-flag">🇧🇷</div><div><div class="lc-name">Português</div><div class="lc-native">Brasil</div></div></div>
  <div class="lang-card" onclick="selectLang(this,'🇺🇸','English')"><div class="lc-flag">🇺🇸</div><div><div class="lc-name">English</div><div class="lc-native">United States</div></div></div>
  </div>
- <button class="btn-main" onclick="nextStep(1)">CONTINUAR →</button>
+ <button class="btn-main" id="btnContinuar" onclick="nextStep(1)">CONTINUAR →</button>
  </div>
 
  <!-- STEP 1: DADOS -->
@@ -1212,6 +1212,7 @@ const t = {
   nenhumaReceita: "Nenhuma receita encontrada",
   nenhumaAnotacao: "Nenhuma anotação ainda. Registre seu primeiro treino!",
   nenhumaRestr: "Nenhuma",
+  continuar: "CONTINUAR →",
   verReceita: "Ver receita",
   tagLowCal: "Low Cal",
   tagAltoProteina: "Alto proteína",
@@ -1343,6 +1344,7 @@ const t = {
   nenhumaReceita: "No recipes found",
   nenhumaAnotacao: "No notes yet. Log your first workout!",
   nenhumaRestr: "None",
+  continuar: "CONTINUE →",
   verReceita: "View recipe",
   tagLowCal: "Low Cal",
   tagAltoProteina: "High protein",
@@ -1400,6 +1402,8 @@ function selectLang(el, flag, lang) {
 function applyLang() {
  const l = t[currentLang];
  // Botões estáticos
+ const btnContinuar = document.getElementById('btnContinuar');
+ if(btnContinuar) btnContinuar.textContent = l.continuar;
  const btnVerSemana = document.getElementById('btnVerSemana');
  if(btnVerSemana) btnVerSemana.textContent = ' ' + l.verSemana;
  const btnTrocarSerie = document.getElementById('btnShuffleEx');
