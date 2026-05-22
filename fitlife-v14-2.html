@@ -3818,6 +3818,13 @@ window.loginComGoogle = function() {
         const onboarding = document.getElementById('onboarding');
         onboarding.style.display = 'flex';
         onboarding.style.zIndex = '90';
+        // Resetar idioma para PT ao abrir onboarding
+        currentLang = 'pt';
+        applyLang();
+        // Garantir que PT está visualmente selecionado
+        document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+        const ptCard = document.querySelector('.lang-card[onclick*="Português"]');
+        if(ptCard) ptCard.classList.add('selected');
       }
     }
 
