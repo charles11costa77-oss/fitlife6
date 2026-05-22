@@ -712,9 +712,9 @@ input, textarea {
  <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
  <span>Treino de <span style="color:var(--accent)">Hoje</span></span>
  <div id="autoScheduleBadge" style="display:none">
-   <button onclick="openWeekModal()" style="font-size:11px;color:var(--accent3);font-weight:700;background:rgba(59,255,216,.08);border:1px solid rgba(59,255,216,.25);border-radius:8px;padding:4px 10px;font-family:'Nunito',sans-serif;cursor:pointer"> Ver Semana</button>
+   <button onclick="openWeekModal()" id="btnVerSemana" style="font-size:11px;color:var(--accent3);font-weight:700;background:rgba(59,255,216,.08);border:1px solid rgba(59,255,216,.25);border-radius:8px;padding:4px 10px;font-family:'Nunito',sans-serif;cursor:pointer"> Ver Semana</button>
  </div>
- <button id="btnShuffleEx" onclick="shuffleExercises()" style="background:var(--card);border:1px solid var(--accent3);color:var(--accent3);border-radius:8px;padding:6px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer"> Trocar série</button>
+ <button id="btnShuffleEx" onclick="shuffleExercises()" style="background:var(--card);border:1px solid var(--accent3);color:var(--accent3);border-radius:8px;padding:6px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer" id="btnTrocarSerie"> Trocar série</button>
  </div>
  <div id="todayWorkoutBox"></div>
  </div>
@@ -725,7 +725,7 @@ input, textarea {
   <div class="modal" onclick="event.stopPropagation()" style="max-height:85vh">
     <div class="modal-handle"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)"> Sua Semana</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent)" id="suaSemanaTitle"> Sua Semana</div>
       <button onclick="closeWeekModal()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer">×</button>
     </div>
     <div id="weekModalBox"></div>
@@ -1160,8 +1160,8 @@ const t = {
   greetSub: "Pronto para treinar hoje?",
   statDays: "Dias", statWorkouts: "Treinos", statKcal: "Kcal",
   todayTitle: "Treino de", todayTitleSpan: "Hoje",
-  verSemana: " Ver Semana", trocarSerie: " Trocar série",
-  suaSemana: " Sua Semana",
+  verSemana: "View Week", trocarSerie: "Shuffle",
+  suaSemana: "Your Week",
   periodicidade: " Periodicidade do", ciclo: "Ciclo",
   diario: "Diário", diariosub: "Treino muda todo dia automaticamente",
   mensal: "Mensal", mensalsub: "Ciclo de 30 dias com renovação manual",
@@ -1196,6 +1196,17 @@ const t = {
   novaNota: "+ Nova",
   diaryPlaceholder: "Como foi seu treino? Anote progressos, medidas, sentimentos...",
   salvarNota: "Salvar",
+  descanso: "Descanso",
+  diaDescanso: "Dia de Descanso!",
+  treinoConcluido: "Treino concluído!",
+  nenhumTreino: "Nenhum treino configurado",
+  configurarTreino: "Configurar Treino",
+  configurarCiclo: "Configure seu ciclo de treinos para ver o treino do dia aqui!",
+  configurarCicloPrimeiro: "Configure seu ciclo primeiro!",
+  verSemana: "Ver Semana",
+  trocarSerie: "Trocar série",
+  suaSemana: "Sua Semana",
+  trocarTreino: "Trocar treino",
  },
  en: {
   obSub: "English selected",
@@ -1269,6 +1280,17 @@ const t = {
   novaNota: "+ New",
   diaryPlaceholder: "How was your workout? Note progress, measurements, feelings...",
   salvarNota: "Save",
+  descanso: "Rest",
+  diaDescanso: "Rest Day!",
+  treinoConcluido: "Workout complete!",
+  nenhumTreino: "No workout configured",
+  configurarTreino: "Set Up Workout",
+  configurarCiclo: "Set up your training cycle to see today's workout here!",
+  configurarCicloPrimeiro: "Set up your cycle first!",
+  verSemana: "View Week",
+  trocarSerie: "Shuffle",
+  suaSemana: "Your Week",
+  trocarTreino: "Change workout",
  }
 };
 
@@ -1282,6 +1304,13 @@ function selectLang(el, flag, lang) {
 
 function applyLang() {
  const l = t[currentLang];
+ // Botões estáticos
+ const btnVerSemana = document.getElementById('btnVerSemana');
+ if(btnVerSemana) btnVerSemana.textContent = ' ' + l.verSemana;
+ const btnTrocarSerie = document.getElementById('btnShuffleEx');
+ if(btnTrocarSerie) btnTrocarSerie.textContent = ' ' + l.trocarSerie;
+ const suaSemanaTitle = document.getElementById('suaSemanaTitle');
+ if(suaSemanaTitle) suaSemanaTitle.textContent = ' ' + l.suaSemana;
  // Onboarding
  const s1 = document.getElementById("step1");
  if(s1) {
@@ -1667,7 +1696,7 @@ var comingFromModal = false;
 
 function openWeekModal(){
   if(!autoSchedule || !autoSchedule.builtCycle){
-    showToast(' Configure seu ciclo primeiro!');
+    showToast(t[currentLang].configurarCicloPrimeiro);
     return;
   }
   const box = document.getElementById('weekModalBox');
@@ -1690,7 +1719,7 @@ function openWeekModal(){
       <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${d.isRest?'var(--muted)':'var(--accent)'};width:32px;text-align:center">${d.dayName.substring(0,3).toUpperCase()}</div>
       <div style="flex:1">
         ${d.isRest
-          ? `<div style="font-size:13px;color:var(--muted);font-weight:700"> Descanso</div>`
+          ? `<div style="font-size:13px;color:var(--muted);font-weight:700">${t[currentLang].descanso}</div>`
           : `<div style="font-size:13px;font-weight:800"> ${d.label}</div>
              <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.groups.map(g=>g.muscle).join(' · ')}</div>`
         }
@@ -1921,7 +1950,7 @@ function openMuscleUL(superior, label){
      </div>
      <div style="background:var(--surface);border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between">
      <div style="font-size:11px;color:var(--muted)"> Troca automática à meia-noite</div>
-     <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer"> Trocar treino</button>
+     <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer">${t[currentLang].trocarTreino}</button>
      </div>
      </div>`;
  }
@@ -2458,7 +2487,7 @@ function updateTodayWithMuscle(name, icon, exercises){
      </div>
      <div style="background:var(--surface);border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between">
      <div style="font-size:11px;color:var(--muted)"> Troca automática à meia-noite</div>
-     <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer"> Trocar treino</button>
+     <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer">${t[currentLang].trocarTreino}</button>
      </div>
      </div>`;
      setTimeout(initProgressUI, 50);
@@ -2525,7 +2554,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div style="font-size:11px;color:var(--muted)">
  ${twPeriod==='daily'?' Troca automática à meia-noite':twPeriod==='monthly'?' Ciclo mensal ativo':twPeriod==='trimester'?' Ciclo trimestral ativo':''}
  </div>
- <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer"> Trocar treino</button>
+ <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer">${t[currentLang].trocarTreino}</button>
  </div>
  </div>
  `;
@@ -2567,7 +2596,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div style="font-size:11px;color:var(--muted)">
  ${twPeriod==='daily'?' Troca automática à meia-noite':twPeriod==='monthly'?' Ciclo mensal ativo':twPeriod==='trimester'?' Ciclo trimestral ativo':''}
  </div>
- <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer"> Trocar treino</button>
+ <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer">${t[currentLang].trocarTreino}</button>
  </div>
  </div>
  `;
@@ -2659,8 +2688,8 @@ function renderTodayWorkout(){
  if(!activeModel || !activeDiff){
  box.innerHTML = `<div style="background:var(--card);border-radius:18px;padding:24px;text-align:center;border:1px dashed var(--border);margin-bottom:12px">
  <div style="font-size:36px;margin-bottom:10px"></div>
- <div style="font-weight:800;font-size:15px;margin-bottom:6px">Nenhum treino configurado</div>
- <div style="color:var(--muted);font-size:13px;margin-bottom:14px">Configure seu ciclo de treinos para ver o treino do dia aqui!</div>
+ <div style="font-weight:800;font-size:15px;margin-bottom:6px">${t[currentLang].nenhumTreino}</div>
+ <div style="color:var(--muted);font-size:13px;margin-bottom:14px">${t[currentLang].configurarCiclo}</div>
  <button onclick="goToTab('treinos')" style="background:var(--accent);color:#000;border:none;border-radius:10px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer">Configurar Treino →</button>
  </div>`;
  return;
@@ -2679,7 +2708,7 @@ function renderTodayWorkout(){
  const btnShuf2 = document.getElementById('btnShuffleEx'); if(btnShuf2) btnShuf2.style.display='block';
  box.innerHTML=`<div style="background:var(--card);border-radius:18px;padding:24px;text-align:center;border:1px solid var(--border);margin-bottom:12px">
  <div style="font-size:48px;margin-bottom:10px"></div>
- <div style="font-weight:900;font-size:18px;margin-bottom:6px">Dia de Descanso!</div>
+ <div style="font-weight:900;font-size:18px;margin-bottom:6px">${t[currentLang].diaDescanso}</div>
  <div style="color:var(--muted);font-size:13px;margin-bottom:14px">Recuperação é parte do treino. Amanhã tem mais! </div>
  <button onclick="goToTab('treinos')" style="background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Ver meu ciclo →</button>
  </div>`;
@@ -2767,7 +2796,7 @@ function renderTodayWorkout(){
  <div style="font-size:11px;color:var(--muted)">
  ${twPeriod==='daily'?' Troca automática à meia-noite':twPeriod==='monthly'?' Ciclo mensal ativo':twPeriod==='trimester'?' Ciclo trimestral ativo':''}
  </div>
- <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer"> Trocar treino</button>
+ <button onclick="goToTab('treinos')" style="background:none;border:none;color:var(--accent3);font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer">${t[currentLang].trocarTreino}</button>
  </div>
  </div>
  `;
@@ -2908,7 +2937,7 @@ function renderCyclePreview(){
  <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${d.isRest?'var(--muted)':'var(--accent)'};width:32px;text-align:center">${d.dayName.substring(0,3).toUpperCase()}</div>
  <div style="flex:1">
  ${d.isRest
- ? `<div style="font-size:13px;color:var(--muted);font-weight:700"> Descanso</div>`
+ ? `<div style="font-size:13px;color:var(--muted);font-weight:700">${t[currentLang].descanso}</div>`
  : `<div style="font-size:14px;font-weight:800"> ${d.label}</div>
  <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.groups.map(g=>g.muscle).join(' · ')}</div>`
  }
@@ -3078,7 +3107,7 @@ function goToDiary(){
  if(defaultMood) defaultMood.classList.add('sel');
  const txt=document.getElementById('entryText');
  if(txt){
- txt.value='Treino concluído! \n';
+ txt.value=t[currentLang].treinoConcluido+'\n';
  txt.focus();
  }
  }, 300);
@@ -3109,7 +3138,7 @@ function showWorkoutComplete(){
  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
  <div style="font-size:28px"></div>
  <div>
- <div style="font-weight:900;font-size:15px;color:var(--green)">Treino concluído!</div>
+ <div style="font-weight:900;font-size:15px;color:var(--green)">${t[currentLang].treinoConcluido}</div>
  <div style="font-size:12px;color:var(--muted);margin-top:2px">Continue assim! Você arrasou! </div>
  </div>
  </div>
