@@ -835,11 +835,11 @@ input, textarea {
  <!-- PASSO 6: PRÉVIA DO CICLO -->
  <div class="tw-step" id="tw-step6">
  <div class="step-breadcrumb" id="breadcrumb6"></div>
- <div class="section-title"> Seu <span>Ciclo</span> Montado</div>
- <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Confira como ficou a distribuição dos seus treinos. O app rotaciona os grupamentos a cada semana para maior variedade! </p>
+ <div class="section-title" id="labelSeuCiclo"> Seu <span id="labelCicloSpan">Ciclo</span> <span id="labelMontado">Montado</span></div>
+ <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6" id="labelConfira">Confira como ficou a distribuição dos seus treinos. O app rotaciona os grupamentos a cada semana para maior variedade! </p>
  <div id="cyclePreviewBox"></div>
- <button class="btn-main" onclick="confirmCycle()"> CONFIRMAR E INICIAR CICLO</button>
- <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(5)">← Voltar e ajustar dias</button>
+ <button class="btn-main" onclick="confirmCycle()" id="btnConfirmarCiclo"> CONFIRMAR E INICIAR CICLO</button>
+ <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(5)" id="btnVoltarAjustar">← Voltar e ajustar dias</button>
  </div>
 
  </div>
@@ -1246,6 +1246,16 @@ const t = {
   inferiorLower: "Inferior (Lower)",
   confirmarCiclo: "CONFIRM AND START CYCLE",
   voltarAjustar: "← Voltar e ajustar dias",
+  faltamDias: "Faltam",
+  diasParaRenovar: "dias para renovar",
+  seuCicloMontado: " Seu",
+  seuCicloSpan: "Ciclo",
+  seuCicloMontadoFim: "Montado",
+  confiraComoFicou: "Confira como ficou a distribuição dos seus treinos. O app rotaciona os grupamentos a cada semana para maior variedade!",
+  seuCicloTerminou: "Seu ciclo terminou!",
+  desejaRenovar: "Deseja renovar ou escolher um novo ciclo?",
+  cicloAtivo: "ativo",
+  confirmarIniciarCiclo: " CONFIRMAR E INICIAR CICLO",
   corpoInteiro: "Corpo Inteiro",
   duasDivisoes: "2 Divisões",
   divisaoAB: "Divisão A/B",
@@ -1387,6 +1397,16 @@ const t = {
   inferiorLower: "Lower Body",
   confirmarCiclo: "CONFIRM AND START CYCLE",
   voltarAjustar: "← Back and adjust days",
+  faltamDias: "Days left:",
+  diasParaRenovar: "days to renew",
+  seuCicloMontado: " Your",
+  seuCicloSpan: "Cycle",
+  seuCicloMontadoFim: "Overview",
+  confiraComoFicou: "Check how your training days are distributed. The app rotates muscle groups every week for more variety!",
+  seuCicloTerminou: "Your cycle has ended!",
+  desejaRenovar: "Would you like to renew or choose a new cycle?",
+  cicloAtivo: "active",
+  confirmarIniciarCiclo: " CONFIRM AND START CYCLE",
   corpoInteiro: "Full Body",
   duasDivisoes: "2 Splits",
   divisaoAB: "A/B Split",
@@ -1457,6 +1477,22 @@ function applyLang() {
  if(diffSubDificil) diffSubDificil.textContent = l.diffSubDificil;
  // Botões ← Voltar
  document.querySelectorAll('.btnVoltar').forEach(el => el.textContent = l.voltar);
+ // Seu Ciclo Montado
+ const labelSeuCiclo = document.getElementById('labelSeuCiclo');
+ if(labelSeuCiclo) labelSeuCiclo.childNodes[0].textContent = ' ' + l.seuCicloMontado.trim();
+ const labelCicloSpan = document.getElementById('labelCicloSpan');
+ if(labelCicloSpan) labelCicloSpan.textContent = l.seuCicloSpan;
+ const labelMontado = document.getElementById('labelMontado');
+ if(labelMontado) labelMontado.textContent = l.seuCicloMontadoFim;
+ // Confira como ficou
+ const labelConfira = document.getElementById('labelConfira');
+ if(labelConfira) labelConfira.textContent = l.confiraComoFicou;
+ // CONFIRMAR E INICIAR CICLO
+ const btnConfirmarCiclo = document.getElementById('btnConfirmarCiclo');
+ if(btnConfirmarCiclo) btnConfirmarCiclo.textContent = l.confirmarIniciarCiclo;
+ // ← Voltar e ajustar dias
+ const btnVoltarAjustar = document.getElementById('btnVoltarAjustar');
+ if(btnVoltarAjustar) btnVoltarAjustar.textContent = l.voltarAjustar;
  // Botão Configurar Treino
  const btnConf = document.getElementById('btnConfigurarTreino');
  if(btnConf) btnConf.textContent = l.btnConfigurarTreino;
@@ -2267,8 +2303,8 @@ function checkCycleStatus(){
  box.innerHTML=`<div class="cycle-status cycle-active">
  <div class="cycle-icon"></div>
  <div class="cycle-info">
- <div class="cycle-title">Ciclo ${cycleData.typeLabel} ativo — ${cycleData.model} ${cycleData.diffLabel}</div>
- <div class="cycle-sub">Faltam ${daysLeft} dias para renovar</div>
+ <div class="cycle-title">${cycleData.typeLabel} ${t[currentLang].cicloAtivo} — ${cycleData.model} ${cycleData.diffLabel}</div>
+ <div class="cycle-sub">${t[currentLang].faltamDias} ${daysLeft} ${t[currentLang].diasParaRenovar}</div>
  </div>
  </div>`;
  } else {
@@ -2276,8 +2312,8 @@ function checkCycleStatus(){
  box.innerHTML=`<div class="cycle-status cycle-expired">
  <div class="cycle-icon">⏰</div>
  <div class="cycle-info">
- <div class="cycle-title">Seu ciclo terminou!</div>
- <div class="cycle-sub">Deseja renovar ou escolher um novo ciclo?</div>
+ <div class="cycle-title">${t[currentLang].seuCicloTerminou}</div>
+ <div class="cycle-sub">${t[currentLang].desejaRenovar}</div>
  </div>
  <button class="cycle-renew-btn" onclick="renewCycle()">Renovar</button>
  </div>`;
