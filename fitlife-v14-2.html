@@ -1905,6 +1905,13 @@ function openWeekModal(){
   }
   const box = document.getElementById('weekModalBox');
   const bc = autoSchedule.builtCycle;
+  // Traduzir dias
+  const dayNamesLang = currentLang === 'en' ? {
+   dom:'Sun', seg:'Mon', ter:'Tue', qua:'Wed', qui:'Thu', sex:'Fri', sab:'Sat'
+  } : {
+   dom:'Dom', seg:'Seg', ter:'Ter', qua:'Qua', qui:'Qui', sex:'Sex', sab:'Sáb'
+  };
+  bc.forEach(d => { d.dayName = dayNamesLang[d.dayCode] || d.dayName; });
   const modelLabel = {'Full':t[currentLang].corpoInteiro,'Upper':t[currentLang].duasDivisoes,'AB':t[currentLang].divisaoAB,'ABCD':t[currentLang].quatroDivisoes}[autoSchedule.model]||autoSchedule.model;
   const periodLabel = currentLang==='en' ? {monthly:'Monthly',trimester:'Quarterly'}[autoSchedule.period]||'' : {monthly:'Mensal',trimester:'Trimestral'}[autoSchedule.period]||'';
   const diffLabel = {easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil}[autoSchedule.diff]||'';
@@ -3122,6 +3129,14 @@ function buildCyclePreview(){
 function renderCyclePreview(){
  const box = document.getElementById('cyclePreviewBox');
  if(!box) return;
+
+ // Traduzir nomes dos dias no ciclo já montado
+ const dayNamesLang = currentLang === 'en' ? {
+  dom:'Sun', seg:'Mon', ter:'Tue', qua:'Wed', qui:'Thu', sex:'Fri', sab:'Sat'
+ } : {
+  dom:'Dom', seg:'Seg', ter:'Ter', qua:'Qua', qui:'Qui', sex:'Sex', sab:'Sáb'
+ };
+ if(builtCycle) builtCycle.forEach(d => { d.dayName = dayNamesLang[d.dayCode] || d.dayName; });
 
  const diffLabel = {easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil}[twDiff];
  const diffIcon = {easy:'',med:'',hard:''}[twDiff];
