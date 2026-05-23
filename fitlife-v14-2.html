@@ -556,7 +556,7 @@ input, textarea {
  <div class="field-group"><label>Sexo</label><select id="userGender"><option value="">Selecione...</option><option>Masculino</option><option>Feminino</option><option>Prefiro não informar</option></select></div>
  <div class="field-group"><label>Peso (kg)</label><input type="number" id="userWeight" placeholder="Ex: 70"/></div>
  <button class="btn-main" onclick="nextStep(2)">PRÓXIMO →</button>
- <button class="btn-back" onclick="nextStep(0)">← Voltar</button>
+ <button class="btn-back" onclick="nextStep(0)"><span class="btnVoltar">← Voltar</span></button>
  </div>
 
  <!-- STEP 2: SAÚDE -->
@@ -576,7 +576,7 @@ input, textarea {
  </div>
  </div>
  <button class="btn-main" onclick="nextStep(3)">PRÓXIMO →</button>
- <button class="btn-back" onclick="nextStep(1)">← Voltar</button>
+ <button class="btn-back" onclick="nextStep(1)"><span class="btnVoltar">← Voltar</span></button>
  </div>
 
  <!-- STEP 3: OBJETIVO -->
@@ -603,7 +603,7 @@ input, textarea {
  </div>
  </div>
  <button class="btn-main" onclick="nextStep(4)">PRÓXIMO →</button>
- <button class="btn-back" onclick="nextStep(2)">← Voltar</button>
+ <button class="btn-back" onclick="nextStep(2)"><span class="btnVoltar">← Voltar</span></button>
  </div>
 
  <!-- STEP 4: PRONTO -->
@@ -614,7 +614,7 @@ input, textarea {
  <p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7;border-top:1px solid var(--border);padding-top:12px"> As orientações deste app são educativas. Consulte sempre um profissional de saúde antes de iniciar qualquer programa.</p>
  </div>
  <button class="btn-main" onclick="startApp()">COMEÇAR AGORA! </button>
- <button class="btn-back" onclick="nextStep(3)">← Voltar</button>
+ <button class="btn-back" onclick="nextStep(3)"><span class="btnVoltar">← Voltar</span></button>
  </div>
 </div>
 
@@ -787,28 +787,28 @@ input, textarea {
  <!-- PASSO 3+4: DIFICULDADE + GRUPAMENTO -->
  <div class="tw-step" id="tw-step3">
  <div class="step-breadcrumb" id="breadcrumb3"></div>
- <div class="section-title" style="margin-top:24px;margin-bottom:14px"> Nível de <span>Dificuldade</span></div>
+ <div class="section-title" style="margin-top:24px;margin-bottom:14px"><span id="labelNivelDe"> Nível de</span> <span id="labelDificuldade">Dificuldade</span></div>
  <div class="tw-grid3">
  <div class="tw-card tw-easy" onclick="selectDiffNew('easy',this)" style="text-align:center;padding:26px 10px">
  <div class="tw-card-title" style="font-size:22px;margin-bottom:8px" id="diffLabelFacil">Fácil</div>
- <div class="tw-card-sub" style="font-size:13px">3 séries · 12 reps · 60s</div>
+ <div class="tw-card-sub" style="font-size:13px" id="diffSubFacil">3 séries · 12 reps · 60s</div>
  </div>
  <div class="tw-card tw-med" onclick="selectDiffNew('med',this)" style="text-align:center;padding:26px 10px">
  <div class="tw-card-title" style="font-size:22px;margin-bottom:8px" id="diffLabelMedio">Médio</div>
- <div class="tw-card-sub" style="font-size:13px">4 séries · 10 reps · 45s</div>
+ <div class="tw-card-sub" style="font-size:13px" id="diffSubMedio">4 séries · 10 reps · 45s</div>
  </div>
  <div class="tw-card tw-hard" onclick="selectDiffNew('hard',this)" style="text-align:center;padding:26px 10px">
  <div class="tw-card-title" style="font-size:22px;margin-bottom:8px" id="diffLabelDificil">Difícil</div>
- <div class="tw-card-sub" style="font-size:13px">5 séries · 8 reps · 30s</div>
+ <div class="tw-card-sub" style="font-size:13px" id="diffSubDificil">5 séries · 8 reps · 30s</div>
  </div>
  </div>
  <!-- GRUPAMENTO aparece ao selecionar dificuldade -->
  <div id="grupamentoSection" style="margin-top:0">
  <hr style="border:none;border-top:1px solid var(--border);margin:22px 0 20px">
- <div class="section-title" style="margin-bottom:14px"> Escolha o <span>Grupamento</span></div>
+ <div class="section-title" style="margin-bottom:14px"><span id="labelEscolhaO"> Escolha o</span> <span id="labelGrupamento">Grupamento</span></div>
  <div id="grupamentoGrid"></div>
  </div>
- <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(1)">← Voltar</button>
+ <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(1)"><span class="btnVoltar">← Voltar</span></button>
  </div>
 
  <!-- PASSO 4: mantido para compatibilidade JS -->
@@ -829,7 +829,7 @@ input, textarea {
  <div class="day-btn" onclick="toggleDay(this,'sab')"><div class="day-letter">S</div><div class="day-name">Sáb</div></div>
  </div>
  <button class="btn-main" onclick="buildCyclePreview()" style="margin-top:16px">VER MEU CICLO →</button>
- <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(3)">← Voltar</button>
+ <button class="tw-back-btn" onclick="goToTab('treinos',true);twGoTo(3)"><span class="btnVoltar">← Voltar</span></button>
  </div>
 
  <!-- PASSO 6: PRÉVIA DO CICLO -->
@@ -1169,6 +1169,13 @@ const t = {
   modeloTitle: " Modelo de", modeloSpan: "Treino",
   abSub: "Peito / Costas / Pernas", fbSub: "Corpo inteiro por sessão", ulSub: "Superior e inferior alternados",
   dificuldade: " Nível de", dificuldadeSpan: "Dificuldade",
+  voltar: "← Back",
+  voltarPT: "← Voltar",
+  diffSubFacil: "3 séries · 12 reps · 60s",
+  diffSubMedio: "4 séries · 10 reps · 45s",
+  diffSubDificil: "5 séries · 8 reps · 30s",
+  grupLabels: ["Peito & Tríceps","Costas & Bíceps","Pernas & Ombros","Abdômen & Flexões"],
+  btnConfigurarTreino: "Configurar Treino →",
   grupamento: " Escolha o", grupamentoSpan: "Grupamento",
   diasTitle: " Seus Dias", diasSpan: "Disponíveis",
   diasSub: "Marque os dias da semana que você pode treinar. O app vai montar seu ciclo automaticamente!",
@@ -1304,6 +1311,13 @@ const t = {
   modeloTitle: " Training", modeloSpan: "Model",
   abSub: "Chest / Back / Legs", fbSub: "Full body per session", ulSub: "Upper and lower alternated",
   dificuldade: " Difficulty", dificuldadeSpan: "Level",
+  voltar: "← Back",
+  voltarPT: "← Back",
+  diffSubFacil: "3 sets · 12 reps · 60s",
+  diffSubMedio: "4 sets · 10 reps · 45s",
+  diffSubDificil: "5 sets · 8 reps · 30s",
+  grupLabels: ["Chest & Triceps","Back & Biceps","Legs & Shoulders","Abs & Push-Ups"],
+  btnConfigurarTreino: "Set Up Workout →",
   grupamento: " Choose", grupamentoSpan: "Muscle Group",
   diasTitle: " Your Available", diasSpan: "Days",
   diasSub: "Select the days of the week you can train. The app will build your cycle automatically!",
@@ -1424,6 +1438,28 @@ function applyLang() {
  if(labelPeriodicidade) labelPeriodicidade.childNodes[0].textContent = l.periodicidade;
  const labelCiclo = document.getElementById('labelCiclo');
  if(labelCiclo) labelCiclo.textContent = l.ciclo;
+ // Nível de Dificuldade
+ const labelNivelDe = document.getElementById('labelNivelDe');
+ if(labelNivelDe) labelNivelDe.textContent = l.dificuldade;
+ const labelDificuldade = document.getElementById('labelDificuldade');
+ if(labelDificuldade) labelDificuldade.textContent = l.dificuldadeSpan;
+ // Escolha o Grupamento
+ const labelEscolhaO = document.getElementById('labelEscolhaO');
+ if(labelEscolhaO) labelEscolhaO.textContent = l.grupamento;
+ const labelGrupamento = document.getElementById('labelGrupamento');
+ if(labelGrupamento) labelGrupamento.textContent = l.grupamentoSpan;
+ // Cards de dificuldade — séries/reps
+ const diffSubFacil = document.getElementById('diffSubFacil');
+ if(diffSubFacil) diffSubFacil.textContent = l.diffSubFacil;
+ const diffSubMedio = document.getElementById('diffSubMedio');
+ if(diffSubMedio) diffSubMedio.textContent = l.diffSubMedio;
+ const diffSubDificil = document.getElementById('diffSubDificil');
+ if(diffSubDificil) diffSubDificil.textContent = l.diffSubDificil;
+ // Botões ← Voltar
+ document.querySelectorAll('.btnVoltar').forEach(el => el.textContent = l.voltar);
+ // Botão Configurar Treino
+ const btnConf = document.getElementById('btnConfigurarTreino');
+ if(btnConf) btnConf.textContent = l.btnConfigurarTreino;
  // Modelo de Treino
  const labelModeloDe = document.getElementById('labelModeloDe');
  if(labelModeloDe) labelModeloDe.textContent = l.modeloDe;
@@ -2153,11 +2189,12 @@ function renderGrupamentoGrid(){
  }
 
  // A/B → pares de grupamentos
+ const isEN = currentLang === 'en';
  const pairs = [
-   {label:'Peito & Tríceps', icon:'', muscle:'Peito', desc:'4 exercícios de Peito + 4 de Tríceps'},
-   {label:'Costas & Bíceps', icon:'', muscle:'Costas', desc:'4 exercícios de Costas + 4 de Bíceps'},
-   {label:'Pernas & Ombros', icon:'', muscle:'Pernas', desc:'4 exercícios de Pernas + 4 de Ombros'},
-   {label:'Abdômen & Flexões', icon:'', muscle:'Abdômen', desc:'Abdominais + Flexões de braço e variações'},
+   {label: isEN ? 'Chest & Triceps' : 'Peito & Tríceps', icon:'', muscle:'Peito', desc: isEN ? '4 Chest + 4 Triceps exercises' : '4 exercícios de Peito + 4 de Tríceps'},
+   {label: isEN ? 'Back & Biceps' : 'Costas & Bíceps', icon:'', muscle:'Costas', desc: isEN ? '4 Back + 4 Biceps exercises' : '4 exercícios de Costas + 4 de Bíceps'},
+   {label: isEN ? 'Legs & Shoulders' : 'Pernas & Ombros', icon:'', muscle:'Pernas', desc: isEN ? '4 Legs + 4 Shoulders exercises' : '4 exercícios de Pernas + 4 de Ombros'},
+   {label: isEN ? 'Abs & Push-Ups' : 'Abdômen & Flexões', icon:'', muscle:'Abdômen', desc: isEN ? 'Abs + Push-up variations' : 'Abdominais + Flexões de braço e variações'},
  ];
  grid.innerHTML = `<div class="muscle-grid">${pairs.map(p=>`
    <div class="muscle-card" onclick="openMuscle('${p.muscle}','${p.icon}',null)">
