@@ -1906,7 +1906,7 @@ function openWeekModal(){
   const box = document.getElementById('weekModalBox');
   const bc = autoSchedule.builtCycle;
   const modelLabel = {'Full':t[currentLang].corpoInteiro,'Upper':t[currentLang].duasDivisoes,'AB':t[currentLang].divisaoAB,'ABCD':t[currentLang].quatroDivisoes}[autoSchedule.model]||autoSchedule.model;
-  const periodLabel = {monthly:'Mensal',trimester:'Trimestral'}[autoSchedule.period]||'';
+  const periodLabel = currentLang==='en' ? {monthly:'Monthly',trimester:'Quarterly'}[autoSchedule.period]||'' : {monthly:'Mensal',trimester:'Trimestral'}[autoSchedule.period]||'';
   const diffLabel = {easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil}[autoSchedule.diff]||'';
   const trainDays = bc.filter(d=>!d.isRest).length;
   const restDays = bc.filter(d=>d.isRest).length;
@@ -2063,14 +2063,14 @@ function updateBreadcrumb(step){
  if(!el||!el.parentNode) return;
  let html='';
  // Each chip is clickable — takes user back to that step
- if(twPeriod) html+=`<span class="done bc-chip" onclick="twGoTo(1)" title="Voltar à periodicidade">${{daily:' Diário',monthly:' Mensal',trimester:' Trimestral'}[twPeriod]}</span> › `;
+ if(twPeriod) html+=`<span class="done bc-chip" onclick="twGoTo(1)" title="Voltar à periodicidade">${currentLang==='en'?{daily:' Daily',monthly:' Monthly',trimester:' Quarterly'}[twPeriod]:{daily:' Diário',monthly:' Mensal',trimester:' Trimestral'}[twPeriod]}</span> › `;
  if(step>=3 && twModel){
  const mLabel={'Full':t[currentLang].corpoInteiro,'Upper':t[currentLang].duasDivisoes,'AB':t[currentLang].divisaoAB,'ABCD':t[currentLang].quatroDivisoes};
  html+=`<span class="done bc-chip" onclick="twGoTo(2)" title="Voltar ao modelo">${mLabel[twModel]||twModel}</span> › `;
  }
- if(step>=4 && twDiff) html+=`<span class="done bc-chip" onclick="twGoTo(3)" title="Voltar à dificuldade">${{easy:' Fácil',med:' Médio',hard:' Difícil'}[twDiff]}</span> › `;
+ if(step>=4 && twDiff) html+=`<span class="done bc-chip" onclick="twGoTo(3)" title="Voltar à dificuldade">${currentLang==='en'?{easy:' Easy',med:' Medium',hard:' Hard'}[twDiff]:{easy:' Fácil',med:' Médio',hard:' Difícil'}[twDiff]}</span> › `;
  if(step>=5 && selectedDays.length){
- html+=`<span class="done bc-chip" onclick="twGoTo(5)" title="Voltar aos dias"> ${selectedDays.length} dias</span> › `;
+ html+=`<span class="done bc-chip" onclick="twGoTo(5)" title="Voltar aos dias"> ${selectedDays.length} ${currentLang==='en'?'days':'dias'}</span> › `;
  }
  el.innerHTML=html.replace(/ › $/,'');
 }
@@ -2358,7 +2358,7 @@ function openMuscle(name,icon,exercises){
  if(twPeriod && twModel && !cycleData){
  const days={daily:1,monthly:30,trimester:90}[twPeriod];
  const end=new Date(); end.setDate(end.getDate()+days);
- const labels={daily:'Diário',monthly:'Mensal',trimester:'Trimestral'};
+ const labels=currentLang==='en'?{daily:'Daily',monthly:'Monthly',trimester:'Quarterly'}:{daily:'Diário',monthly:'Mensal',trimester:'Trimestral'};
  const diffs={easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil};
  cycleData={type:twPeriod,typeLabel:labels[twPeriod],model:twModel,diff:twDiff,diffLabel:diffs[twDiff],endDate:end.toISOString()};
  checkCycleStatus();
@@ -2650,7 +2650,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  const s = diffSpecs[twDiff||'easy'];
  const diffLabel = {easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil}[twDiff||'easy'];
  const diffClass = {easy:'badge-easy',med:'badge-med',hard:'badge-hard'}[twDiff||'easy'];
- const periodLabel = twPeriod ? {daily:'Diário',monthly:'Mensal',trimester:'Trimestral'}[twPeriod] : '';
+ const periodLabel = twPeriod ? (currentLang==='en' ? {daily:'Daily',monthly:'Monthly',trimester:'Quarterly'}[twPeriod] : {daily:'Diário',monthly:'Mensal',trimester:'Trimestral'}[twPeriod]) : '';
  const modelLabel = {'Full':t[currentLang].corpoInteiro,'Upper':t[currentLang].duasDivisoes,'AB':t[currentLang].divisaoAB,'ABCD':t[currentLang].quatroDivisoes}[twModel] || twModel || '';
 
  // Se Full Body (Corpo Inteiro), renderiza todos os grupos do dia A
@@ -3066,7 +3066,10 @@ function updateWorkoutProgress(){
 let selectedDays = []; // ['seg','qua','sex']
 let builtCycle = null; // [{dayName, dayKey, dayData, isRest}]
 
-const dayNames = {
+const dayNames = currentLang === 'en' ? {
+ dom:'Sunday', seg:'Monday', ter:'Tuesday',
+ qua:'Wednesday', qui:'Thursday', sex:'Friday', sab:'Saturday'
+} : {
  dom:'Domingo', seg:'Segunda', ter:'Terça',
  qua:'Quarta', qui:'Quinta', sex:'Sexta', sab:'Sábado'
 };
@@ -3123,7 +3126,7 @@ function renderCyclePreview(){
  const diffLabel = {easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil}[twDiff];
  const diffIcon = {easy:'',med:'',hard:''}[twDiff];
  const modelLabel = {'Full':t[currentLang].corpoInteiro,'Upper':t[currentLang].duasDivisoes,'AB':t[currentLang].divisaoAB,'ABCD':t[currentLang].quatroDivisoes}[twModel]||twModel;
- const periodLabel = {daily:'Diário',monthly:'Mensal',trimester:'Trimestral'}[twPeriod]||'';
+ const periodLabel = currentLang==='en' ? {daily:'Daily',monthly:'Monthly',trimester:'Quarterly'}[twPeriod]||'' : {daily:'Diário',monthly:'Mensal',trimester:'Trimestral'}[twPeriod]||'';
  const trainDays = builtCycle.filter(d=>!d.isRest).length;
  const restDays = builtCycle.filter(d=>d.isRest).length;
 
