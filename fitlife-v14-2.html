@@ -817,8 +817,8 @@ input, textarea {
  <!-- PASSO 5: DIAS DISPONÍVEIS (mensal/trimestral) -->
  <div class="tw-step" id="tw-step5">
  <div class="step-breadcrumb" id="breadcrumb5"></div>
- <div class="section-title"> Seus Dias <span>Disponíveis</span></div>
- <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Marque os dias da semana que você pode treinar. O app vai montar seu ciclo automaticamente!</p>
+ <div class="section-title" id="diasTitle"> Seus Dias <span id="diasSpan">Disponíveis</span></div>
+ <p id="diasSub" style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Marque os dias da semana que você pode treinar. O app vai montar seu ciclo automaticamente!</p>
  <div class="days-grid" id="daysGrid">
  <div class="day-btn" onclick="toggleDay(this,'dom')"><div class="day-letter">D</div><div class="day-name">Dom</div></div>
  <div class="day-btn" onclick="toggleDay(this,'seg')"><div class="day-letter">S</div><div class="day-name">Seg</div></div>
@@ -1142,6 +1142,7 @@ const t = {
   goalLabel: "O que você quer alcançar?",
   goals: [" Ganhar massa"," Perder gordura"," Condicionamento"," Ganhar força"," Saúde geral"," Resistência"],
   timeLabel: "Tempo por sessão",
+  timeOptions: ["30 min","45 min","1 hora","1h30","2h+"],
   freqLabel: "Frequência",
   freqs: ["2x semana","3x semana","4x semana","5x semana","Diário"],
   step4Title: " Tudo pronto!",
@@ -1294,6 +1295,7 @@ const t = {
   goalLabel: "What do you want to achieve?",
   goals: [" Gain muscle"," Lose fat"," Conditioning"," Gain strength"," General health"," Endurance"],
   timeLabel: "Time per session",
+  timeOptions: ["30 min","45 min","1 hour","1h30","2h+"],
   freqLabel: "Frequency",
   freqs: ["2x week","3x week","4x week","5x week","Daily"],
   step4Title: " All set!",
@@ -1556,6 +1558,8 @@ function applyLang() {
   const labels = s3.querySelectorAll("label");
   if(labels[0]) labels[0].textContent = l.goalLabel;
   if(labels[1]) labels[1].textContent = l.timeLabel;
+  const userTime = document.getElementById("userTime");
+  if(userTime && l.timeOptions) { l.timeOptions.forEach((opt,i)=>{ if(userTime.options[i]) userTime.options[i].text = opt; }); }
   if(labels[2]) labels[2].textContent = l.freqLabel;
   const goalChips = s3.querySelectorAll("#goalChips .chip");
   goalChips.forEach((c,i) => { if(l.goals[i]) c.textContent = l.goals[i]; });
@@ -1575,6 +1579,11 @@ function applyLang() {
   if(btns[0]) btns[0].textContent = l.start;
   if(btns[1]) btns[1].textContent = l.back;
  }
+ // Dias disponíveis (step 5)
+ const diasTitleEl = document.getElementById("diasTitle");
+ if(diasTitleEl){ diasTitleEl.childNodes[0].textContent = l.diasTitle; const diasSpanEl = document.getElementById("diasSpan"); if(diasSpanEl) diasSpanEl.textContent = l.diasSpan; }
+ const diasSubEl = document.getElementById("diasSub");
+ if(diasSubEl) diasSubEl.textContent = l.diasSub;
  // Bottom nav
  const navLabels = document.querySelectorAll(".nav-label");
  const navTexts = [l.navHome, l.navWorkouts, l.navNutrition, l.navDiary];
@@ -2102,6 +2111,9 @@ function selectPeriod(period, el){
 
 function selectModel(model, el){
  twModel=model;
+ todayPickedCache = {};
+ cycleData = null;
+ checkCycleStatus();
  document.querySelectorAll('#modelSection .tw-card').forEach(c=>c.classList.remove('selected'));
  el.classList.add('selected');
  // Esconde grupamentos se Full — não precisa escolher
@@ -2217,11 +2229,11 @@ function renderGrupamentoGrid(){
  if(twModel === 'Upper'){
    // U/L + Diário → escolhe combinação superior/inferior
    const combos = [
-     {label:'Peito & Pernas', superior:'Peito', desc:'Superior + Inferior'},
-     {label:'Costas & Pernas', superior:'Costas', desc:'Superior + Inferior'},
-     {label:'Ombros & Pernas', superior:'Ombros', desc:'Superior + Inferior'},
-     {label:'Bíceps & Pernas', superior:'Bíceps', desc:'Superior + Inferior'},
-     {label:'Tríceps & Pernas', superior:'Tríceps', desc:'Superior + Inferior'},
+     {label: tMuscle('Peito')+' & '+tMuscle('Pernas'), superior:'Peito', desc:currentLang==='en'?'Upper + Lower':'Superior + Inferior'},
+     {label: tMuscle('Costas')+' & '+tMuscle('Pernas'), superior:'Costas', desc:currentLang==='en'?'Upper + Lower':'Superior + Inferior'},
+     {label: tMuscle('Ombros')+' & '+tMuscle('Pernas'), superior:'Ombros', desc:currentLang==='en'?'Upper + Lower':'Superior + Inferior'},
+     {label: tMuscle('Bíceps')+' & '+tMuscle('Pernas'), superior:'Bíceps', desc:currentLang==='en'?'Upper + Lower':'Superior + Inferior'},
+     {label: tMuscle('Tríceps')+' & '+tMuscle('Pernas'), superior:'Tríceps', desc:currentLang==='en'?'Upper + Lower':'Superior + Inferior'},
    ];
    grid.innerHTML = `<div class="muscle-grid">${combos.map(p=>`
      <div class="muscle-card" onclick="openMuscleUL('${p.superior}','${p.label}')">
@@ -2293,6 +2305,9 @@ function afterMuscleSelected(){
 function selectDiffNew(diff, el){
  twDiff=diff;
  currentDiff=diff;
+ todayPickedCache = {};
+ cycleData = null;
+ checkCycleStatus();
  document.querySelectorAll('#tw-step3 .tw-card').forEach(c=>c.classList.remove('selected'));
  el.classList.add('selected');
  setTimeout(()=>afterDiffSelected(), 300);
@@ -2456,7 +2471,7 @@ function openMuscle(name,icon,exercises){
  dayGroups.forEach(g => {
  const gIcon = {'Peito':'','Costas':'','Pernas':'','Ombros':'','Bíceps':'','Tríceps':'','Abdômen':'','Flexões':''}[g.muscle]||'';
  const picked = todayPickedCache[g.muscle] || pickExercises(g.exs, 4);
- allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + g.muscle.toUpperCase() + '</div>';
+ allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + tMuscle(g.muscle).toUpperCase() + '</div>';
  allHtml += picked.map(ex=>`<div class="ex-detail-card">
  <h4>${ex}</h4>
  <div class="ex-spec-row">
@@ -2513,9 +2528,14 @@ function openMuscle(name,icon,exercises){
  } // close else
  const mEl = document.getElementById('muscleModal');
  const mElInner = mEl.querySelector('.modal');
+ // Limpa conteúdo anterior antes de exibir
+ const mExFinal = document.getElementById('modalExercises');
+ const mTitleFinal = document.getElementById('modalTitle');
+ if(mExFinal) mExFinal.innerHTML = '';
+ if(mTitleFinal) mTitleFinal.textContent = '';
  mEl.scrollTop = 0;
  if(mElInner) mElInner.scrollTop = 0;
- document.getElementById('modalExercises').scrollTop = 0;
+ if(mExFinal) mExFinal.scrollTop = 0;
  mEl.classList.add('open');
  setTimeout(function(){
    if(mElInner) mElInner.scrollTo({top:0, behavior:'auto'});
@@ -2680,7 +2700,7 @@ function updateTodayWithMuscle(name, icon, exercises){
        </div>`).join('');
        return `<div style="margin-bottom:4px">
        <div style="font-size:11px;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px;display:flex;align-items:center;gap:6px">
-       <span>${gIcon}</span><span>${g.muscle}</span></div>
+       <span>${gIcon}</span><span>${tMuscle(g.muscle)}</span></div>
        <div class="exercise-list">${exsHTML}</div></div>`;
      }).join('');
      box.innerHTML = `
@@ -2739,7 +2759,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div style="margin-bottom:4px">
  <div style="font-size:11px;color:var(--accent);font-weight:800;text-transform:uppercase;
  letter-spacing:.5px;margin:12px 0 6px;display:flex;align-items:center;gap:6px">
- <span>${gIcon}</span><span>${g.muscle}</span>
+ <span>${gIcon}</span><span>${tMuscle(g.muscle)}</span>
  </div>
  <div class="exercise-list">${exsHTML}</div>
  </div>`;
@@ -2845,6 +2865,13 @@ const muscleIcons = {
  'Bíceps':'','Tríceps':'','Abdômen':''
 };
 
+const muscleTranslation = {
+ 'Peito':'Chest','Costas':'Back','Pernas':'Legs','Ombros':'Shoulders',
+ 'Bíceps':'Biceps','Tríceps':'Triceps','Abdômen':'Abs','Flexões':'Push-ups'
+};
+function tMuscle(name){ return currentLang==='en' ? (muscleTranslation[name]||name) : name; }
+
+
 // ─── AUTO SCHEDULE ──────────────────────────────────────
 
 function setupAutoSchedule(){
@@ -2930,7 +2957,7 @@ function renderTodayWorkout(){
  const s = diffSpecs[activeDiff];
  const diffLabel = {easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil}[activeDiff];
  const diffClass = {easy:'badge-easy',med:'badge-med',hard:'badge-hard'}[activeDiff];
- const periodLabel = {daily:'Diário ',monthly:'Mensal ',trimester:'Trimestral '}[activePeriod]||'';
+ const periodLabel = currentLang==='en' ? {daily:'Daily ',monthly:'Monthly ',trimester:'Quarterly '}[activePeriod]||'' : {daily:'Diário ',monthly:'Mensal ',trimester:'Trimestral '}[activePeriod]||'';
 
  // Get today's day — reuse todayInfo declared above
  // Para Full Body, sempre usa o modelMap que tem todos os grupamentos
