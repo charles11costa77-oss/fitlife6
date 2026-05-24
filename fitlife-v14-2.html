@@ -2817,7 +2817,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div class="today-card">
  <div class="tc-header">
  <div>
- <div class="tc-title">${icon} ${name}</div>
+ <div class="tc-title">${icon} ${tDayLabel(name)}</div>
  <div style="font-size:11px;color:var(--muted);margin-top:3px">${modelLabel}${periodLabel?' · '+periodLabel:''}</div>
  </div>
  <div class="badge ${diffClass}">${diffLabel}</div>
@@ -3073,7 +3073,7 @@ function initProgressUI(){
  const btn = document.getElementById('btnConcluir');
  if(btn){
  btn.classList.add('locked');
- btn.textContent = ' ${t[currentLang].concluirTreino} (0%)';
+ btn.textContent = t[currentLang].concluirTreino + ' (0%)';
  btn.onclick = ()=>showToast(t[currentLang].concluaMenos);
  }
 }
