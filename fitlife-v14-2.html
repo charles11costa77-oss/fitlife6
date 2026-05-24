@@ -859,48 +859,48 @@ input, textarea {
  <div class="goal-big-toggle">
  <button class="goal-big-btn active" id="btnBulk" onclick="setNutriGoal('bulk',this)">
  <div class="gbb-icon"></div>
- <div class="gbb-label">Ganhar Massa</div>
- <div class="gbb-sub">2.800+ kcal • Alto carb • Alta proteína</div>
+ <div class="gbb-label" id="lblBulk">Ganhar Massa</div>
+ <div class="gbb-sub" id="subBulk">2.800+ kcal • Alto carb • Alta proteína</div>
  </button>
  <button class="goal-big-btn" id="btnCut" onclick="setNutriGoal('cut',this)">
  <div class="gbb-icon"></div>
- <div class="gbb-label">Perder Gordura</div>
- <div class="gbb-sub">1.600–1.900 kcal • Low carb • Leve</div>
+ <div class="gbb-label" id="lblCut">Perder Gordura</div>
+ <div class="gbb-sub" id="subCut">1.600–1.900 kcal • Low carb • Leve</div>
  </button>
  </div>
 
  <!-- NÍVEL DE COMPLEXIDADE -->
- <div class="section-title" style="margin-top:20px"> Nível de <span>Preparo</span></div>
+ <div class="section-title" style="margin-top:20px" id="nivelPreparo"> Nível de <span id="nivelPreparoSpan">Preparo</span></div>
  <div class="complexity-row">
  <div class="complexity-btn active" id="cplx-simple" onclick="setComplexity('simple',this)">
  <div class="cplx-dot" style="background:var(--green)"></div>
  <div>
- <div class="cplx-title"> Simples</div>
- <div class="cplx-sub">Ingredientes básicos · Rápido · Sem equipamentos</div>
+ <div class="cplx-title" id="cplxTitleSimple"> Simples</div>
+ <div class="cplx-sub" id="cplxSubSimple">Ingredientes básicos · Rápido · Sem equipamentos</div>
  </div>
  </div>
  <div class="complexity-btn" id="cplx-mid" onclick="setComplexity('mid',this)">
  <div class="cplx-dot" style="background:#facc15"></div>
  <div>
- <div class="cplx-title"> Intermediário</div>
- <div class="cplx-sub">Mais variedade · Acessível · Fácil de fazer</div>
+ <div class="cplx-title" id="cplxTitleMid"> Intermediário</div>
+ <div class="cplx-sub" id="cplxSubMid">Mais variedade · Acessível · Fácil de fazer</div>
  </div>
  </div>
  <div class="complexity-btn" id="cplx-full" onclick="setComplexity('full',this)">
  <div class="cplx-dot" style="background:var(--accent2)"></div>
  <div>
- <div class="cplx-title"> Completo</div>
- <div class="cplx-sub">Receitas elaboradas · Mais ingredientes · Técnico</div>
+ <div class="cplx-title" id="cplxTitleFull"> Completo</div>
+ <div class="cplx-sub" id="cplxSubFull">Receitas elaboradas · Mais ingredientes · Técnico</div>
  </div>
  </div>
  </div>
 
  <!-- MACROS DO DIA -->
- <div class="section-title" style="margin-top:20px"> Referência de <span>Macros</span></div>
+ <div class="section-title" style="margin-top:20px" id="refMacros"> Referência de <span id="refMacrosSpan">Macros</span></div>
  <div class="macro-row">
- <div class="macro-card"><div class="m-val" style="color:var(--accent)" id="mKcal">2.800</div><div class="m-lbl">Kcal/dia</div><div class="m-bar" style="background:var(--accent)"></div></div>
- <div class="macro-card"><div class="m-val" style="color:var(--accent3)" id="mProt">180g</div><div class="m-lbl">Proteína</div><div class="m-bar" style="background:var(--accent3)"></div></div>
- <div class="macro-card"><div class="m-val" style="color:var(--accent2)" id="mFat">70g</div><div class="m-lbl">Gordura</div><div class="m-bar" style="background:var(--accent2)"></div></div>
+ <div class="macro-card"><div class="m-val" style="color:var(--accent)" id="mKcal">2.800</div><div class="m-lbl" id="lblKcal">Kcal/dia</div><div class="m-bar" style="background:var(--accent)"></div></div>
+ <div class="macro-card"><div class="m-val" style="color:var(--accent3)" id="mProt">180g</div><div class="m-lbl" id="lblProt">Proteína</div><div class="m-bar" style="background:var(--accent3)"></div></div>
+ <div class="macro-card"><div class="m-val" style="color:var(--accent2)" id="mFat">70g</div><div class="m-lbl" id="lblFat">Gordura</div><div class="m-bar" style="background:var(--accent2)"></div></div>
  </div>
 
  <!-- PLANO DO DIA -->
@@ -908,7 +908,7 @@ input, textarea {
  <span> Plano do <span style="color:var(--accent)">Dia</span>
  <span style="font-size:11px;color:var(--muted);font-weight:400;margin-left:6px">— toque para ver dicas</span>
  </span>
- <button id="btnShuffleMeal" onclick="shuffleMealPlan()" style="display:none;background:var(--card);border:1px solid var(--accent3);color:var(--accent3);border-radius:8px;padding:5px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer"> Trocar cardápio</button>
+ <button id="btnShuffleMeal" onclick="shuffleMealPlan()" style="display:none;background:var(--card);border:1px solid var(--accent3);color:var(--accent3);border-radius:8px;padding:5px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer" id="btnShuffleMealLbl"> Trocar cardápio</button>
  </div>
  <div id="mealPlanBox"></div>
 
@@ -1196,6 +1196,15 @@ const t = {
   completo: " Completo", completoSub: "Receitas elaboradas · Mais ingredientes · Técnico",
   macros: " Referência de", macrosSpan: "Macros",
   planoDia: " Plano do", planoDiaSpan: "Dia", planoDiaTip: "— toque para ver dicas",
+  lblBulk:"Ganhar Massa", subBulk:"2.800+ kcal • Alto carb • Alta proteína",
+  lblCut:"Perder Gordura", subCut:"1.600–1.900 kcal • Low carb • Leve",
+  nivelPreparo:" Nível de", nivelPreparoSpan:"Preparo",
+  cplxTitleSimple:"Simples", cplxSubSimple:"Ingredientes básicos · Rápido · Sem equipamentos",
+  cplxTitleMid:"Intermediário", cplxSubMid:"Mais variedade · Acessível · Fácil de fazer",
+  cplxTitleFull:"Completo", cplxSubFull:"Receitas elaboradas · Mais ingredientes · Técnico",
+  refMacros:" Referência de", refMacrosSpan:"Macros",
+  lblKcal:"Kcal/dia", lblProt:"Proteína", lblFat:"Gordura",
+  trocaCardapio:"Trocar cardápio",
   trocarCardapio: " Trocar cardápio",
   receitas: " Enciclopédia de", receitasSpan: "Receitas",
   receitasTabs: [" Todas"," Frango"," Ovos"," Peixe"," Carne"," Legumes"," Shakes"],
@@ -1349,6 +1358,15 @@ const t = {
   completo: " Complete", completoSub: "Elaborate recipes · More ingredients · Technical",
   macros: " Daily", macrosSpan: "Macros",
   planoDia: " Meal", planoDiaSpan: "Plan", planoDiaTip: "— tap to see tips",
+  lblBulk:"Gain Muscle", subBulk:"2,800+ kcal • High carb • High protein",
+  lblCut:"Lose Fat", subCut:"1,600–1,900 kcal • Low carb • Light",
+  nivelPreparo:" Skill", nivelPreparoSpan:"Level",
+  cplxTitleSimple:"Simple", cplxSubSimple:"Basic ingredients · Fast · No equipment",
+  cplxTitleMid:"Intermediate", cplxSubMid:"More variety · Accessible · Easy to make",
+  cplxTitleFull:"Complete", cplxSubFull:"Elaborate recipes · More ingredients · Technical",
+  refMacros:" Macro", refMacrosSpan:"Reference",
+  lblKcal:"Kcal/day", lblProt:"Protein", lblFat:"Fat",
+  trocaCardapio:"Shuffle meals",
   trocarCardapio: " Shuffle meal plan",
   receitas: " Recipe", receitasSpan: "Encyclopedia",
   receitasTabs: [" All"," Chicken"," Eggs"," Fish"," Meat"," Veggies"," Shakes"],
@@ -1589,6 +1607,17 @@ function applyLang() {
  if(diasTitleEl){ diasTitleEl.childNodes[0].textContent = l.diasTitle; const diasSpanEl = document.getElementById("diasSpan"); if(diasSpanEl) diasSpanEl.textContent = l.diasSpan; }
  const diasSubEl = document.getElementById("diasSub");
  if(diasSubEl) diasSubEl.textContent = l.diasSub;
+ // Nutrição - labels da interface
+ const nutriIds = ['lblBulk','subBulk','lblCut','subCut','nivelPreparoSpan',
+  'cplxTitleSimple','cplxSubSimple','cplxTitleMid','cplxSubMid','cplxTitleFull','cplxSubFull',
+  'refMacrosSpan','lblKcal','lblProt','lblFat'];
+ nutriIds.forEach(id => { const el = document.getElementById(id); if(el && l[id]) el.textContent = l[id]; });
+ const nivelEl = document.getElementById('nivelPreparo');
+ if(nivelEl) nivelEl.childNodes[0].textContent = l.nivelPreparo;
+ const refEl = document.getElementById('refMacros');
+ if(refEl) refEl.childNodes[0].textContent = l.refMacros;
+ const shuffleLbl = document.getElementById('btnShuffleMealLbl');
+ if(shuffleLbl) shuffleLbl.textContent = l.trocaCardapio;
  // Bottom nav
  const navLabels = document.querySelectorAll(".nav-label");
  const navTexts = [l.navHome, l.navWorkouts, l.navNutrition, l.navDiary];
@@ -3537,6 +3566,99 @@ const mealPlansDB={
  ],
 };;
 
+const recipeNameTranslation = {
+ 'Frango Grelhado com Batata Doce':'Grilled Chicken with Sweet Potato',
+ 'Macarrão Integral com Frango e Brócolis':'Whole Wheat Pasta with Chicken & Broccoli',
+ 'Frango ao Curry com Arroz Integral':'Chicken Curry with Brown Rice',
+ 'Wrap de Frango com Hummus':'Chicken Wrap with Hummus',
+ 'Frango Ensopado com Mandioquinha':'Chicken Stew with Mandioquinha',
+ 'Mexido Proteico com Ricota':'Protein Scramble with Ricotta',
+ 'Salada de Atum com Ovo Cozido':'Tuna Salad with Boiled Egg',
+ 'Ovos Mexidos com Abacate e Torrada':'Scrambled Eggs with Avocado & Toast',
+ 'Salmão Grelhado com Aspargos':'Grilled Salmon with Asparagus',
+ 'Atum Grelhado com Macarrão Integral':'Grilled Tuna with Whole Wheat Pasta',
+ 'Patinho Moído com Legumes':'Ground Beef with Vegetables',
+ 'Bife de Alcatra com Batata Doce':'Sirloin Steak with Sweet Potato',
+ 'Carne Moída com Grão-de-Bico':'Ground Beef with Chickpeas',
+ 'Bowl de Quinoa com Grão-de-Bico':'Quinoa Bowl with Chickpeas',
+ 'Dhal de Lentilha com Naan Integral':'Lentil Dhal with Whole Wheat Naan',
+ 'Shake Pós-Treino de Banana e Aveia':'Post-Workout Banana & Oat Shake',
+ 'Shake de Cacau e Pasta de Amendoim':'Cocoa & Peanut Butter Shake',
+ 'Shake Massa com Aveia, Mel e Ovo':'Mass Shake with Oats, Honey & Egg',
+ 'Frango com Arroz Integral e Feijão':'Chicken with Brown Rice & Beans',
+ 'Omelete Recheado com Queijo e Presunto':'Stuffed Omelette with Cheese & Ham',
+ 'Picadinho com Ervilhas e Arroz':'Beef Stew with Peas & Rice',
+ 'Tilápia ao Forno com Purê de Batata Doce':'Baked Tilapia with Sweet Potato Mash',
+ 'Strogonoff Vegano de Cogumelos':'Vegan Mushroom Stroganoff',
+ 'Shake de Morango com Iogurte Grego':'Strawberry & Greek Yogurt Shake',
+ 'Panqueca de Aveia com Frango':'Oat Pancake with Chicken',
+ 'Tapioca Proteica com Ovo e Queijo':'Protein Tapioca with Egg & Cheese',
+ 'Taco Fitness com Carne e Guacamole':'Fitness Taco with Beef & Guacamole',
+ 'Moqueca Fitness de Tilápia':'Moqueca Fitness de Tilápia',
+ 'Macarrão de Grão-de-Bico com Pesto':'Chickpea Pasta with Pesto',
+ 'Vitamina de Banana com Pasta de Amendoim':'Banana & Peanut Butter Smoothie',
+ 'Frango Desfiado com Arroz e Feijão':'Shredded Chicken with Rice & Beans',
+ 'Frango Cozido com Legumes na Panela':'Chicken & Vegetables in One Pot',
+ 'Ovo Frito com Queijo Minas':'Fried Egg with Minas Cheese',
+ 'Ovo Mexido com Repolho Refogado':'Scrambled Egg with Sautéed Cabbage',
+ 'Filé de Peixe Empanado Simples':'Simple Breaded Fish Fillet',
+ 'Atum de Lata com Arroz':'Canned Tuna with Rice',
+ 'Bife Grelhado na Frigideira':'Pan-Grilled Steak',
+ 'Carne Moída Refogada Simples':'Simple Sautéed Ground Beef',
+ 'Legumes Cozidos na Água e Sal':'Boiled Vegetables with Salt',
+ 'Feijão Simples com Arroz':'Simple Bean & Rice',
+ 'Vitamina de Banana com Leite':'Banana & Milk Smoothie',
+ 'Achocolatado com Aveia':'Chocolate Milk with Oats',
+ 'Salada de Frango com Quinoa':'Chicken & Quinoa Salad',
+ 'Frango ao Limão com Aspargos':'Lemon Chicken with Asparagus',
+ 'Wrap Low Carb de Frango com Rúcula':'Low Carb Chicken Wrap with Arugula',
+ 'Sopa de Frango com Legumes':'Chicken & Vegetable Soup',
+ 'Frango Grelhado com Salada Caprese':'Grilled Chicken with Caprese Salad',
+ 'Omelete de Claras com Espinafre':'Egg White Omelette with Spinach',
+ 'Muffin de Ovo e Vegetais no Forno':'Baked Egg & Vegetable Muffin',
+ 'Salada Niçoise Fitness':'Fitness Niçoise Salad',
+ 'Tilápia ao Vapor com Legumes':'Steamed Tilapia with Vegetables',
+ 'Ceviche de Tilápia':'Tilapia Ceviche',
+ 'Atum com Salada de Pepino e Iogurte':'Tuna with Cucumber & Yogurt Salad',
+ 'Bifinho Grelhado com Salada Verde':'Grilled Steak with Green Salad',
+ 'Sopa de Carne Magra com Legumes':'Lean Beef & Vegetable Soup',
+ 'Taco Lettuce Wrap (Sem Tortilla)':'Lettuce Taco Wrap (No Tortilla)',
+ 'Bowl de Brócolis com Hummus e Ovo':'Broccoli Bowl with Hummus & Egg',
+ 'Salada de Lentilha com Pepino':'Lentil & Cucumber Salad',
+ 'Espaguete de Abobrinha com Molho de Tomate':'Zucchini Spaghetti with Tomato Sauce',
+ 'Smoothie Detox Verde':'Green Detox Smoothie',
+ 'Shake Proteico de Baunilha e Café':'Vanilla Coffee Protein Shake',
+ 'Shake Citrico de Laranja e Gengibre':'Citrus Orange & Ginger Shake',
+ 'Frango com Couve Refogada e Ovo':'Chicken with Sautéed Kale & Egg',
+ 'Claras Mexidas com Tomate e Ervas':'Scrambled Egg Whites with Tomato & Herbs',
+ 'Sardinha Grelhada com Salada':'Grilled Sardine with Salad',
+ 'Carne Moída com Couve-Flor no Forno':'Ground Beef with Roasted Cauliflower',
+ 'Sopinha de Legumes com Tofu':'Light Vegetable Soup with Tofu',
+ 'Salada de Grão-de-Bico com Espinafre':'Chickpea & Spinach Salad',
+ 'Smoothie de Mirtilo e Proteína':'Blueberry Protein Smoothie',
+ 'Shake de Coco com Whey e Chia':'Coconut Whey & Chia Shake',
+ 'Caldo de Frango com Macarrão Konjac':'Chicken Broth with Konjac Noodles',
+ 'Salada de Ovo com Iogurte e Mostarda':'Egg Salad with Yogurt & Mustard',
+ 'Frango Cozido Desfiado com Salada':'Shredded Chicken with Salad',
+ 'Frango com Abobrinha Refogada':'Chicken with Sautéed Zucchini',
+ 'Ovo Cozido com Sal':'Boiled Egg with Salt',
+ 'Ovo Frito com Repolho na Frigideira':'Pan-Fried Egg with Cabbage',
+ 'Filé de Peixe Grelhado com Sal':'Grilled Fish Fillet with Salt',
+ 'Atum de Lata com Pepino':'Canned Tuna with Cucumber',
+ 'Carne Moída com Couve Refogada':'Ground Beef with Sautéed Kale',
+ 'Bife Grelhado com Tomate':'Grilled Steak with Tomato',
+ 'Brócolis Cozido com Azeite e Sal':'Boiled Broccoli with Olive Oil & Salt',
+ 'Cenoura e Beterraba Cozidas':'Boiled Carrot & Beetroot',
+ 'Iogurte Natural com Banana':'Natural Yogurt with Banana',
+};
+function tRecipeName(name){ return currentLang==='en' ? (recipeNameTranslation[name]||name) : name; }
+
+const mealLabelTranslation = {
+ 'Café da manhã':'Breakfast','Lanche da manhã':'Morning snack',
+ 'Almoço':'Lunch','Lanche da tarde':'Afternoon snack','Jantar':'Dinner'
+};
+function tMealLabel(label){ return currentLang==='en' ? (mealLabelTranslation[label]||label) : label; }
+
 function getMealPlanForToday(){
  const goal = currentNutriGoal;
  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
@@ -3658,7 +3780,7 @@ function renderRecipes(cat){
  +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'
  +(r.emoji ? '<div style="font-size:32px">'+r.emoji+'</div>' : '')
  +'<div style="flex:1">'
- +'<div style="font-weight:800;font-size:14px" class="rc-name">'+r.name+'</div>'
+ +'<div style="font-weight:800;font-size:14px" class="rc-name">'+tRecipeName(r.name)+'</div>'
  +'<div style="font-size:11px;color:'+cplxColor+';font-weight:700;margin-top:2px">'+cplxLabel+'</div>'
  +'</div>'
  +'<div style="text-align:right">'
@@ -3701,7 +3823,7 @@ function renderMealPlan(){
  const totalKcal = plan.reduce((s,m)=>s+m.kcal, 0);
  const totalProt = plan.reduce((s,m)=>s+parseInt(m.prot), 0);
  const today = new Date();
- const dateStr = today.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+ const dateStr = today.toLocaleDateString(currentLang==='en'?'en-US':'pt-BR',{weekday:'long',day:'numeric',month:'long'});
  const cplxLabel = {simple:' Simples',mid:' Intermediário',full:' Completo'}[currentComplexity]||'';
 
  let html = '<div style="background:var(--card);border-radius:14px;padding:12px 16px;margin-bottom:12px;border:1px solid var(--border)">'
@@ -3717,8 +3839,8 @@ function renderMealPlan(){
  + '<div style="display:flex;align-items:center;gap:10px;flex:1">'
  + '<div style="font-size:28px">' + m.emoji + '</div>'
  + '<div style="flex:1">'
- + '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">' + m.label + ' · ' + m.time + '</div>'
- + '<div style="font-weight:800;font-size:14px;margin-top:2px">' + m.name + '</div>'
+ + '<div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">' + tMealLabel(m.label) + ' · ' + m.time + '</div>'
+ + '<div style="font-weight:800;font-size:14px;margin-top:2px">' + tRecipeName(m.name) + '</div>'
  + '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + m.kcal + ' kcal · ' + m.prot + ' proteína</div>'
  + '</div>'
  + '</div>'
@@ -3825,7 +3947,7 @@ function toggleNewEntry(){
 function saveEntry(){
  const text = document.getElementById('entryText').value;
  if(!text.trim()) return;
- const dateStr = new Date().toLocaleDateString('pt-BR',{day:'numeric',month:'long'});
+ const dateStr = new Date().toLocaleDateString(currentLang==='en'?'en-US':'pt-BR',{day:'numeric',month:'long'});
  const id = 'entry-' + Date.now();
  const entry = {id, date:'Hoje, ' + dateStr, text, mood: selectedMood || ''};
  diaryEntries.unshift(entry);
