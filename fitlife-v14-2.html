@@ -972,8 +972,8 @@ input, textarea {
  <div id="modalExercises"></div>
  <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,0.08);padding-top:20px">
     <div style="background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px">
-      <div style="font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;text-align:center">PRONTO PARA COMEÇAR?</div>
-      <button class="btn-start" onclick="localStorage.setItem('fitlife_tw_config',JSON.stringify({period:twPeriod,model:twModel,diff:twDiff}));closeModal();comingFromModal=false;goToTab('home');"> VER TREINO DO DIA</button>
+      <div id="modalReadyLabel" style="font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;text-align:center">PRONTO PARA COMEÇAR?</div>
+      <button id="modalReadyBtn" class="btn-start" onclick="localStorage.setItem('fitlife_tw_config',JSON.stringify({period:twPeriod,model:twModel,diff:twDiff}));closeModal();comingFromModal=false;goToTab('home');"> VER TREINO DO DIA</button>
     </div>
   </div>
  </div>
@@ -1579,6 +1579,11 @@ function applyLang() {
   if(btns[0]) btns[0].textContent = l.start;
   if(btns[1]) btns[1].textContent = l.back;
  }
+ // Modal pronto para começar
+ const modalReadyLabel = document.getElementById('modalReadyLabel');
+ if(modalReadyLabel) modalReadyLabel.textContent = l.prontoParaComecar;
+ const modalReadyBtn = document.getElementById('modalReadyBtn');
+ if(modalReadyBtn) modalReadyBtn.textContent = l.verTreinoDia;
  // Dias disponíveis (step 5)
  const diasTitleEl = document.getElementById("diasTitle");
  if(diasTitleEl){ diasTitleEl.childNodes[0].textContent = l.diasTitle; const diasSpanEl = document.getElementById("diasSpan"); if(diasSpanEl) diasSpanEl.textContent = l.diasSpan; }
@@ -2152,7 +2157,7 @@ function openMuscleUL(superior, label){
          </div>`;
      }).join('');
      return `<div style="margin-bottom:4px">
-       <div style="font-size:11px;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px">${m}</div>
+       <div style="font-size:11px;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px">${tMuscle(m)}</div>
        <div class="exercise-list">${exsHTML}</div>
        </div>`;
    }).join('');
@@ -2160,7 +2165,7 @@ function openMuscleUL(superior, label){
    box.innerHTML = `<div class="today-card">
      <div class="tc-header">
      <div><div class="tc-title">${label}</div>
-     <div style="font-size:11px;color:var(--muted);margin-top:3px">Upper · Diário</div></div>
+     <div style="font-size:11px;color:var(--muted);margin-top:3px">Upper · ${currentLang==='en'?'Daily':'Diário'}</div></div>
      <div class="badge ${diffClass}">${diffLabel}</div>
      </div>
      ${sectionsHTML}
@@ -2466,7 +2471,7 @@ function openMuscle(name,icon,exercises){
 
  if(dayGroups && dayGroups.length > 1){
  // Show all groups (e.g. Peito + Triceps together)
- document.getElementById('modalTitle').textContent = dayGroups.map(g=>g.muscle).join(' & ') + ' ' + icon;
+ document.getElementById('modalTitle').textContent = dayGroups.map(g=>tMuscle(g.muscle)).join(' & ') + ' ' + icon;
  let allHtml = '';
  dayGroups.forEach(g => {
  const gIcon = {'Peito':'','Costas':'','Pernas':'','Ombros':'','Bíceps':'','Tríceps':'','Abdômen':'','Flexões':''}[g.muscle]||'';
