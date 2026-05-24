@@ -2878,9 +2878,10 @@ function tMuscle(name){ return currentLang==='en' ? (muscleTranslation[name]||na
 
 const dayLabelTranslation = {
  'Corpo Inteiro':'Full Body','Superior (Upper)':'Upper Body','Inferior (Lower)':'Lower Body',
+ 'Treino A':'Workout A','Treino B':'Workout B',
  'Peito & Tríceps':'Chest & Triceps','Costas & Bíceps':'Back & Biceps',
  'Pernas & Ombros':'Legs & Shoulders','Ombros & Bíceps':'Shoulders & Biceps',
- 'Costas & Bíceps':'Back & Biceps','Bíceps & Abdômen':'Biceps & Abs'
+ 'Bíceps & Abdômen':'Biceps & Abs','Abdômen & Flexões':'Abs & Push-Ups'
 };
 function tDayLabel(label){ return currentLang==='en' ? (dayLabelTranslation[label]||label) : label; }
 
@@ -2993,11 +2994,7 @@ function renderTodayWorkout(){
  return;
  }
 
- const labelMap = {
-  'Corpo Inteiro':'Full Body','Superior (Upper)':'Upper Body',
-  'Inferior (Lower)':'Lower Body','Treino A':'Workout A','Treino B':'Workout B'
- };
- const title = currentLang==='en' ? (labelMap[dayData.label]||dayData.label) : dayData.label;
+ const title = tDayLabel(dayData.label);
  const groups = dayData.groups;
 
  // Build exercise sections per muscle group
