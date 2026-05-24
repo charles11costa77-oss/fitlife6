@@ -2774,7 +2774,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div class="today-card">
  <div class="tc-header">
  <div>
- <div class="tc-title"> ${foundDay.label}</div>
+ <div class="tc-title"> ${tDayLabel(foundDay.label)}</div>
  <div style="font-size:11px;color:var(--muted);margin-top:3px">${modelLabel}${periodLabel?' · '+periodLabel:''}</div>
  </div>
  <div class="badge ${diffClass}">${diffLabel}</div>
@@ -2875,6 +2875,14 @@ const muscleTranslation = {
  'Bíceps':'Biceps','Tríceps':'Triceps','Abdômen':'Abs','Flexões':'Push-ups'
 };
 function tMuscle(name){ return currentLang==='en' ? (muscleTranslation[name]||name) : name; }
+
+const dayLabelTranslation = {
+ 'Corpo Inteiro':'Full Body','Superior (Upper)':'Upper Body','Inferior (Lower)':'Lower Body',
+ 'Peito & Tríceps':'Chest & Triceps','Costas & Bíceps':'Back & Biceps',
+ 'Pernas & Ombros':'Legs & Shoulders','Ombros & Bíceps':'Shoulders & Biceps',
+ 'Costas & Bíceps':'Back & Biceps','Bíceps & Abdômen':'Biceps & Abs'
+};
+function tDayLabel(label){ return currentLang==='en' ? (dayLabelTranslation[label]||label) : label; }
 
 
 // ─── AUTO SCHEDULE ──────────────────────────────────────
