@@ -640,7 +640,7 @@ input, textarea {
    <div class="sp-email" id="sideEmail">—</div>
   </div>
   <div class="profile-badges">
-   <span class="profile-badge">⚡ Ativo</span>
+   <span class="profile-badge" id="sideActiveBadge">⚡ Ativo</span>
    <span class="profile-badge" id="sideGoalBadge">Configure seu perfil</span>
   </div>
   <div class="profile-fields">
@@ -935,7 +935,7 @@ input, textarea {
  </div>
  <div>
  <div class="diary-header">
- <div class="section-title" style="margin:0">Minhas <span>Anotações</span></div>
+ <div class="section-title" style="margin:0"><span id="labelMinhasAnotacoes">Minhas</span> <span id="labelAnotacoesSpan" style="color:var(--accent)">Anotações</span></div>
  <button class="diary-add-btn" onclick="toggleNewEntry()">+ Nova</button>
  </div>
  <div class="new-entry-form" id="newEntryForm" style="display:block">
@@ -1098,7 +1098,6 @@ const recipesCut=[
  {cat:'legumes',complexity:'simple',emoji:'',name:'Brócolis Cozido com Azeite e Sal',level:'simple',kcal:80,prot:'5g',carb:'10g',fat:'4g',time:'10 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['200g broccoli','Water and salt','Drizzle of olive oil and garlic'],prep:'Boil broccoli in salted water for 5-7 min. Drain and season with olive oil and garlic.',qty:'Broccoli = very few calories, lots of fiber, vitamin C and calcium.'},
  {cat:'legumes',complexity:'simple',emoji:'',name:'Cenoura e Beterraba Cozidas',level:'simple',kcal:100,prot:'3g',carb:'22g',fat:'1g',time:'20 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 carrot','1 small beetroot','Water and salt','Lemon to season'],prep:'Boil carrot and beetroot in salted water until tender. Serve with lemon.',qty:'Two of the cheapest and most nutritious vegetables. Beetroot improves physical performance.'},
  {cat:'shake',complexity:'simple',emoji:'',name:'Iogurte Natural com Banana',level:'simple',kcal:180,prot:'8g',carb:'32g',fat:'2g',time:'2 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 pot skimmed natural yogurt','1 sliced banana','1 tbsp honey (optional)'],prep:'Slice banana into rounds. Place in yogurt. Done!',qty:'No blender, no stove. Natural yogurt = protein + probiotics.'},
- {cat:'shake',complexity:'simple',emoji:'',name:'Água com Limão e Gengibre',level:'simple',kcal:20,prot:'0g',carb:'5g',fat:'0g',time:'2 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['Juice of 2 lemons','1 small piece grated ginger','500ml water','Sweetener to taste'],prep:'Mix everything. Can serve cold or hot.',qty:'Natural thermogenic. Ginger boosts metabolism. Practically zero calories.'},
 ];
 
 const macros={bulk:{kcal:'2.800',prot:'180g',fat:'70g'},cut:{kcal:'1.600',prot:'160g',fat:'50g'}};
@@ -1723,6 +1722,12 @@ function applyLang() {
  if(saveEntryBtn) saveEntryBtn.textContent=l.salvarNota;
  const novaNota = document.querySelector(".diary-add-btn");
  if(novaNota) novaNota.textContent=l.novaNota;
+ const sideActiveBadge = document.getElementById('sideActiveBadge');
+ if(sideActiveBadge) sideActiveBadge.textContent = currentLang==='en'?'⚡ Active':'⚡ Ativo';
+ const labelMinhas = document.getElementById('labelMinhasAnotacoes');
+ if(labelMinhas) labelMinhas.textContent = currentLang==='en'?'My':'Minhas';
+ const labelAnot = document.getElementById('labelAnotacoesSpan');
+ if(labelAnot) labelAnot.textContent = currentLang==='en'?'Notes':'Anotações';
  localStorage.setItem("fitlife_lang", currentLang);
 }
 function toggleChip(el){el.classList.toggle('selected')}
@@ -1763,6 +1768,8 @@ function startApp(){
  renderBuilder();
  localStorage.setItem('fitlife_onboarding_done', '1');
  localStorage.setItem('fitlife_profile', JSON.stringify(userProfile));
+ // Salva também na chave por UID se disponível
+ try{ var _u=firebase.auth().currentUser; if(_u){ localStorage.setItem('fitlife_onboarding_done_'+_u.uid,'1'); localStorage.setItem('fitlife_profile_'+_u.uid,JSON.stringify(userProfile)); } }catch(e){}
  window.scrollTo(0,0);
 }
 
@@ -1810,7 +1817,7 @@ function saveEdit(){
  localStorage.setItem('fitlife_profile', JSON.stringify(userProfile));
  updateProfileUI();
  closeEditModal();
- showToast(' Perfil atualizado!');
+ showToast(currentLang==='en'?' Profile updated!':" Perfil atualizado!");
 }
 
 function updateProfileUI(){
@@ -1823,7 +1830,7 @@ function updateProfileUI(){
  var emailEl=document.getElementById('sideEmail');
   try{ if(emailEl && auth && auth.currentUser) emailEl.textContent=auth.currentUser.email||''; }catch(e){}
  document.getElementById('pfWeight').textContent=p.weight?(p.weight+' kg'):'—';
- document.getElementById('pfAge').textContent=p.age?(p.age+' anos'):'—';
+ document.getElementById('pfAge').textContent=p.age?(p.age+(currentLang==='en'?' years old':' anos')):'—';
   document.getElementById('pfHealth').textContent=(p.health&&p.health.length?p.health.join(', '):'—');
  document.getElementById('pfGoal').textContent=p.goal||'—';
  // Tema por sexo: Feminino = rosa, demais = amarelo
@@ -1988,14 +1995,17 @@ function openWeekModal(){
       <div style="flex:1">
         ${d.isRest
           ? `<div style="font-size:13px;color:var(--muted);font-weight:700">${t[currentLang].descanso}</div>`
-          : `<div style="font-size:13px;font-weight:800"> ${d.label}</div>
-             <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.groups.map(g=>g.muscle).join(' · ')}</div>`
+          : `<div style="font-size:13px;font-weight:800"> ${tDayLabel(d.label)}</div>
+             <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.groups.map(g=>tMuscle(g.muscle)).join(' · ')}</div>`
         }
       </div>
       ${!d.isRest ? `<div style="font-size:16px">${muscleIcons2[d.groups[0]?.muscle]||''}</div>` : ''}
     </div>`).join('')}
   </div>`;
 
+  // Atualizar título do modal com nome do plano
+  const suaSemTitleEl = document.getElementById('suaSemanaTitle');
+  if(suaSemTitleEl) suaSemTitleEl.textContent = modelLabel + (periodLabel ? ' · ' + periodLabel : '');
   const modal = document.getElementById('weekModal');
   const modalInner = modal.querySelector('.modal');
   modal.scrollTop = 0;
@@ -2239,17 +2249,17 @@ function openMuscleUL(superior, label){
        return `<div class="ex-detail-card">
          <h4>${ex}</h4>
          <div class="ex-spec-row">
-         <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">Séries</div>
+         <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">${t[currentLang].seriesUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
          <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',-1,1,10)">−</button>
          <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',1,1,10)">+</button>
          </div></div>
-         <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">Reps</div>
+         <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">${t[currentLang].repsUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
          <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',-1,1,30)">−</button>
          <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',1,1,30)">+</button>
          </div></div>
-         <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${parseInt(s.rest)}s</div><div class="sl">Descanso</div>
+         <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${parseInt(s.rest)}s</div><div class="sl">${t[currentLang].descansoUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
          <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',-5,10,180)">−</button>
          <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',5,10,180)">+</button>
@@ -2481,17 +2491,17 @@ function openMuscle(name,icon,exercises){
        allHtml += picked.map(ex=>`<div class="ex-detail-card">
          <h4>${ex}</h4>
          <div class="ex-spec-row">
-         <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">Séries</div>
+         <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">${t[currentLang].seriesUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
          <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',-1,1,10)">−</button>
          <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',1,1,10)">+</button>
          </div></div>
-         <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">Reps</div>
+         <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">${t[currentLang].repsUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
          <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',-1,1,30)">−</button>
          <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',1,1,30)">+</button>
          </div></div>
-         <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${parseInt(s.rest)}s</div><div class="sl">Descanso</div>
+         <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${parseInt(s.rest)}s</div><div class="sl">${t[currentLang].descansoUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
          <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',-5,10,180)">−</button>
          <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',5,10,180)">+</button>
@@ -2523,19 +2533,19 @@ function openMuscle(name,icon,exercises){
  allHtml += picked.map(ex=>`<div class="ex-detail-card">
  <h4>${ex}</h4>
  <div class="ex-spec-row">
- <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">Séries</div>
+ <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">${t[currentLang].seriesUpper}</div>
  <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
  <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',-1,1,10)">−</button>
  <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',1,1,10)">+</button>
  </div>
  </div>
- <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">Reps</div>
+ <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">${t[currentLang].repsUpper}</div>
  <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
  <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',-1,1,30)">−</button>
  <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',1,1,30)">+</button>
  </div>
  </div>
- <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${parseInt(s.rest)}s</div><div class="sl">Descanso</div>
+ <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${parseInt(s.rest)}s</div><div class="sl">${t[currentLang].descansoUpper}</div>
  <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
  <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',-5,10,180)">−</button>
  <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',5,10,180)">+</button>
@@ -2553,19 +2563,19 @@ function openMuscle(name,icon,exercises){
  <div class="ex-detail-card">
  <h4>${ex}</h4>
  <div class="ex-spec-row">
- <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">Séries</div>
+ <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">${t[currentLang].seriesUpper}</div>
  <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
  <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',-1,1,10)">−</button>
  <button class="ctrl-btn" onclick="adjSpec('s','${ex.replace(/\s/g,'')}','ms-s-',1,1,10)">+</button>
  </div>
  </div>
- <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">Reps</div>
+ <div class="ex-spec"><div class="sv" id="ms-r-${ex.replace(/\s/g,'')}">${s.reps}</div><div class="sl">${t[currentLang].repsUpper}</div>
  <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
  <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',-1,1,30)">−</button>
  <button class="ctrl-btn" onclick="adjSpec('r','${ex.replace(/\s/g,'')}','ms-r-',1,1,30)">+</button>
  </div>
  </div>
- <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${s.rest}</div><div class="sl">Descanso</div>
+ <div class="ex-spec"><div class="sv" id="ms-d-${ex.replace(/\s/g,'')}">${s.rest}</div><div class="sl">${t[currentLang].descansoUpper}</div>
  <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
  <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',-15,15,180)">−</button>
  <button class="ctrl-btn" onclick="adjRest('${ex.replace(/\s/g,'')}','ms-d-',15,15,180)">+</button>
@@ -2576,14 +2586,8 @@ function openMuscle(name,icon,exercises){
  } // close else
  const mEl = document.getElementById('muscleModal');
  const mElInner = mEl.querySelector('.modal');
- // Limpa conteúdo anterior antes de exibir
- const mExFinal = document.getElementById('modalExercises');
- const mTitleFinal = document.getElementById('modalTitle');
- if(mExFinal) mExFinal.innerHTML = '';
- if(mTitleFinal) mTitleFinal.textContent = '';
  mEl.scrollTop = 0;
  if(mElInner) mElInner.scrollTop = 0;
- if(mExFinal) mExFinal.scrollTop = 0;
  mEl.classList.add('open');
  setTimeout(function(){
    if(mElInner) mElInner.scrollTo({top:0, behavior:'auto'});
@@ -2760,7 +2764,7 @@ function updateTodayWithMuscle(name, icon, exercises){
      </div>
      ${sectionsHTML}
      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
-     <div class="ex-counter" id="exCounter">0 de 0 exercícios concluídos (0%)</div>
+     <div class="ex-counter" id="exCounter">${t[currentLang].marqueExercicios}</div>
      <button class="btn-start locked" id="btnConcluir" style="margin-top:4px" onclick="showToast(t[currentLang].concluaMenos)">
      ${t[currentLang].concluirTreino} (0%)
      </button>
@@ -2824,7 +2828,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  </div>
  ${sectionsHTML}
  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
- <div class="ex-counter" id="exCounter">0 de 0 exercícios concluídos (0%)</div>
+ <div class="ex-counter" id="exCounter">${t[currentLang].marqueExercicios}</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px"
  onclick="showToast(t[currentLang].concluaMenos)">
  ${t[currentLang].concluirTreino} (0%)
@@ -2867,7 +2871,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  </div>
  <div class="exercise-list">${exsHTML}</div>
  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="exProgressBar" style="width:0%"></div></div>
- <div class="ex-counter" id="exCounter">0 de 0 exercícios concluídos (0%)</div>
+ <div class="ex-counter" id="exCounter">${t[currentLang].marqueExercicios}</div>
  <button class="btn-start locked" id="btnConcluir" style="margin-top:4px" onclick="showToast(t[currentLang].concluaMenos)">
  ${t[currentLang].concluirTreino} (0%)
  </button>
@@ -3006,8 +3010,8 @@ function renderTodayWorkout(){
  box.innerHTML=`<div style="background:var(--card);border-radius:18px;padding:24px;text-align:center;border:1px solid var(--border);margin-bottom:12px">
  <div style="font-size:48px;margin-bottom:10px"></div>
  <div style="font-weight:900;font-size:18px;margin-bottom:6px">${t[currentLang].diaDescanso}</div>
- <div style="color:var(--muted);font-size:13px;margin-bottom:14px">Recuperação é parte do treino. Amanhã tem mais! </div>
- <button onclick="goToTab('treinos')" style="background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Ver meu ciclo →</button>
+ <div style="color:var(--muted);font-size:13px;margin-bottom:14px">${currentLang==='en'?'Recovery is part of training. More tomorrow!':'Recuperação é parte do treino. Amanhã tem mais!'} </div>
+ <button onclick="goToTab('treinos')" style="background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer">${currentLang==='en'?'View my cycle →':'Ver meu ciclo →'}</button>
  </div>`;
  return;
  }
@@ -3032,7 +3036,7 @@ function renderTodayWorkout(){
  box.innerHTML = `<div class="today-card" style="text-align:center;padding:32px 20px">
  <div style="font-size:48px;margin-bottom:12px"></div>
  <div style="font-size:18px;font-weight:900;margin-bottom:8px">Dia de <span style="color:var(--accent3)">Descanso</span></div>
- <div style="font-size:13px;color:var(--muted);line-height:1.6">Recuperação é parte do treino!<br>Aproveite para descansar, se hidratar e comer bem.</div>
+ <div style="font-size:13px;color:var(--muted);line-height:1.6">${currentLang==='en'?'Recovery is part of training!<br>Rest, hydrate and eat well.':'Recuperação é parte do treino!<br>Aproveite para descansar, se hidratar e comer bem.'}</div>
  </div>
  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">${currentLang==='en'?'Next workout tomorrow!':'Próximo treino amanhã!'} </p>`;
  return;
@@ -3132,7 +3136,7 @@ function updateWorkoutProgress(){
  // Update counter text
  const counter = document.getElementById('exCounter');
  if(counter){
- counter.textContent = count + ' de ' + total + ' exercícios concluídos (' + pct + '%)';
+ counter.textContent = count + (currentLang==='en'?' of ':' de ') + total + (currentLang==='en'?' exercises done (':' exercícios concluídos (') + pct + '%)';
  counter.style.color = unlocked ? 'var(--green)' : 'var(--muted)';
  }
 
@@ -3246,8 +3250,8 @@ function renderCyclePreview(){
  <div style="flex:1">
  ${d.isRest
  ? `<div style="font-size:13px;color:var(--muted);font-weight:700">${t[currentLang].descanso}</div>`
- : `<div style="font-size:14px;font-weight:800"> ${d.label}</div>
- <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.groups.map(g=>g.muscle).join(' · ')}</div>`
+ : `<div style="font-size:14px;font-weight:800"> ${tDayLabel(d.label)}</div>
+ <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.groups.map(g=>tMuscle(g.muscle)).join(' · ')}</div>`
  }
  </div>
  ${!d.isRest ? `<div style="font-size:18px">${d.groups[0]?({'Peito':'','Costas':'','Pernas':'','Ombros':'','Bíceps':'','Tríceps':'','Abdômen':'','Flexões':''}[d.groups[0].muscle]||''):''}</div>` : ''}
@@ -3284,12 +3288,14 @@ function confirmCycle(){
  selectedDays: selectedDays
  };
  lastAutoDate = new Date().toDateString();
+ // Persiste ciclo no localStorage para sobreviver a reload
+ try{ localStorage.setItem('fitlife_auto_schedule', JSON.stringify(autoSchedule)); }catch(e){}
  startMidnightWatcher();
  renderTodayWorkout();
  // Navigate to home immediately and show success
  goToTab('home');
  setTimeout(()=>{
- showToast(' Ciclo salvo! Seu treino está pronto!');
+ showToast(currentLang==='en'?' Cycle saved! Your workout is ready!':" Ciclo salvo! Seu treino está pronto!");
  }, 400);
 }
 
@@ -3373,7 +3379,7 @@ function shuffleExercises(){
  exerciseOffset++;
  todayPickedCache = {}; // clear cache so new exercises are picked
  renderTodayWorkout();
- showToast(' Nova combinação de exercícios!');
+ showToast(currentLang==='en'?' New exercise combination!':" Nova combinação de exercícios!");
 }
 
 // Pick 4 DIFFERENT exercises from pool — guaranteed to change each tap
@@ -3447,7 +3453,7 @@ function showWorkoutComplete(){
  <div style="font-size:28px"></div>
  <div>
  <div style="font-weight:900;font-size:15px;color:var(--green)">${t[currentLang].treinoConcluido}</div>
- <div style="font-size:12px;color:var(--muted);margin-top:2px">Continue assim! Você arrasou! </div>
+ <div style="font-size:12px;color:var(--muted);margin-top:2px">${currentLang==='en'?'Keep it up! You crushed it! ':'Continue assim! Você arrasou! '}</div>
  </div>
  </div>
  <div style="display:flex;gap:8px">
@@ -3763,7 +3769,7 @@ function setNutriGoal(goal, btn){
  if(firstTab) firstTab.classList.add('active');
  currentRecipeCat='todos';
  renderRecipes('todos');
- showToast(goal==='bulk'?' Cardápio de Ganho de Massa carregado!':' Cardápio de Perda de Gordura carregado!');
+ showToast(goal==='bulk'?(currentLang==='en'?' Muscle gain meal plan loaded!':' Cardápio de Ganho de Massa carregado!'):(currentLang==='en'?' Fat loss meal plan loaded!':' Cardápio de Perda de Gordura carregado!'));
 }
 
 // filterRecipes — called by category tab buttons
@@ -3820,13 +3826,13 @@ function setComplexity(level, btn){
  // Show shuffle meal button only on 'full' complexity
  const btnMeal = document.getElementById('btnShuffleMeal');
  if(btnMeal) btnMeal.style.display = level==='full' ? 'block' : 'none';
- showToast({'simple':' Receitas simples e rápidas!','mid':' Receitas intermediárias!','full':' Cardápio completo + Trocar disponível!'}[level]);
+ showToast(currentLang==='en'?{'simple':' Simple and quick recipes!','mid':' Intermediate recipes!','full':' Full menu + Shuffle available!'}[level]:{'simple':' Receitas simples e rápidas!','mid':' Receitas intermediárias!','full':' Cardápio completo + Trocar disponível!'}[level]);
 }
 
 function shuffleMealPlan(){
  mealPlanOffset++;
  renderMealPlan();
- showToast(' Novo cardápio do dia!');
+ showToast(currentLang==='en'?' New daily meal plan!':" Novo cardápio do dia!");
 }
 
 function renderMealPlan(){
@@ -3908,16 +3914,20 @@ function findRecipe(name, cat){
  if(recipesList) recipesList.scrollIntoView({behavior:'smooth',block:'start'});
  // Highlight the matching recipe card
  const cards = recipesList.querySelectorAll('.recipe-card, [data-name]');
+ const translatedName = tRecipeName(name);
+ const searchPT = name.substring(0,15).toLowerCase();
+ const searchEN = translatedName.substring(0,15).toLowerCase();
  cards.forEach(card=>{
- const cardName = card.querySelector('h4,b,.rc-name')?.textContent||'';
- if(cardName.includes(name.substring(0,15))){
+ const cardName = (card.querySelector('h4,b,.rc-name')?.textContent||'').toLowerCase();
+ if(cardName.includes(searchPT) || cardName.includes(searchEN)){
  card.style.border='2px solid var(--accent)';
  card.style.background='rgba(232,255,59,.08)';
+ card.style.transition='border 0.3s, background 0.3s';
  card.scrollIntoView({behavior:'smooth',block:'center'});
- setTimeout(()=>{ card.style.border=''; card.style.background=''; }, 3000);
+ setTimeout(()=>{ card.style.border='1px solid var(--border)'; card.style.background=''; }, 3000);
  }
  });
- showToast(' Buscando receita: ' + name.substring(0,25) + '...');
+ showToast((currentLang==='en'?' Loading recipe: ':' Buscando receita: ') + translatedName.substring(0,25) + '...');
  }, 300);
 }
 // ─── DIÁRIO ──────────────────────────────────────────
@@ -3939,7 +3949,7 @@ function renderDiaryEntries(){
  '<div class="diary-entry" id="' + e.id + '">'
  + '<div style="display:flex;justify-content:space-between;align-items:flex-start">'
  + '<div class="de-date">' + e.date + '</div>'
- + '<button onclick="window.editEntry && editEntry(this.dataset.id)" data-id="' + e.id + '" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-weight:700;padding:0">Editar</button>'
+ + '<button onclick="window.editEntry && editEntry(this.dataset.id)" data-id="' + e.id + '" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-weight:700;padding:0">'+(currentLang==='en'?'Edit':'Editar')+'</button>'
  + '</div>'
  + '<div class="de-text">' + e.text + '</div>'
  + '<div class="de-mood">' + e.mood + '</div>'
@@ -3964,7 +3974,7 @@ function saveEntry(){
  if(!text.trim()) return;
  const dateStr = new Date().toLocaleDateString(currentLang==='en'?'en-US':'pt-BR',{day:'numeric',month:'long'});
  const id = 'entry-' + Date.now();
- const entry = {id, date:'Hoje, ' + dateStr, text, mood: selectedMood || ''};
+ const entry = {id, date:(currentLang==='en'?'Today, ':'Hoje, ') + dateStr, text, mood: selectedMood || ''};
  diaryEntries.unshift(entry);
  renderDiaryEntries();
  document.getElementById('entryText').value = '';
@@ -3990,11 +4000,11 @@ function editEntry(id){
  const btns = document.createElement('div');
  btns.style.cssText = 'display:flex;gap:8px;margin-top:8px;justify-content:flex-end';
  const cancel = document.createElement('button');
- cancel.textContent = 'Cancelar';
+ cancel.textContent = currentLang==='en'?'Cancel':'Cancelar';
  cancel.style.cssText = 'background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer';
  cancel.onclick = function(){ cancelEdit(id); };
  const save = document.createElement('button');
- save.textContent = 'Salvar ';
+ save.textContent = (currentLang==='en'?'Save ':'Salvar ');
  save.style.cssText = 'background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:800;cursor:pointer';
  save.onclick = function(){ saveEditEntry(id); };
  btns.appendChild(cancel);
@@ -4013,7 +4023,7 @@ function saveEditEntry(id){
  if(!entry) return;
  entry.text = textarea.value.trim() || entry.text;
  renderDiaryEntries();
- showToast(' Anotação atualizada!');
+ showToast(currentLang==='en'?' Note updated!':" Anotação atualizada!");
 }
 
 function cancelEdit(id){
@@ -4024,16 +4034,24 @@ function cancelEdit(id){
 
 // loginComGoogle definida globalmente para estar disponível antes do Firebase carregar
 window.loginComGoogle = function() {
+  var btn = document.getElementById('btnGoogleLogin') || document.getElementById('btnGoogleCadastro');
+  function resetBtn(){
+    if(btn){ btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg> Entrar com Google'; btn.disabled = false; }
+  }
   if(typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length){
     showToast('⚠️ Aguarde e tente novamente');
+    // Segurança: resetar botão após 3s caso fique preso
+    setTimeout(resetBtn, 3000);
     return;
   }
   var auth = firebase.auth();
   var provider = new firebase.auth.GoogleAuthProvider();
-  var btn = document.getElementById('btnGoogleLogin') || document.getElementById('btnGoogleCadastro');
   if(btn){ btn.textContent = 'Aguarde...'; btn.disabled = true; }
+  // Timeout de segurança: se em 8s não resolver, resetar botão
+  var safetyTimer = setTimeout(resetBtn, 8000);
   auth.signInWithPopup(provider)
     .then(function(result) {
+      clearTimeout(safetyTimer);
       var user = result.user;
       if(!localStorage.getItem('fitlife_onboarding_done')) {
         var profile = JSON.parse(localStorage.getItem('fitlife_profile') || '{}');
@@ -4045,7 +4063,8 @@ window.loginComGoogle = function() {
       // entrarNoApp é chamada pelo onAuthStateChanged
     })
     .catch(function(e) {
-      if(btn){ btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg> Entrar com Google'; btn.disabled = false; }
+      clearTimeout(safetyTimer);
+      resetBtn();
       if(e.code !== 'auth/popup-closed-by-user') showToast('❌ Erro ao entrar com Google');
     });
 };
@@ -4079,11 +4098,18 @@ window.loginComGoogle = function() {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
 
-      var onboardingDone = localStorage.getItem('fitlife_onboarding_done');
+      // ─── VINCULA DADOS AO UID DO USUÁRIO ───────────────────
+      var currentUser = auth.currentUser;
+      var uid = currentUser ? currentUser.uid : null;
+      var profileKey = uid ? 'fitlife_profile_' + uid : 'fitlife_profile';
+      var onboardingKey = uid ? 'fitlife_onboarding_done_' + uid : 'fitlife_onboarding_done';
+      var configKey = uid ? 'fitlife_tw_config_' + uid : 'fitlife_tw_config';
+
+      var onboardingDone = localStorage.getItem(onboardingKey);
       // Carrega idioma salvo
       var savedLang = localStorage.getItem("fitlife_lang");
       if(savedLang) { currentLang = savedLang; applyLang(); }
-      var savedProfile = localStorage.getItem('fitlife_profile');
+      var savedProfile = localStorage.getItem(profileKey);
 
       if(onboardingDone && savedProfile) {
         // Já fez onboarding — vai direto pro app
@@ -4094,6 +4120,22 @@ window.loginComGoogle = function() {
           document.getElementById('greetName').textContent = profile.name || 'Campeão';
           document.getElementById('avatarInitial').textContent = (profile.name || 'C').charAt(0).toUpperCase();
         } catch(e) {}
+        // Restaurar config de treino do usuário atual
+        var savedConfig = localStorage.getItem(configKey);
+        if(savedConfig){ try{ var cfg=JSON.parse(savedConfig); twPeriod=cfg.period||''; twModel=cfg.model||''; twDiff=cfg.diff||'easy'; currentDiff=twDiff; }catch(e){} }
+        // Restaurar ciclo salvo
+        try{
+          var savedSchedule = localStorage.getItem('fitlife_auto_schedule');
+          if(savedSchedule){
+            autoSchedule = JSON.parse(savedSchedule);
+            lastAutoDate = new Date().toDateString();
+            if(autoSchedule.model) twModel = autoSchedule.model;
+            if(autoSchedule.diff){ twDiff = autoSchedule.diff; currentDiff = autoSchedule.diff; }
+            if(autoSchedule.period) twPeriod = autoSchedule.period;
+            if(autoSchedule.builtCycle) builtCycle = autoSchedule.builtCycle;
+            if(autoSchedule.selectedDays) selectedDays = autoSchedule.selectedDays;
+          }
+        }catch(e){}
         var appEl2 = document.getElementById("app");
         appEl2.style.display = "flex";
         appEl2.classList.add("visible");
@@ -4121,6 +4163,11 @@ window.loginComGoogle = function() {
         if(ptCard) ptCard.classList.add('selected');
       }
     }
+
+    // Expõe profileKey/onboardingKey globalmente para startApp e btnSair
+    function getProfileKey(){ var u=auth.currentUser; return u?'fitlife_profile_'+u.uid:'fitlife_profile'; }
+    function getOnboardingKey(){ var u=auth.currentUser; return u?'fitlife_onboarding_done_'+u.uid:'fitlife_onboarding_done'; }
+    function getConfigKey(){ var u=auth.currentUser; return u?'fitlife_tw_config_'+u.uid:'fitlife_tw_config'; }
 
     // PROTEÇÃO + APÓS LOGIN
     var splashReady = false; var authReady = false; var authUser = null;
@@ -4166,11 +4213,16 @@ window.loginComGoogle = function() {
     // BOTÃO SAIR
     document.getElementById('btnSair').addEventListener('click', function() {
       auth.signOut().then(function() {
-        // Limpa tudo
+        // Limpa tudo (chaves genéricas)
         localStorage.removeItem('fitlife_onboarding_done');
         localStorage.removeItem('fitlife_profile');
         localStorage.removeItem('fitlife_tw_config');
+        localStorage.removeItem('fitlife_auto_schedule');
         todayPickedCache = {};
+        autoSchedule = null;
+        builtCycle = null;
+        selectedDays = [];
+        twModel = ''; twPeriod = ''; twDiff = 'easy'; currentDiff = 'easy';
         // Esconde app e onboarding
         document.getElementById('app').classList.remove('visible');
         document.getElementById('app').style.display = 'none';
@@ -4185,7 +4237,7 @@ window.loginComGoogle = function() {
         document.getElementById('btnEntrar').textContent = 'ENTRAR →';
         document.getElementById('btnEntrar').disabled = false;
         closeSideMenu();
-        showToast('✅ Sessão encerrada!');
+        showToast(currentLang==='en'?'✅ Session ended!':'✅ Sessão encerrada!');
       });
     });
 
