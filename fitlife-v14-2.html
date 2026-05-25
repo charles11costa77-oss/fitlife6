@@ -1477,7 +1477,7 @@ function applyLang() {
  if(btnConfigurarTreino) btnConfigurarTreino.textContent = l.configurarTreinoBtn;
  // Periodicidade do Ciclo
  const labelPeriodicidade = document.getElementById('labelPeriodicidade');
- if(labelPeriodicidade) labelPeriodicidade.childNodes[0].textContent = l.periodicidade;
+ if(labelPeriodicidade && labelPeriodicidade.childNodes[0]) try{ labelPeriodicidade.childNodes[0].textContent = l.periodicidade; }catch(e){}
  const labelCiclo = document.getElementById('labelCiclo');
  if(labelCiclo) labelCiclo.textContent = l.ciclo;
  // Nível de Dificuldade
@@ -1501,7 +1501,7 @@ function applyLang() {
  document.querySelectorAll('.btnVoltar').forEach(el => el.textContent = l.voltar);
  // Seu Ciclo Montado
  const labelSeuCiclo = document.getElementById('labelSeuCiclo');
- if(labelSeuCiclo) labelSeuCiclo.childNodes[0].textContent = ' ' + l.seuCicloMontado.trim();
+ if(labelSeuCiclo && labelSeuCiclo.childNodes[0]) try{ labelSeuCiclo.childNodes[0].textContent = ' ' + l.seuCicloMontado.trim(); }catch(e){}
  const labelCicloSpan = document.getElementById('labelCicloSpan');
  if(labelCicloSpan) labelCicloSpan.textContent = l.seuCicloSpan;
  const labelMontado = document.getElementById('labelMontado');
@@ -1606,7 +1606,7 @@ function applyLang() {
  if(modalReadyBtn) modalReadyBtn.textContent = l.verTreinoDia;
  // Dias disponíveis (step 5)
  const diasTitleEl = document.getElementById("diasTitle");
- if(diasTitleEl){ diasTitleEl.childNodes[0].textContent = l.diasTitle; const diasSpanEl = document.getElementById("diasSpan"); if(diasSpanEl) diasSpanEl.textContent = l.diasSpan; }
+ if(diasTitleEl && diasTitleEl.childNodes[0]){ try{ diasTitleEl.childNodes[0].textContent = l.diasTitle; }catch(e){} const diasSpanEl = document.getElementById("diasSpan"); if(diasSpanEl) diasSpanEl.textContent = l.diasSpan; }
  const diasSubEl = document.getElementById("diasSub");
  if(diasSubEl) diasSubEl.textContent = l.diasSub;
  // Nutrição - labels da interface
@@ -1616,19 +1616,19 @@ function applyLang() {
  nutriIds.forEach(id => { const el = document.getElementById(id); if(el && l[id]) el.textContent = l[id]; });
  // Seu Objetivo
  const seuObj = document.getElementById('seuObjetivoTitle');
- if(seuObj) { seuObj.childNodes[0].textContent = l.seuObjetivo; const seuObjSpan = document.getElementById('seuObjetivoSpan'); if(seuObjSpan) seuObjSpan.textContent = l.seuObjetivoSpan; }
+ if(seuObj && seuObj.childNodes[0]) { try{ seuObj.childNodes[0].textContent = l.seuObjetivo; }catch(e){} const seuObjSpan = document.getElementById('seuObjetivoSpan'); if(seuObjSpan) seuObjSpan.textContent = l.seuObjetivoSpan; }
  // Nível de Preparo — com espaço correto
  const nivelEl = document.getElementById('nivelPreparo');
- if(nivelEl) { nivelEl.childNodes[0].textContent = l.nivelPreparo; const nivelSpan = document.getElementById('nivelPreparoSpan'); if(nivelSpan) nivelSpan.textContent = l.nivelPreparoSpan; }
+ if(nivelEl && nivelEl.childNodes[0]) { try{ nivelEl.childNodes[0].textContent = l.nivelPreparo; }catch(e){} const nivelSpan = document.getElementById('nivelPreparoSpan'); if(nivelSpan) nivelSpan.textContent = l.nivelPreparoSpan; }
  // Referência de Macros — com espaço correto
  const refEl = document.getElementById('refMacros');
- if(refEl) { refEl.childNodes[0].textContent = l.refMacros; const refSpan = document.getElementById('refMacrosSpan'); if(refSpan) refSpan.textContent = l.refMacrosSpan; }
+ if(refEl && refEl.childNodes[0]) { try{ refEl.childNodes[0].textContent = l.refMacros; }catch(e){} const refSpan = document.getElementById('refMacrosSpan'); if(refSpan) refSpan.textContent = l.refMacrosSpan; }
  // Plano do Dia
  const planoDiaEl = document.getElementById('planoDiaTitle');
- if(planoDiaEl) { planoDiaEl.childNodes[0].childNodes[0].textContent = l.planoDia; const planSpan = document.getElementById('planoDiaSpan'); if(planSpan) planSpan.textContent = l.planoDiaSpan; const planTip = document.getElementById('planoDiaTip'); if(planTip) planTip.textContent = l.planoDiaTip; }
+ if(planoDiaEl && planoDiaEl.childNodes[0]) { try{ planoDiaEl.childNodes[0].childNodes[0].textContent = l.planoDia; }catch(e){} const planSpan = document.getElementById('planoDiaSpan'); if(planSpan) planSpan.textContent = l.planoDiaSpan; const planTip = document.getElementById('planoDiaTip'); if(planTip) planTip.textContent = l.planoDiaTip; }
  // Enciclopédia de Receitas
  const receitasEl = document.getElementById('receitasTitle');
- if(receitasEl) { receitasEl.childNodes[0].textContent = l.receitas; const recSpan = document.getElementById('receitasSpan'); if(recSpan) recSpan.textContent = l.receitasSpan; }
+ if(receitasEl && receitasEl.childNodes[0]) { try{ receitasEl.childNodes[0].textContent = l.receitas; }catch(e){} const recSpan = document.getElementById('receitasSpan'); if(recSpan) recSpan.textContent = l.receitasSpan; }
  // Trocar cardápio
  const shuffleLbl = document.getElementById('btnShuffleMealLbl');
  if(shuffleLbl) shuffleLbl.textContent = l.trocaCardapio;
