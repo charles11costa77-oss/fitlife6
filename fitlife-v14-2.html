@@ -992,12 +992,13 @@ input, textarea {
 
 <script>
 // Safe wrapper — prevents errors if called before app loads
-function showToast(msg){
+function showToast(msg, color){
  const existing = document.getElementById('toastMsg');
  if(existing) existing.remove();
  const t = document.createElement('div');
  t.id = 'toastMsg';
- t.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:9999;pointer-events:none;animation:slideUp .3s ease';
+ t.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#222;color:'+(color||'#fff')+';padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:9999;pointer-events:none;animation:slideUp .3s ease';
+ if(color) t.style.border = '1px solid '+color;
  t.textContent = msg;
  document.body.appendChild(t);
  setTimeout(()=>t.remove(), 2500);
@@ -1984,24 +1985,52 @@ function openWeekModal(){
   const restDays = bc.filter(d=>d.isRest).length;
   const muscleIcons2 = {'Peito':'','Costas':'','Pernas':'','Ombros':'','Bíceps':'','Tríceps':'','Abdômen':''};
 
+  // Carregar dias já marcados
+  const doneKey = 'fitlife_done_days';
+  let doneDays = {};
+  try{ doneDays = JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){}
+
+  // Calcular datas da semana atual (Dom=0 ... Sáb=6)
+  const today = new Date();
+  const todayDow = today.getDay(); // 0=Dom
+  const dayCodeToIdx = {dom:0,seg:1,ter:2,qua:3,qui:4,sex:5,sab:6};
+  function getDayDate(dayCode){
+    const diff = dayCodeToIdx[dayCode] - todayDow;
+    const d = new Date(today);
+    d.setDate(today.getDate() + diff);
+    return d.getDate(); // número do dia
+  }
+
   box.innerHTML = `
   <div style="background:linear-gradient(135deg,#1a1a00,#2a2a00);border:1px solid var(--accent);border-radius:16px;padding:14px;margin-bottom:14px">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)">${modelLabel} · ${periodLabel}</div>
     <div style="font-size:11px;color:var(--muted);margin-top:2px">${diffLabel} &nbsp;|&nbsp; ${trainDays} ${t[currentLang].diasTreino} &nbsp;|&nbsp; ${restDays} ${t[currentLang].diasDescanso}</div>
   </div>
   <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-  ${bc.map(d=>`
-    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:${d.isRest?'var(--card)':'rgba(232,255,59,.04)'};border-radius:14px;border:1px solid ${d.isRest?'var(--border)':'rgba(232,255,59,.2)'}">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${d.isRest?'var(--muted)':'var(--accent)'};width:32px;text-align:center">${d.dayName.substring(0,3).toUpperCase()}</div>
+  ${bc.map(d=>{
+    const dateNum = getDayDate(d.dayCode);
+    const weekKey = today.getFullYear()+'W'+Math.ceil(today.getDate()/7);
+    const doneId = weekKey+'_'+d.dayCode;
+    const isDone = doneDays[doneId];
+    return `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:${d.isRest?'var(--card)':isDone?'rgba(74,222,128,.06)':'rgba(232,255,59,.04)'};border-radius:14px;border:1px solid ${d.isRest?'var(--border)':isDone?'rgba(74,222,128,.3)':'rgba(232,255,59,.2)'}">
+      <div style="text-align:center;width:32px;flex-shrink:0">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${d.isRest?'var(--muted)':isDone?'var(--green)':'var(--accent)'};line-height:1">${d.dayName.substring(0,3).toUpperCase()}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${dateNum}</div>
+      </div>
       <div style="flex:1">
         ${d.isRest
           ? `<div style="font-size:13px;color:var(--muted);font-weight:700">${t[currentLang].descanso}</div>`
-          : `<div style="font-size:13px;font-weight:800"> ${tDayLabel(d.label)}</div>
+          : `<div style="font-size:13px;font-weight:800;color:${isDone?'var(--green)':''}"> ${tDayLabel(d.label)}${isDone?' ✓':''}</div>
              <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.groups.map(g=>tMuscle(g.muscle)).join(' · ')}</div>`
         }
       </div>
-      ${!d.isRest ? `<div style="font-size:16px">${muscleIcons2[d.groups[0]?.muscle]||''}</div>` : ''}
-    </div>`).join('')}
+      ${!d.isRest ? `
+        <button onclick="toggleDayDone('${doneId}')" style="background:${isDone?'var(--green)':'transparent'};border:2px solid ${isDone?'var(--green)':'var(--border)'};border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all 0.2s">
+          ${isDone?'✓':''}
+        </button>` : ''}
+    </div>`;
+  }).join('')}
   </div>`;
 
   // Atualizar título do modal com nome do plano
@@ -2015,6 +2044,22 @@ function openWeekModal(){
   setTimeout(function(){
     if(modalInner) modalInner.scrollTo({top:0, behavior:'auto'});
   }, 50);
+}
+
+function toggleDayDone(doneId){
+  const doneKey = 'fitlife_done_days';
+  let doneDays = {};
+  try{ doneDays = JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){}
+  if(doneDays[doneId]){
+    delete doneDays[doneId];
+    showToast(currentLang==='en'?'Day unmarked!':'Dia desmarcado!');
+  } else {
+    doneDays[doneId] = true;
+    showToast(currentLang==='en'?'✅ Day marked as done!':'✅ Dia marcado como concluído!');
+  }
+  try{ localStorage.setItem(doneKey, JSON.stringify(doneDays)); }catch(e){}
+  // Reabrir modal para atualizar visual
+  openWeekModal();
 }
 
 function closeWeekModal(){
@@ -2206,7 +2251,7 @@ function openMuscleUL(superior, label){
      const exsHTML = picked.map(function(exName){
        return `<div class="ex-item">
          <div class="ex-info">
-         <div class="ex-name">${exName}</div>
+         <div class="ex-name">${tExercise(exName)}</div>
          <div class="ex-detail">${s.series} ${t[currentLang].seriesLabel} • ${s.reps} ${t[currentLang].repsLabel} • ${s.rest} ${t[currentLang].descansoLabel}</div>
          </div>
          <div class="ex-check" onclick="toggleCheck(this)"></div>
@@ -2377,30 +2422,7 @@ function selectDiffNew(diff, el){
 function checkCycleStatus(){
  const box=document.getElementById('cycleStatusBox');
  if(!box||!box.parentNode) return;
- if(!cycleData){box.style.display='none';return;}
- const now=new Date();
- const end=new Date(cycleData.endDate);
- const daysLeft=Math.ceil((end-now)/(1000*60*60*24));
- if(daysLeft>0){
- box.style.display='block';
- box.innerHTML=`<div class="cycle-status cycle-active">
- <div class="cycle-icon"></div>
- <div class="cycle-info">
- <div class="cycle-title">${cycleData.typeLabel} ${t[currentLang].cicloAtivo} — ${cycleData.model} ${cycleData.diffLabel}</div>
- <div class="cycle-sub">${t[currentLang].faltamDias} ${daysLeft} ${t[currentLang].diasParaRenovar}</div>
- </div>
- </div>`;
- } else {
- box.style.display='block';
- box.innerHTML=`<div class="cycle-status cycle-expired">
- <div class="cycle-icon">⏰</div>
- <div class="cycle-info">
- <div class="cycle-title">${t[currentLang].seuCicloTerminou}</div>
- <div class="cycle-sub">${t[currentLang].desejaRenovar}</div>
- </div>
- <button class="cycle-renew-btn" onclick="renewCycle()">Renovar</button>
- </div>`;
- }
+ box.style.display='none'; // Badge do ciclo removido por design
 }
 
 function renewCycle(){
@@ -2657,7 +2679,174 @@ const exercisesDB = {
  ]},
 };
 
-// Mapa de grupamentos + exercícios específicos por modelo e dia
+// ─── TRADUÇÃO DOS EXERCÍCIOS ────────────────────────────────────
+const exerciseTranslation = {
+ // PEITO
+ 'Supino Reto':'Flat Bench Press',
+ 'Supino Inclinado':'Incline Bench Press',
+ 'Supino Declinado':'Decline Bench Press',
+ 'Crucifixo Reto':'Flat Dumbbell Fly',
+ 'Crucifixo Inclinado':'Incline Dumbbell Fly',
+ 'Flexão de Braço':'Push-Up',
+ 'Flexão Diamante':'Diamond Push-Up',
+ 'Cruzamento no Cabo Alto':'High Cable Crossover',
+ 'Cruzamento no Cabo Baixo':'Low Cable Crossover',
+ 'Pullover no Banco — Alongamento':'Dumbbell Pullover',
+ 'Supino com Halteres':'Dumbbell Bench Press',
+ 'Flexão com Apoio':'Assisted Push-Up',
+ 'Voador (Peck Deck)':'Pec Deck Fly',
+ 'Supino Fechado':'Close-Grip Bench Press',
+ 'Flexão Arqueiro — Lateral':'Archer Push-Up',
+ 'Supino 45°':'45° Bench Press',
+ 'Crucifixo com Cabo':'Cable Fly',
+ 'Flexão Declinada':'Decline Push-Up',
+ 'Supino Unilateral':'Single-Arm Bench Press',
+ 'Cruzamento no Cabo Neutro':'Neutral Cable Crossover',
+ // COSTAS
+ 'Puxada Frontal':'Front Lat Pulldown',
+ 'Puxada pela Nuca':'Behind-the-Neck Pulldown',
+ 'Remada Curvada':'Bent-Over Row',
+ 'Remada Unilateral':'Single-Arm Row',
+ 'Barra Fixa':'Pull-Up',
+ 'Remada Máquina':'Machine Row',
+ 'Pullover — Costas':'Cable Pullover',
+ 'Remada Baixa no Cabo':'Seated Cable Row',
+ 'Remada Fechada':'Close-Grip Row',
+ 'Levantamento Terra':'Deadlift',
+ 'Remada em T':'T-Bar Row',
+ 'Puxada Neutra':'Neutral-Grip Pulldown',
+ 'Remada Alta':'Upright Row',
+ 'Remada Unilateral com Haltere (Serrote)':'Dumbbell Row (Seal)',
+ 'Remada Cavalinho':'Pendlay Row',
+ 'Puxada Aberta':'Wide-Grip Pulldown',
+ 'Remada Supinada':'Supinated Row',
+ 'Bom Dia (Good Morning)':'Good Morning',
+ 'Remada Sentada':'Seated Row',
+ 'Puxada Unilateral no Cabo':'Single-Arm Cable Pulldown',
+ // PERNAS
+ 'Agachamento Livre':'Back Squat',
+ 'Agachamento Sumô':'Sumo Squat',
+ 'Leg Press 45°':'45° Leg Press',
+ 'Leg Press Horizontal':'Horizontal Leg Press',
+ 'Extensora':'Leg Extension',
+ 'Mesa Flexora':'Leg Curl',
+ 'Terra com Pernas Estendidas (Stiff)':'Stiff-Leg Deadlift',
+ 'Avanço com Halteres':'Dumbbell Lunge',
+ 'Panturrilha em Pé':'Standing Calf Raise',
+ 'Panturrilha Sentado':'Seated Calf Raise',
+ 'Agachamento Búlgaro — Uma Perna':'Bulgarian Split Squat',
+ 'Cadeira Adutora':'Hip Adductor Machine',
+ 'Cadeira Abdutora':'Hip Abductor Machine',
+ 'Agachamento Hack':'Hack Squat',
+ 'Leg Press Unilateral':'Single-Leg Press',
+ 'Agachamento Goblet com Haltere':'Goblet Squat',
+ 'Subida no Banco (Step Up)':'Step-Up',
+ 'Avanço Caminhando':'Walking Lunge',
+ 'Agachamento Frontal com Barra':'Front Squat',
+ 'Elevação Pélvica — Glúteo':'Hip Thrust',
+ // OMBROS
+ 'Desenvolvimento com Barra':'Barbell Overhead Press',
+ 'Desenvolvimento com Halteres':'Dumbbell Shoulder Press',
+ 'Desenvolvimento Arnold':'Arnold Press',
+ 'Elevação Lateral':'Lateral Raise',
+ 'Elevação Frontal':'Front Raise',
+ 'Puxada para o Rosto (Face Pull)':'Face Pull',
+ 'Desenvolvimento Militar':'Military Press',
+ 'Elevação Lateral Inclinada':'Incline Lateral Raise',
+ 'Crucifixo Invertido':'Reverse Fly',
+ 'Desenvolvimento Unilateral':'Single-Arm Shoulder Press',
+ 'Elevação 90°':'90° Raise',
+ 'Rotação Externa':'External Rotation',
+ 'Rotação Interna':'Internal Rotation',
+ 'Elevação com Cabo':'Cable Lateral Raise',
+ 'Desenvolvimento Scott':'Scott Press',
+ 'Desenvolvimento no Cabo':'Cable Shoulder Press',
+ 'Elevação Frontal com Barra':'Barbell Front Raise',
+ 'Remada Alta com Barra':'Barbell Upright Row',
+ 'Elevação Lateral Cabo':'Cable Lateral Raise',
+ // BÍCEPS
+ 'Rosca Direta com Barra':'Barbell Curl',
+ 'Rosca Alternada':'Alternating Dumbbell Curl',
+ 'Rosca Martelo':'Hammer Curl',
+ 'Rosca Concentrada':'Concentration Curl',
+ 'Rosca Scott':'Scott Curl',
+ 'Rosca 21 — Técnica Avançada':'21s Curl',
+ 'Rosca no Cabo':'Cable Curl',
+ 'Rosca Inclinada':'Incline Dumbbell Curl',
+ 'Rosca Inversa':'Reverse Curl',
+ 'Rosca Zottman — Força Total':'Zottman Curl',
+ 'Rosca com Barra W':'EZ-Bar Curl',
+ 'Rosca Unilateral no Cabo':'Single-Arm Cable Curl',
+ 'Rosca Predicador':'Preacher Curl',
+ 'Rosca Spider — Pico do Bíceps':'Spider Curl',
+ 'Rosca com Corda':'Rope Curl',
+ 'Rosca Sentado':'Seated Curl',
+ 'Rosca com Supinação':'Supinating Curl',
+ 'Rosca Isométrica':'Isometric Curl',
+ 'Rosca Martelo Cruzado':'Cross-Body Hammer Curl',
+ 'Rosca Alta no Cabo':'High Cable Curl',
+ // TRÍCEPS
+ 'Tríceps Pulley':'Cable Pushdown',
+ 'Tríceps Testa':'Skull Crusher',
+ 'Tríceps Francês — Overhead':'French Press',
+ 'Mergulho no Banco':'Bench Dip',
+ 'Extensão Tríceps Inclinado (Coice)':'Triceps Kickback',
+ 'Barra Fechada':'Close-Grip Bench Press',
+ 'Tríceps na Corda':'Rope Pushdown',
+ 'Tríceps Overhead':'Overhead Triceps Extension',
+ 'Extensão Unilateral':'Single-Arm Extension',
+ 'Mergulho entre Bancos':'Bench Dip',
+ 'Tríceps com Haltere':'Dumbbell Triceps Extension',
+ 'Extensão no Cabo':'Cable Extension',
+ 'Tríceps Kickback':'Triceps Kickback',
+ 'Press Fechado':'Close-Grip Press',
+ 'Tríceps Unilateral':'Single-Arm Pushdown',
+ 'Extensão Declinada':'Decline Extension',
+ 'Tríceps Testa com Barra (Skullcrusher)':'Barbell Skull Crusher',
+ 'Tríceps Supinado no Cabo':'Supinated Cable Pushdown',
+ 'Flexão Diamante — Tríceps':'Diamond Push-Up',
+ 'Tríceps com Barra':'Barbell Triceps Extension',
+ // ABDÔMEN
+ 'Crunch':'Crunch',
+ 'Crunch Inverso':'Reverse Crunch',
+ 'Prancha Frontal':'Plank',
+ 'Prancha Lateral':'Side Plank',
+ 'Abdominal Infra':'Lower Ab Raise',
+ 'Oblíquo com Haltere':'Dumbbell Side Bend',
+ 'Roda Abdominal':'Ab Wheel Rollout',
+ 'Elevação de Pernas':'Leg Raise',
+ 'Bicicleta Abdominal':'Bicycle Crunch',
+ 'Giro Russo com Peso (Russian Twist)':'Russian Twist',
+ 'Escalador (Mountain Climber)':'Mountain Climber',
+ 'Abdominal Completo':'Full Sit-Up',
+ 'Estabilização Abdominal (Dead Bug)':'Dead Bug',
+ 'Abdominal Isométrico (Hollow Hold)':'Hollow Hold',
+ 'Crunch no Cabo':'Cable Crunch',
+ 'Abdominal Declinado':'Decline Sit-Up',
+ 'Toque no Pé (Toe Touch)':'Toe Touch',
+ 'Prancha Lateral com Elevação':'Side Plank with Hip Raise',
+ 'Chutinho Abdominal (Flutter Kick)':'Flutter Kick',
+ 'Dragon Flag — Avançado':'Dragon Flag',
+ // FLEXÕES
+ 'Flexão Normal':'Standard Push-Up',
+ 'Flexão Inclinada':'Incline Push-Up',
+ 'Flexão com Palmas':'Clap Push-Up',
+ 'Flexão Lenta':'Slow Push-Up',
+ 'Flexão Explosiva':'Explosive Push-Up',
+ 'Flexão com Rotação':'Push-Up with Rotation',
+ 'Flexão com Elevação de Perna':'Push-Up with Leg Raise',
+ 'Flexão em T com Rotação':'T Push-Up',
+ 'Flexão Hindu — Yoga':'Hindu Push-Up',
+ 'Flexão Fechada':'Close-Grip Push-Up',
+ 'Flexão Aberta':'Wide Push-Up',
+ 'Flexão com Apoio nos Joelhos':'Knee Push-Up',
+ 'Flexão Unilateral':'Single-Arm Push-Up',
+ 'Flexão com Toque no Ombro':'Shoulder-Tap Push-Up',
+ 'Flexão Homem-Aranha':'Spiderman Push-Up',
+ 'Flexão com Salto Explosivo':'Plyometric Push-Up',
+ 'Flexão Isométrica':'Isometric Push-Up',
+};
+function tExercise(name){ return currentLang==='en' ? (exerciseTranslation[name]||name) : name; }
 const modelMap = {
  'AB': {
  A: {label:'Peito & Tríceps', groups:[
@@ -2748,7 +2937,7 @@ function updateTodayWithMuscle(name, icon, exercises){
        <div class="ex-item">
        <div class="ex-icon">${exIcons[exName]||gIcon}</div>
        <div class="ex-info">
-       <div class="ex-name">${exName}</div>
+       <div class="ex-name">${tExercise(exName)}</div>
        <div class="ex-detail">${s.series} ${t[currentLang].seriesLabel} • ${s.reps} ${t[currentLang].repsLabel} • ${s.rest} ${t[currentLang].descansoLabel}</div>
        </div>
        <div class="ex-check" onclick="toggleCheck(this)"></div>
@@ -2805,7 +2994,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div class="ex-item">
  <div class="ex-icon">${exIcons[exName]||gIcon}</div>
  <div class="ex-info">
- <div class="ex-name">${exName}</div>
+ <div class="ex-name">${tExercise(exName)}</div>
  <div class="ex-detail">${s.series} ${t[currentLang].seriesLabel} • ${s.reps} ${t[currentLang].repsLabel} • ${s.rest} ${t[currentLang].descansoLabel}</div>
  </div>
  <div class="ex-check" onclick="toggleCheck(this)"></div>
@@ -2857,7 +3046,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  <div class="ex-item">
  <div class="ex-icon">${exIcons[exName]||icon}</div>
  <div class="ex-info">
- <div class="ex-name">${exName}</div>
+ <div class="ex-name">${tExercise(exName)}</div>
  <div class="ex-detail">${s.series} ${t[currentLang].seriesLabel} • ${s.reps} ${t[currentLang].repsLabel} • ${s.rest} ${t[currentLang].descansoLabel}</div>
  </div>
  <div class="ex-check" onclick="toggleCheck(this)"></div>
@@ -2984,6 +3173,11 @@ function renderTodayWorkout(){
  const autoBadge = document.getElementById('autoScheduleBadge');
  // Will update after we know activeModel
 
+ // Se o modelo atual for diferente do autoSchedule salvo, descarta o autoSchedule
+ if(autoSchedule && twModel && autoSchedule.model !== twModel){
+   autoSchedule = null;
+   try{ localStorage.removeItem('fitlife_auto_schedule'); }catch(e){}
+ }
  // Use autoSchedule if available, otherwise use current selection
  const activeModel = autoSchedule ? autoSchedule.model : twModel;
  const activeDiff = autoSchedule ? autoSchedule.diff : twDiff;
@@ -3053,8 +3247,8 @@ function renderTodayWorkout(){
  let sectionsHTML = groups.map(g => {
  const icon = muscleIcons[g.muscle] || '';
  // Apply exerciseOffset rotation — each tap shows different exercises
- const exCount = (activeModel==='Full'||activeModel==='Upper') ? 3 : 4;
- // Usa cache se já existir, senão gera e salva
+ const exCount = 4; // Sempre 4 exercícios por grupamento em todos os modelos
+ // Sempre usa cache (foi limpo no shuffleExercises antes de chamar esta função)
  if(!todayPickedCache[g.muscle]){
    todayPickedCache[g.muscle] = pickExercises(g.exs, exCount);
  }
@@ -3064,7 +3258,7 @@ function renderTodayWorkout(){
  return `<div class="ex-item">
  <div class="ex-icon">${exIcons[exName]||icon}</div>
  <div class="ex-info">
- <div class="ex-name">${exName}</div>
+ <div class="ex-name">${tExercise(exName)}</div>
  <div class="ex-detail">${s.series} ${t[currentLang].seriesLabel} • ${s.reps} ${t[currentLang].repsLabel} • ${s.rest} ${t[currentLang].descansoLabel}</div>
  </div>
  <div class="ex-check" onclick="toggleCheck(this)"></div>
@@ -3199,12 +3393,17 @@ function buildCyclePreview(){
  const modelDays = Object.keys(model);
 
  // Distribute grupamentos across selected days
+ // Para mensal/trimestral: embaralha a ordem dos grupamentos por semana
+ const shuffledModelDays = twPeriod !== 'daily'
+   ? [...modelDays].sort(() => Math.random() - 0.5)
+   : modelDays;
+
  builtCycle = dayOrder.map((dayCode, idx) => {
  const isTrainDay = sortedDays.includes(dayCode);
  if(!isTrainDay) return {dayCode, dayName:dayNames[dayCode], isRest:true};
  // Assign grupamento cyclically
  const trainIdx = sortedDays.indexOf(dayCode);
- const modelDayKey = modelDays[trainIdx % modelDays.length];
+ const modelDayKey = shuffledModelDays[trainIdx % shuffledModelDays.length];
  const dayData = model[modelDayKey];
  return {
  dayCode, dayName:dayNames[dayCode], isRest:false,
@@ -3247,9 +3446,19 @@ function renderCyclePreview(){
  </div>
  </div>
  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
- ${builtCycle.map(d=>`
+ ${builtCycle.map(d=>{
+   const todayD = new Date();
+   const todayDow2 = todayD.getDay();
+   const dcIdx = {dom:0,seg:1,ter:2,qua:3,qui:4,sex:5,sab:6}[d.dayCode]??0;
+   const diff2 = dcIdx - todayDow2;
+   const dd = new Date(todayD); dd.setDate(todayD.getDate()+diff2);
+   const dateNum = dd.getDate();
+   return `
  <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:${d.isRest?'var(--card)':'rgba(232,255,59,.04)'};border-radius:14px;border:1px solid ${d.isRest?'var(--border)':'rgba(232,255,59,.2)'}">
- <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${d.isRest?'var(--muted)':'var(--accent)'};width:32px;text-align:center">${d.dayName.substring(0,3).toUpperCase()}</div>
+ <div style="text-align:center;width:32px;flex-shrink:0">
+   <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${d.isRest?'var(--muted)':'var(--accent)'};line-height:1">${d.dayName.substring(0,3).toUpperCase()}</div>
+   <div style="font-size:10px;color:var(--muted);margin-top:2px">${dateNum}</div>
+ </div>
  <div style="flex:1">
  ${d.isRest
  ? `<div style="font-size:13px;color:var(--muted);font-weight:700">${t[currentLang].descanso}</div>`
@@ -3258,7 +3467,8 @@ function renderCyclePreview(){
  }
  </div>
  ${!d.isRest ? `<div style="font-size:18px">${d.groups[0]?({'Peito':'','Costas':'','Pernas':'','Ombros':'','Bíceps':'','Tríceps':'','Abdômen':'','Flexões':''}[d.groups[0].muscle]||''):''}</div>` : ''}
- </div>`).join('')}
+ </div>`;
+ }).join('')}
  </div>
  <div style="background:rgba(59,255,216,.06);border:1px solid rgba(59,255,216,.15);border-radius:12px;padding:12px;font-size:12px;color:var(--accent3);line-height:1.7;margin-bottom:4px">
  ${t[currentLang].appEntrega} <strong>${t[currentLang].inicio}</strong>. ${t[currentLang].vocePrecisa}</div>
@@ -3382,7 +3592,7 @@ function shuffleExercises(){
  exerciseOffset++;
  todayPickedCache = {}; // clear cache so new exercises are picked
  renderTodayWorkout();
- showToast(currentLang==='en'?' New exercise combination!':" Nova combinação de exercícios!");
+ showToast(currentLang==='en'?' New exercise combination!':' Nova combinação de exercícios!', '#3bffd8');
 }
 
 // Pick 4 DIFFERENT exercises from pool — guaranteed to change each tap
@@ -3674,6 +3884,7 @@ const recipeNameTranslation = {
  'Brócolis Cozido com Azeite e Sal':'Boiled Broccoli with Olive Oil & Salt',
  'Cenoura e Beterraba Cozidas':'Boiled Carrot & Beetroot',
  'Iogurte Natural com Banana':'Natural Yogurt with Banana',
+ 'Água com Limão e Gengibre':'Lemon Ginger Water',
 };
 function tRecipeName(name){ return currentLang==='en' ? (recipeNameTranslation[name]||name) : name; }
 
@@ -3930,7 +4141,7 @@ function findRecipe(name, cat){
  setTimeout(()=>{ card.style.border='1px solid var(--border)'; card.style.background=''; }, 3000);
  }
  });
- showToast((currentLang==='en'?' Loading recipe: ':' Buscando receita: ') + translatedName.substring(0,25) + '...');
+ showToast((currentLang==='en'?' Loading recipe: ':' Buscando receita: ') + translatedName.substring(0,25) + '...', '#3bffd8');
  }, 300);
 }
 // ─── DIÁRIO ──────────────────────────────────────────
