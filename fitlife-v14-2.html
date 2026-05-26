@@ -1098,6 +1098,7 @@ const recipesCut=[
  {cat:'legumes',complexity:'simple',emoji:'',name:'Brócolis Cozido com Azeite e Sal',level:'simple',kcal:80,prot:'5g',carb:'10g',fat:'4g',time:'10 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['200g broccoli','Water and salt','Drizzle of olive oil and garlic'],prep:'Boil broccoli in salted water for 5-7 min. Drain and season with olive oil and garlic.',qty:'Broccoli = very few calories, lots of fiber, vitamin C and calcium.'},
  {cat:'legumes',complexity:'simple',emoji:'',name:'Cenoura e Beterraba Cozidas',level:'simple',kcal:100,prot:'3g',carb:'22g',fat:'1g',time:'20 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 carrot','1 small beetroot','Water and salt','Lemon to season'],prep:'Boil carrot and beetroot in salted water until tender. Serve with lemon.',qty:'Two of the cheapest and most nutritious vegetables. Beetroot improves physical performance.'},
  {cat:'shake',complexity:'simple',emoji:'',name:'Iogurte Natural com Banana',level:'simple',kcal:180,prot:'8g',carb:'32g',fat:'2g',time:'2 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['1 pot skimmed natural yogurt','1 sliced banana','1 tbsp honey (optional)'],prep:'Slice banana into rounds. Place in yogurt. Done!',qty:'No blender, no stove. Natural yogurt = protein + probiotics.'},
+ {cat:'shake',complexity:'simple',emoji:'',name:'Água com Limão e Gengibre',level:'simple',kcal:20,prot:'0g',carb:'5g',fat:'0g',time:'2 min',tags:[{txt:'Simple',c:'#4ade80',bg:'rgba(74,222,128,.15)'}],ingr:['Juice of 2 lemons','1 small piece grated ginger','500ml water','Sweetener to taste'],prep:'Mix everything. Can serve cold or hot.',qty:'Natural thermogenic. Ginger boosts metabolism. Practically zero calories.'},
 ];
 
 const macros={bulk:{kcal:'2.800',prot:'180g',fat:'70g'},cut:{kcal:'1.600',prot:'160g',fat:'50g'}};
@@ -2171,6 +2172,8 @@ function selectModel(model, el){
  twModel=model;
  todayPickedCache = {};
  cycleData = null;
+ autoSchedule = null; // Limpa ciclo anterior para home refletir o novo modelo
+ try{ localStorage.removeItem('fitlife_auto_schedule'); }catch(e){}
  checkCycleStatus();
  document.querySelectorAll('#modelSection .tw-card').forEach(c=>c.classList.remove('selected'));
  el.classList.add('selected');
@@ -2189,7 +2192,7 @@ function openMuscleUL(superior, label){
  const muscles = [superior, 'Pernas'];
  muscles.forEach(function(m){
    if(!todayPickedCache[m] && exercisesDB[m]){
-     todayPickedCache[m] = pickExercises(exercisesDB[m].exs, 3);
+     todayPickedCache[m] = pickExercises(exercisesDB[m].exs, 4);
    }
  });
 
@@ -2334,7 +2337,7 @@ function afterDiffSelected(){
      var allExs = [];
      ['Peito','Costas','Pernas','Ombros','Bíceps','Tríceps','Abdômen'].forEach(function(m){
        if(exercisesDB[m] && exercisesDB[m].exs){
-         var picked = todayPickedCache[m] || pickExercises(exercisesDB[m].exs, 3);
+         var picked = todayPickedCache[m] || pickExercises(exercisesDB[m].exs, 4);
          todayPickedCache[m] = picked;
          picked.forEach(function(e){ allExs.push(e); });
        }
@@ -2487,7 +2490,7 @@ function openMuscle(name,icon,exercises){
      muscles.forEach(function(m){
        const picked = todayPickedCache[m];
        if(!picked || !picked.length) return;
-       allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + m.toUpperCase() + '</div>';
+       allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + tMuscle(m).toUpperCase() + '</div>';
        allHtml += picked.map(ex=>`<div class="ex-detail-card">
          <h4>${ex}</h4>
          <div class="ex-spec-row">
@@ -4035,23 +4038,20 @@ function cancelEdit(id){
 // loginComGoogle definida globalmente para estar disponível antes do Firebase carregar
 window.loginComGoogle = function() {
   var btn = document.getElementById('btnGoogleLogin') || document.getElementById('btnGoogleCadastro');
+  var originalHTML = btn ? btn.innerHTML : '';
   function resetBtn(){
-    if(btn){ btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg> Entrar com Google'; btn.disabled = false; }
+    if(btn){ btn.innerHTML = originalHTML; btn.disabled = false; }
   }
   if(typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length){
     showToast('⚠️ Aguarde e tente novamente');
-    // Segurança: resetar botão após 3s caso fique preso
-    setTimeout(resetBtn, 3000);
     return;
   }
   var auth = firebase.auth();
   var provider = new firebase.auth.GoogleAuthProvider();
-  if(btn){ btn.textContent = 'Aguarde...'; btn.disabled = true; }
-  // Timeout de segurança: se em 8s não resolver, resetar botão
-  var safetyTimer = setTimeout(resetBtn, 8000);
+  if(btn){ btn.textContent = 'Aguarde...'; btn.disabled = false; }
   auth.signInWithPopup(provider)
     .then(function(result) {
-      clearTimeout(safetyTimer);
+      resetBtn();
       var user = result.user;
       if(!localStorage.getItem('fitlife_onboarding_done')) {
         var profile = JSON.parse(localStorage.getItem('fitlife_profile') || '{}');
@@ -4060,10 +4060,8 @@ window.loginComGoogle = function() {
           localStorage.setItem('fitlife_profile', JSON.stringify(profile));
         }
       }
-      // entrarNoApp é chamada pelo onAuthStateChanged
     })
     .catch(function(e) {
-      clearTimeout(safetyTimer);
       resetBtn();
       if(e.code !== 'auth/popup-closed-by-user') showToast('❌ Erro ao entrar com Google');
     });
