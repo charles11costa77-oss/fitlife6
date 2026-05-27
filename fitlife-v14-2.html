@@ -1964,13 +1964,17 @@ function adjRest(key,prefix,delta,min,max){
 
 var comingFromModal = false;
 
-function openWeekModal(){
+function openWeekModal(weekOffset){
   if(!autoSchedule || !autoSchedule.builtCycle){
     showToast(t[currentLang].configurarCicloPrimeiro);
     return;
   }
   const box = document.getElementById('weekModalBox');
   const bc = autoSchedule.builtCycle;
+  const isPeriodic = autoSchedule.period === 'monthly' || autoSchedule.period === 'trimester';
+  const totalWeeks = autoSchedule.period === 'trimester' ? 12 : isPeriodic ? 4 : 1;
+  const activeWeek = (weekOffset !== undefined ? weekOffset : 0); // 0 = semana atual
+
   // Traduzir dias
   const dayNamesLang = currentLang === 'en' ? {
    dom:'Sun', seg:'Mon', ter:'Tue', qua:'Wed', qui:'Thu', sex:'Fri', sab:'Sat'
@@ -1978,43 +1982,72 @@ function openWeekModal(){
    dom:'Dom', seg:'Seg', ter:'Ter', qua:'Qua', qui:'Qui', sex:'Sex', sab:'Sáb'
   };
   bc.forEach(d => { d.dayName = dayNamesLang[d.dayCode] || d.dayName; });
+
   const modelLabel = {'Full':t[currentLang].corpoInteiro,'Upper':t[currentLang].duasDivisoes,'AB':t[currentLang].divisaoAB,'ABCD':t[currentLang].quatroDivisoes}[autoSchedule.model]||autoSchedule.model;
   const periodLabel = currentLang==='en' ? {monthly:'Monthly',trimester:'Quarterly'}[autoSchedule.period]||'' : {monthly:'Mensal',trimester:'Trimestral'}[autoSchedule.period]||'';
   const diffLabel = {easy:t[currentLang].facil,med:t[currentLang].medio,hard:t[currentLang].dificil}[autoSchedule.diff]||'';
   const trainDays = bc.filter(d=>!d.isRest).length;
   const restDays = bc.filter(d=>d.isRest).length;
-  const muscleIcons2 = {'Peito':'','Costas':'','Pernas':'','Ombros':'','Bíceps':'','Tríceps':'','Abdômen':''};
 
   // Carregar dias já marcados
   const doneKey = 'fitlife_done_days';
   let doneDays = {};
   try{ doneDays = JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){}
 
-  // Calcular datas da semana atual (Dom=0 ... Sáb=6)
+  // Calcular data de início da semana atual (domingo)
   const today = new Date();
-  const todayDow = today.getDay(); // 0=Dom
+  const todayDow = today.getDay();
   const dayCodeToIdx = {dom:0,seg:1,ter:2,qua:3,qui:4,sex:5,sab:6};
-  function getDayDate(dayCode){
-    const diff = dayCodeToIdx[dayCode] - todayDow;
+
+  function getISOWeek(d){ const tmp=new Date(d); tmp.setHours(0,0,0,0); tmp.setDate(tmp.getDate()+3-(tmp.getDay()+6)%7); const w1=new Date(tmp.getFullYear(),0,4); return tmp.getFullYear()+'W'+String(1+Math.round(((tmp-w1)/86400000-3+(w1.getDay()+6)%7)/7)).padStart(2,'0'); }
+
+  function getDayDateForWeek(dayCode, wOffset){
+    const diff = dayCodeToIdx[dayCode] - todayDow + (wOffset * 7);
     const d = new Date(today);
     d.setDate(today.getDate() + diff);
-    return d.getDate(); // número do dia
+    return { label: d.getDate().toString().padStart(2,'0') + '/' + (d.getMonth()+1).toString().padStart(2,'0'), date: d };
   }
+
+  // Rotacionar grupamentos por semana (progressão A/B/C/D)
+  function getWeekCycle(wOffset){
+    const trainDaysCodes = bc.filter(d=>!d.isRest).map(d=>d.dayCode);
+    const allGroups = bc.filter(d=>!d.isRest).map(d=>d);
+    // Rotaciona os grupamentos pela semana
+    return bc.map(d => {
+      if(d.isRest) return {...d};
+      const trainIdx = trainDaysCodes.indexOf(d.dayCode);
+      const groupCount = allGroups.length;
+      const rotated = allGroups[(trainIdx + wOffset) % groupCount];
+      return {...d, label: rotated.label, groups: rotated.groups};
+    });
+  }
+
+  // Abas de semana (só para mensal/trimestral)
+  const weekTabsHTML = isPeriodic ? `
+  <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px">
+    ${Array.from({length:totalWeeks},(_,i)=>`
+      <button onclick="openWeekModal(${i})" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid ${i===activeWeek?'var(--accent)':'var(--border)'};background:${i===activeWeek?'rgba(232,255,59,.1)':'var(--card)'};color:${i===activeWeek?'var(--accent)':'var(--muted)'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif">
+        ${currentLang==='en'?'Week':'Sem'} ${i+1}
+      </button>`).join('')}
+  </div>` : '';
+
+  const weekCycle = isPeriodic ? getWeekCycle(activeWeek) : bc;
 
   box.innerHTML = `
   <div style="background:linear-gradient(135deg,#1a1a00,#2a2a00);border:1px solid var(--accent);border-radius:16px;padding:14px;margin-bottom:14px">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)">${modelLabel} · ${periodLabel}</div>
     <div style="font-size:11px;color:var(--muted);margin-top:2px">${diffLabel} &nbsp;|&nbsp; ${trainDays} ${t[currentLang].diasTreino} &nbsp;|&nbsp; ${restDays} ${t[currentLang].diasDescanso}</div>
   </div>
+  ${weekTabsHTML}
   <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-  ${bc.map(d=>{
-    const dateNum = getDayDate(d.dayCode);
-    const weekKey = today.getFullYear()+'W'+Math.ceil(today.getDate()/7);
+  ${weekCycle.map(d=>{
+    const {label: dateNum, date: dayDate} = getDayDateForWeek(d.dayCode, activeWeek);
+    const weekKey = getISOWeek(dayDate);
     const doneId = weekKey+'_'+d.dayCode;
     const isDone = doneDays[doneId];
     return `
     <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:${d.isRest?'var(--card)':isDone?'rgba(74,222,128,.06)':'rgba(232,255,59,.04)'};border-radius:14px;border:1px solid ${d.isRest?'var(--border)':isDone?'rgba(74,222,128,.3)':'rgba(232,255,59,.2)'}">
-      <div style="text-align:center;width:32px;flex-shrink:0">
+      <div style="text-align:center;width:36px;flex-shrink:0">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${d.isRest?'var(--muted)':isDone?'var(--green)':'var(--accent)'};line-height:1">${d.dayName.substring(0,3).toUpperCase()}</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px">${dateNum}</div>
       </div>
@@ -2026,14 +2059,13 @@ function openWeekModal(){
         }
       </div>
       ${!d.isRest ? `
-        <button onclick="toggleDayDone('${doneId}')" style="background:${isDone?'var(--green)':'transparent'};border:2px solid ${isDone?'var(--green)':'var(--border)'};border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all 0.2s">
+        <button onclick="toggleDayDone('${doneId}',${activeWeek})" style="background:${isDone?'var(--green)':'transparent'};border:2px solid ${isDone?'var(--green)':'var(--border)'};border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all 0.2s">
           ${isDone?'✓':''}
         </button>` : ''}
     </div>`;
   }).join('')}
   </div>`;
 
-  // Atualizar título do modal com nome do plano
   const suaSemTitleEl = document.getElementById('suaSemanaTitle');
   if(suaSemTitleEl) suaSemTitleEl.textContent = modelLabel + (periodLabel ? ' · ' + periodLabel : '');
   const modal = document.getElementById('weekModal');
@@ -2046,7 +2078,7 @@ function openWeekModal(){
   }, 50);
 }
 
-function toggleDayDone(doneId){
+function toggleDayDone(doneId, weekOffset){
   const doneKey = 'fitlife_done_days';
   let doneDays = {};
   try{ doneDays = JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){}
@@ -2058,8 +2090,7 @@ function toggleDayDone(doneId){
     showToast(currentLang==='en'?'✅ Day marked as done!':'✅ Dia marcado como concluído!');
   }
   try{ localStorage.setItem(doneKey, JSON.stringify(doneDays)); }catch(e){}
-  // Reabrir modal para atualizar visual
-  openWeekModal();
+  openWeekModal(weekOffset||0);
 }
 
 function closeWeekModal(){
@@ -3452,7 +3483,7 @@ function renderCyclePreview(){
    const dcIdx = {dom:0,seg:1,ter:2,qua:3,qui:4,sex:5,sab:6}[d.dayCode]??0;
    const diff2 = dcIdx - todayDow2;
    const dd = new Date(todayD); dd.setDate(todayD.getDate()+diff2);
-   const dateNum = dd.getDate();
+   const dateNum = dd.getDate().toString().padStart(2,'0') + '/' + (dd.getMonth()+1).toString().padStart(2,'0');
    return `
  <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:${d.isRest?'var(--card)':'rgba(232,255,59,.04)'};border-radius:14px;border:1px solid ${d.isRest?'var(--border)':'rgba(232,255,59,.2)'}">
  <div style="text-align:center;width:32px;flex-shrink:0">
@@ -3508,7 +3539,7 @@ function confirmCycle(){
  // Navigate to home immediately and show success
  goToTab('home');
  setTimeout(()=>{
- showToast(currentLang==='en'?' Cycle saved! Your workout is ready!':" Ciclo salvo! Seu treino está pronto!");
+ showToast(currentLang==='en'?' Cycle saved! Your workout is ready!':" Ciclo salvo! Seu treino está pronto!", '#3bffd8');
  }, 400);
 }
 
@@ -3983,7 +4014,7 @@ function setNutriGoal(goal, btn){
  if(firstTab) firstTab.classList.add('active');
  currentRecipeCat='todos';
  renderRecipes('todos');
- showToast(goal==='bulk'?(currentLang==='en'?' Muscle gain meal plan loaded!':' Cardápio de Ganho de Massa carregado!'):(currentLang==='en'?' Fat loss meal plan loaded!':' Cardápio de Perda de Gordura carregado!'));
+ showToast(goal==='bulk'?(currentLang==='en'?' Muscle gain meal plan loaded!':' Cardápio de Ganho de Massa carregado!'):(currentLang==='en'?' Fat loss meal plan loaded!':' Cardápio de Perda de Gordura carregado!'), '#3bffd8');
 }
 
 // filterRecipes — called by category tab buttons
@@ -4040,7 +4071,7 @@ function setComplexity(level, btn){
  // Show shuffle meal button only on 'full' complexity
  const btnMeal = document.getElementById('btnShuffleMeal');
  if(btnMeal) btnMeal.style.display = level==='full' ? 'block' : 'none';
- showToast(currentLang==='en'?{'simple':' Simple and quick recipes!','mid':' Intermediate recipes!','full':' Full menu + Shuffle available!'}[level]:{'simple':' Receitas simples e rápidas!','mid':' Receitas intermediárias!','full':' Cardápio completo + Trocar disponível!'}[level]);
+ showToast(currentLang==='en'?{'simple':' Simple and quick recipes!','mid':' Intermediate recipes!','full':' Full menu + Shuffle available!'}[level]:{'simple':' Receitas simples e rápidas!','mid':' Receitas intermediárias!','full':' Cardápio completo + Trocar disponível!'}[level], '#3bffd8');
 }
 
 function shuffleMealPlan(){
@@ -4432,20 +4463,22 @@ window.loginComGoogle = function() {
         builtCycle = null;
         selectedDays = [];
         twModel = ''; twPeriod = ''; twDiff = 'easy'; currentDiff = 'easy';
-        // Esconde app e onboarding
+        // Esconde app
         document.getElementById('app').classList.remove('visible');
         document.getElementById('app').style.display = 'none';
-        document.getElementById('onboarding').style.display = 'none';
-        // Mostra login
-        document.getElementById('authScreen').style.display = 'flex';
-        document.getElementById('authTitle').textContent = 'LOGIN';
-        document.getElementById('authLogin').style.display = 'block';
-        document.getElementById('authCadastro').style.display = 'none';
-        document.getElementById('loginEmail').value = '';
-        document.getElementById('loginSenha').value = '';
-        document.getElementById('btnEntrar').textContent = 'ENTRAR →';
-        document.getElementById('btnEntrar').disabled = false;
+        document.getElementById('authScreen').style.display = 'none';
         closeSideMenu();
+        // Vai para onboarding começando pelo idioma (passo 1)
+        currentLang = 'pt';
+        applyLang();
+        twStep = 1;
+        const onb = document.getElementById('onboarding');
+        onb.style.display = 'flex';
+        onb.style.zIndex = '90';
+        // Resetar seleção de idioma visualmente
+        document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+        const ptCard = document.querySelector('.lang-card[onclick*="Português"]');
+        if(ptCard) ptCard.classList.add('selected');
         showToast(currentLang==='en'?'✅ Session ended!':'✅ Sessão encerrada!');
       });
     });
