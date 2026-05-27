@@ -2043,7 +2043,8 @@ function openWeekModal(weekOffset){
   ${weekCycle.map(d=>{
     const {label: dateNum, date: dayDate} = getDayDateForWeek(d.dayCode, activeWeek);
     const weekKey = getISOWeek(dayDate);
-    const doneId = weekKey+'_'+d.dayCode;
+    const cycleId = (autoSchedule.model||'')+'_'+(autoSchedule.period||'')+'_'+(autoSchedule.diff||'');
+    const doneId = cycleId+'_'+weekKey+'_'+d.dayCode;
     const isDone = doneDays[doneId];
     return `
     <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:${d.isRest?'var(--card)':isDone?'rgba(74,222,128,.06)':'rgba(232,255,59,.04)'};border-radius:14px;border:1px solid ${d.isRest?'var(--border)':isDone?'rgba(74,222,128,.3)':'rgba(232,255,59,.2)'}">
@@ -3186,7 +3187,7 @@ function startMidnightWatcher(){
  twPeriod = autoSchedule.period;
  currentDiff = autoSchedule.diff;
  renderTodayWorkout();
- showToast(' Novo dia! Treino atualizado automaticamente!');
+ showToast(' Novo dia! Treino atualizado automaticamente!', '#3bffd8');
  }
  }
  }, 60000); // check every 60s
@@ -4077,7 +4078,7 @@ function setComplexity(level, btn){
 function shuffleMealPlan(){
  mealPlanOffset++;
  renderMealPlan();
- showToast(currentLang==='en'?' New daily meal plan!':" Novo cardápio do dia!");
+ showToast(currentLang==='en'?' New daily meal plan!':" Novo cardápio do dia!", '#3bffd8');
 }
 
 function renderMealPlan(){
@@ -4411,11 +4412,21 @@ window.loginComGoogle = function() {
 
     // PROTEÇÃO + APÓS LOGIN
     var splashReady = false; var authReady = false; var authUser = null;
+    var isLoggingOut = false; // flag para logout intencional
     function tryHideSplash(){
       if(!splashReady || !authReady) return;
+      if(isLoggingOut) return; // não interferir no fluxo de logout
       var splash = document.getElementById("splash");
       splash.style.opacity = "0";
-      setTimeout(function(){ splash.style.display = "none"; if(authUser){ entrarNoApp(); } else { document.getElementById("authScreen").style.display = "flex"; document.getElementById("onboarding").style.display = "none"; document.getElementById("app").classList.remove("visible"); } }, 500);
+      setTimeout(function(){
+        splash.style.display = "none";
+        if(authUser){ entrarNoApp(); }
+        else {
+          document.getElementById("authScreen").style.display = "flex";
+          document.getElementById("onboarding").style.display = "none";
+          document.getElementById("app").classList.remove("visible");
+        }
+      }, 500);
     }
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
     auth.onAuthStateChanged(function(user) { authReady = true; authUser = user;
@@ -4452,6 +4463,7 @@ window.loginComGoogle = function() {
 
     // BOTÃO SAIR
     document.getElementById('btnSair').addEventListener('click', function() {
+      isLoggingOut = true;
       auth.signOut().then(function() {
         // Limpa tudo (chaves genéricas)
         localStorage.removeItem('fitlife_onboarding_done');
