@@ -4488,12 +4488,21 @@ window.loginComGoogle = function() {
     // BOTÃO SAIR
     document.getElementById('btnSair').addEventListener('click', function() {
       isLoggingOut = true;
+      // Pega o UID ANTES do signOut para limpar as chaves vinculadas
+      var currentUser = auth.currentUser;
+      var uid = currentUser ? currentUser.uid : null;
       auth.signOut().then(function() {
-        // Limpa tudo (chaves genéricas)
+        // Limpa chaves genéricas
         localStorage.removeItem('fitlife_onboarding_done');
         localStorage.removeItem('fitlife_profile');
         localStorage.removeItem('fitlife_tw_config');
         localStorage.removeItem('fitlife_auto_schedule');
+        // Limpa chaves vinculadas ao UID (essencial para forçar onboarding no próximo login)
+        if(uid){
+          localStorage.removeItem('fitlife_onboarding_done_' + uid);
+          localStorage.removeItem('fitlife_profile_' + uid);
+          localStorage.removeItem('fitlife_tw_config_' + uid);
+        }
         // Reseta variáveis globais de estado
         todayPickedCache = {};
         autoSchedule = null;
@@ -4513,14 +4522,12 @@ window.loginComGoogle = function() {
         document.getElementById('app').style.display = 'none';
         document.getElementById('onboarding').style.display = 'none';
         closeSideMenu();
-        // Vai para tela de login (authScreen) — não para onboarding
+        // Vai para tela de login (authScreen)
         currentLang = 'pt';
         applyLang();
-        // Garante painel de login visível (não cadastro)
         document.getElementById('authLogin').style.display = 'block';
         document.getElementById('authCadastro').style.display = 'none';
         document.getElementById('authTitle').textContent = 'LOGIN';
-        // Limpa campos de login
         var loginEmail = document.getElementById('loginEmail');
         var loginSenha = document.getElementById('loginSenha');
         if(loginEmail) loginEmail.value = '';
