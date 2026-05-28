@@ -4436,19 +4436,36 @@ window.loginComGoogle = function() {
 
     // PROTEÇÃO + APÓS LOGIN
     var splashReady = false; var authReady = false; var authUser = null;
-    var isLoggingOut = false; // flag para logout intencional
+    var isLoggingOut = false;
     function tryHideSplash(){
       if(!splashReady || !authReady) return;
-      if(isLoggingOut) return; // não interferir no fluxo de logout
+      if(isLoggingOut) return;
       var splash = document.getElementById("splash");
       splash.style.opacity = "0";
       setTimeout(function(){
         splash.style.display = "none";
-        if(authUser){ entrarNoApp(); }
-        else {
+        if(authUser){
+          // Verifica se já completou onboarding para este UID
+          var uid = authUser.uid;
+          var onboardingKey = 'fitlife_onboarding_done_' + uid;
+          var profileKey = 'fitlife_profile_' + uid;
+          var onboardingDone = localStorage.getItem(onboardingKey);
+          var savedProfile = localStorage.getItem(profileKey);
+          if(onboardingDone && savedProfile){
+            // Sessão válida com onboarding completo — entra direto
+            entrarNoApp();
+          } else {
+            // Tem sessão Firebase mas não tem onboarding — vai para authScreen
+            document.getElementById("authScreen").style.display = "flex";
+            document.getElementById("onboarding").style.display = "none";
+            document.getElementById("app").classList.remove("visible");
+            document.getElementById("app").style.display = "none";
+          }
+        } else {
           document.getElementById("authScreen").style.display = "flex";
           document.getElementById("onboarding").style.display = "none";
           document.getElementById("app").classList.remove("visible");
+          document.getElementById("app").style.display = "none";
         }
       }, 500);
     }
@@ -4534,6 +4551,7 @@ window.loginComGoogle = function() {
         if(loginSenha) loginSenha.value = '';
         document.getElementById('authScreen').style.display = 'flex';
         showToast('✅ Sessão encerrada!');
+        isLoggingOut = false;
       });
     });
 
