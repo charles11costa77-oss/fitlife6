@@ -959,7 +959,6 @@ input, textarea {
  <div class="nav-item" id="nav-treinos" onclick="goToTab('treinos')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14M18 5v14"/><rect x="3" y="8" width="3" height="8" rx="1"/><rect x="18" y="8" width="3" height="8" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/></svg></div><div class="nav-label">TREINOS</div></div>
  <div class="nav-item" id="nav-nutri" onclick="goToTab('nutri')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></div><div class="nav-label">NUTRIÇÃO</div></div>
  <div class="nav-item" id="nav-diario" onclick="goToTab('diario')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg></div><div class="nav-label">DIÁRIO</div></div>
-</div><div class="nav-label">DIÁRIO</div></div>
  </nav>
 </div>
 
@@ -2010,15 +2009,20 @@ function openWeekModal(weekOffset){
 
   // Rotacionar grupamentos por semana (progressão A/B/C/D)
   function getWeekCycle(wOffset){
-    const trainDaysCodes = bc.filter(d=>!d.isRest).map(d=>d.dayCode);
-    const allGroups = bc.filter(d=>!d.isRest).map(d=>d);
-    // Rotaciona os grupamentos pela semana
+    // Bug 6 fix: usa a mesma fórmula de rotação que getTodayWorkoutDay
+    // wOffset = índice da semana (0-based), igual ao weekNum do getTodayWorkoutDay
+    const model = modelMap[autoSchedule.model];
+    const modelDays = model ? Object.keys(model) : [];
+    const trainDays = bc.filter(d=>!d.isRest);
     return bc.map(d => {
       if(d.isRest) return {...d};
-      const trainIdx = trainDaysCodes.indexOf(d.dayCode);
-      const groupCount = allGroups.length;
-      const rotated = allGroups[(trainIdx + wOffset) % groupCount];
-      return {...d, label: rotated.label, groups: rotated.groups};
+      const trainIdx = trainDays.findIndex(t=>t.dayCode===d.dayCode);
+      if(trainIdx < 0 || modelDays.length === 0) return {...d};
+      const rotatedIdx = (trainIdx + wOffset) % modelDays.length;
+      const rotatedDayKey = modelDays[rotatedIdx];
+      const rotatedData = model[rotatedDayKey];
+      if(!rotatedData) return {...d};
+      return {...d, label: rotatedDayKey, groups: rotatedData.groups};
     });
   }
 
@@ -2043,7 +2047,7 @@ function openWeekModal(weekOffset){
   ${weekCycle.map(d=>{
     const {label: dateNum, date: dayDate} = getDayDateForWeek(d.dayCode, activeWeek);
     const weekKey = getISOWeek(dayDate);
-    const cycleId = (autoSchedule.model||'')+'_'+(autoSchedule.period||'')+'_'+(autoSchedule.diff||'');
+    const cycleId = (autoSchedule.model||'')+'_'+(autoSchedule.period||'')+'_'+(autoSchedule.diff||'')+'_'+(autoSchedule.startDate||'').replace(/ /g,'-');
     const doneId = cycleId+'_'+weekKey+'_'+d.dayCode;
     const isDone = doneDays[doneId];
     return `
@@ -2076,6 +2080,18 @@ function openWeekModal(weekOffset){
   modal.classList.add('open');
   setTimeout(function(){
     if(modalInner) modalInner.scrollTo({top:0, behavior:'auto'});
+    // Bug 7 fix: rola a barra de abas horizontalmente para mostrar a aba ativa
+    const tabsBar = box.querySelector('div[style*="overflow-x:auto"]');
+    if(tabsBar){
+      const activeBtn = tabsBar.querySelectorAll('button')[activeWeek];
+      if(activeBtn){
+        const barLeft = tabsBar.getBoundingClientRect().left;
+        const btnLeft = activeBtn.getBoundingClientRect().left;
+        const btnWidth = activeBtn.offsetWidth;
+        const barWidth = tabsBar.offsetWidth;
+        tabsBar.scrollLeft += (btnLeft - barLeft) - (barWidth/2) + (btnWidth/2);
+      }
+    }
   }, 50);
 }
 
@@ -2085,10 +2101,10 @@ function toggleDayDone(doneId, weekOffset){
   try{ doneDays = JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){}
   if(doneDays[doneId]){
     delete doneDays[doneId];
-    showToast(currentLang==='en'?'Day unmarked!':'Dia desmarcado!');
+    showToast(currentLang==='en'?'Day unmarked!':'Dia desmarcado!', '#3bffd8');
   } else {
     doneDays[doneId] = true;
-    showToast(currentLang==='en'?'✅ Day marked as done!':'✅ Dia marcado como concluído!');
+    showToast(currentLang==='en'?'✅ Day marked as done!':'✅ Dia marcado como concluído!', '#3bffd8');
   }
   try{ localStorage.setItem(doneKey, JSON.stringify(doneDays)); }catch(e){}
   openWeekModal(weekOffset||0);
@@ -2194,6 +2210,11 @@ let appStats = {streak:0, workouts:0, kcal:0};
 function twGoTo(step){
  if(step===3){
    renderGrupamentoGrid();
+ }
+ // Bug 3: ao entrar no step 5 (dias disponíveis), limpa seleção anterior
+ if(step===5){
+   selectedDays=[];
+   document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('selected'));
  }
  document.querySelectorAll('.tw-step').forEach(s=>s.classList.remove('active'));
  const target = document.getElementById('tw-step'+step);
@@ -2963,7 +2984,7 @@ function updateTodayWithMuscle(name, icon, exercises){
    if(dayData){
      let sectionsHTML = dayData.groups.map(g => {
        const gIcon = muscleIcons[g.muscle]||'';
-       const pickedExs = pickExercises(g.exs, 2);
+       const pickedExs = pickExercises(g.exs, 4);
        todayPickedCache[g.muscle] = pickedExs;
        const exsHTML = pickedExs.map(exName => `
        <div class="ex-item">
@@ -3019,7 +3040,7 @@ function updateTodayWithMuscle(name, icon, exercises){
  let sectionsHTML = foundDay.groups.map(g => {
  const gIcon = muscleIcons[g.muscle]||'';
  // Full/Upper: 2 per group; AB/ABCD: 4 per group
- const exCnt = (twModel==='Full'||twModel==='Upper') ? 2 : 4;
+const exCnt = 4;
  const pickedExs = pickExercises(g.exs, exCnt);
  todayPickedCache[g.muscle] = pickedExs; // save for modal consistency
  const exsHTML = pickedExs.map(exName => `
@@ -3523,6 +3544,9 @@ function confirmCycle(){
  }
  }
 
+  // Limpa marcações de dias do ciclo anterior
+ try{ localStorage.removeItem('fitlife_done_days'); }catch(e){}
+
  // Save cycle to autoSchedule
  autoSchedule = {
  model: twModel,
@@ -3652,8 +3676,8 @@ function pickExercises(exsPool, count=4){
 }
 
 function goToDiary(){
- const t=document.getElementById('workoutCompleteToast');
- if(t) t.remove();
+ const toastEl=document.getElementById('workoutCompleteToast');
+ if(toastEl) toastEl.remove();
  goToTab('diario');
  // Auto-open new entry form
  setTimeout(()=>{
@@ -4188,7 +4212,7 @@ function renderDiaryEntries(){
  const c = document.getElementById('diaryEntries');
  if(!c) return;
  if(!diaryEntries.length){
- c.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted)">'+ t[currentLang].nenhumaAnotacao +'iro treino! </div>';
+ c.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted)">'+ t[currentLang].nenhumaAnotacao +'</div>';
  return;
  }
  c.innerHTML = diaryEntries.map(e =>
@@ -4464,34 +4488,52 @@ window.loginComGoogle = function() {
     // BOTÃO SAIR
     document.getElementById('btnSair').addEventListener('click', function() {
       isLoggingOut = true;
+      // Pega o UID ANTES do signOut para limpar as chaves vinculadas
+      var currentUser = auth.currentUser;
+      var uid = currentUser ? currentUser.uid : null;
       auth.signOut().then(function() {
-        // Limpa tudo (chaves genéricas)
+        // Limpa chaves genéricas
         localStorage.removeItem('fitlife_onboarding_done');
         localStorage.removeItem('fitlife_profile');
         localStorage.removeItem('fitlife_tw_config');
         localStorage.removeItem('fitlife_auto_schedule');
+        // Limpa chaves vinculadas ao UID (essencial para forçar onboarding no próximo login)
+        if(uid){
+          localStorage.removeItem('fitlife_onboarding_done_' + uid);
+          localStorage.removeItem('fitlife_profile_' + uid);
+          localStorage.removeItem('fitlife_tw_config_' + uid);
+        }
+        // Reseta variáveis globais de estado
         todayPickedCache = {};
         autoSchedule = null;
         builtCycle = null;
         selectedDays = [];
         twModel = ''; twPeriod = ''; twDiff = 'easy'; currentDiff = 'easy';
-        // Esconde app
+        // Reseta perfil em memória para evitar nome antigo no próximo login
+        userProfile = {name:'', age:'', weight:'', health:[], goal:'', gender:''};
+        // Reseta UI do perfil
+        document.getElementById('sideName').textContent = '—';
+        document.getElementById('sideEmail').textContent = '—';
+        document.getElementById('sideAvatar').textContent = '?';
+        document.getElementById('avatarInitial').textContent = '?';
+        document.getElementById('greetName').textContent = 'Campeão';
+        // Esconde app e onboarding
         document.getElementById('app').classList.remove('visible');
         document.getElementById('app').style.display = 'none';
-        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('onboarding').style.display = 'none';
         closeSideMenu();
-        // Vai para onboarding começando pelo idioma (passo 1)
+        // Vai para tela de login (authScreen)
         currentLang = 'pt';
         applyLang();
-        twStep = 1;
-        const onb = document.getElementById('onboarding');
-        onb.style.display = 'flex';
-        onb.style.zIndex = '90';
-        // Resetar seleção de idioma visualmente
-        document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
-        const ptCard = document.querySelector('.lang-card[onclick*="Português"]');
-        if(ptCard) ptCard.classList.add('selected');
-        showToast(currentLang==='en'?'✅ Session ended!':'✅ Sessão encerrada!');
+        document.getElementById('authLogin').style.display = 'block';
+        document.getElementById('authCadastro').style.display = 'none';
+        document.getElementById('authTitle').textContent = 'LOGIN';
+        var loginEmail = document.getElementById('loginEmail');
+        var loginSenha = document.getElementById('loginSenha');
+        if(loginEmail) loginEmail.value = '';
+        if(loginSenha) loginSenha.value = '';
+        document.getElementById('authScreen').style.display = 'flex';
+        showToast('✅ Sessão encerrada!');
       });
     });
 
