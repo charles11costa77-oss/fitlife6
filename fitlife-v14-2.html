@@ -1105,7 +1105,7 @@ const macros={bulk:{kcal:'2.800',prot:'180g',fat:'70g'},cut:{kcal:'1.600',prot:'
 
 const diffSpecs={easy:{series:3,reps:12,rest:'60s'},med:{series:4,reps:10,rest:'45s'},hard:{series:5,reps:8,rest:'30s'}};
 
-let currentDiff='easy', selectedMood='', currentEditField='';
+let currentDiff='easy', selectedMood='', currentEditField='', currentDayKey=null;
 let userProfile={name:'',age:'',weight:'',health:[],goal:''};
 let builderExercises=[];
 let currentBuilderSpec={series:3,reps:12,rest:60};
@@ -3286,6 +3286,8 @@ function renderTodayWorkout(){
  dayKey = getTodayDayKey(activeModel);
  dayData = (modelMap[activeModel]||{})[dayKey];
  }
+ // Salva o dayKey atual para uso consistente no shuffleExercises
+ currentDayKey = dayKey;
  if(!dayData || (typeof dayData === 'object' && dayData.isRest)){
  box.innerHTML = `<div class="today-card" style="text-align:center;padding:32px 20px">
  <div style="font-size:48px;margin-bottom:12px"></div>
@@ -3620,7 +3622,9 @@ function getTodayWorkoutDay(){
  const start = new Date(autoSchedule.startDate);
  const now = new Date();
  const daysDiff = Math.floor((now-start)/(1000*60*60*24));
- return {dayKey:days[daysDiff%days.length], dayData:model[days[daysDiff%days.length]], isRest:false};
+ // Usa currentDayKey se disponível — preserva grupamento escolhido ao trocar série
+ const dayKey = (currentDayKey && model[currentDayKey]) ? currentDayKey : days[daysDiff%days.length];
+ return {dayKey, dayData:model[dayKey], isRest:false};
 }
 
 // ─── STATS ──────────────────────────────────────────────
