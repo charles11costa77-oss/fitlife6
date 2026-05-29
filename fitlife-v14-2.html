@@ -3286,8 +3286,16 @@ function renderTodayWorkout(){
  dayKey = getTodayDayKey(activeModel);
  dayData = (modelMap[activeModel]||{})[dayKey];
  }
- // Salva o dayKey atual para uso consistente no shuffleExercises
- currentDayKey = dayKey;
+ // Só atualiza currentDayKey se ainda não foi definido ou se o dia mudou
+ const _today = new Date().toDateString();
+ if(!currentDayKey || window._currentDayKeyDate !== _today){
+   currentDayKey = dayKey;
+   window._currentDayKeyDate = _today;
+ } else {
+   // Mantém o dayKey atual — preserva grupamento ao trocar série
+   dayKey = currentDayKey;
+   dayData = (modelMap[activeModel]||{})[dayKey] || dayData;
+ }
  if(!dayData || (typeof dayData === 'object' && dayData.isRest)){
  box.innerHTML = `<div class="today-card" style="text-align:center;padding:32px 20px">
  <div style="font-size:48px;margin-bottom:12px"></div>
@@ -3664,7 +3672,21 @@ let todayPickedCache = {}; // cache today's picks so home and modal show SAME ex
 
 function shuffleExercises(){
  exerciseOffset++;
- todayPickedCache = {}; // clear cache so new exercises are picked
+ // Preserva apenas os músculos do grupamento atual — não deixa cair em Peito & Tríceps
+ const currentMuscles = Object.keys(todayPickedCache);
+ todayPickedCache = {};
+ // Repopula com novos exercícios para os mesmos músculos
+ currentMuscles.forEach(muscle => {
+   if(exercisesDB[muscle]){
+     const pool = exercisesDB[muscle].exs || [];
+     const last = lastPickedExs[pool[0]] || [];
+     const fresh = pool.filter(e => !last.includes(e));
+     const seen = pool.filter(e => last.includes(e));
+     const shuffled = [...fresh.sort(()=>Math.random()-.5), ...seen.sort(()=>Math.random()-.5)];
+     todayPickedCache[muscle] = shuffled.slice(0, 4);
+     lastPickedExs[pool[0]] = todayPickedCache[muscle];
+   }
+ });
  renderTodayWorkout();
  showToast(currentLang==='en'?' New exercise combination!':' Nova combinação de exercícios!', '#3bffd8');
 }
