@@ -2009,15 +2009,17 @@ function openWeekModal(weekOffset){
 
   // Rotacionar grupamentos por semana (progressão A/B/C/D)
   function getWeekCycle(wOffset){
-    // Bug 6 fix: usa a mesma fórmula de rotação que getTodayWorkoutDay
-    // wOffset = índice da semana (0-based), igual ao weekNum do getTodayWorkoutDay
     const model = modelMap[autoSchedule.model];
-    const modelDays = model ? Object.keys(model) : [];
+    const modelDays = autoSchedule.shuffledModelDays || (model ? Object.keys(model) : []);
     const trainDays = bc.filter(d=>!d.isRest);
     return bc.map(d => {
       if(d.isRest) return {...d};
       const trainIdx = trainDays.findIndex(t=>t.dayCode===d.dayCode);
       if(trainIdx < 0 || modelDays.length === 0) return {...d};
+      // Semana 0: usa builtCycle direto (igual à prévia)
+      if(wOffset === 0){
+        return {...d, label: d.label, groups: d.groups};
+      }
       const rotatedIdx = (trainIdx + wOffset) % modelDays.length;
       const rotatedDayKey = modelDays[rotatedIdx];
       const rotatedData = model[rotatedDayKey];
@@ -3447,8 +3449,7 @@ function buildCyclePreview(){
  if(!model){ showToast('Escolha um modelo primeiro!'); return; }
  const modelDays = Object.keys(model);
 
- // Distribute grupamentos across selected days
- // Para mensal/trimestral: embaralha a ordem dos grupamentos por semana
+ // Para mensal/trimestral: embaralha a ordem dos grupamentos (aleatório único por ciclo)
  const shuffledModelDays = twPeriod !== 'daily'
    ? [...modelDays].sort(() => Math.random() - 0.5)
    : modelDays;
@@ -3456,7 +3457,6 @@ function buildCyclePreview(){
  builtCycle = dayOrder.map((dayCode, idx) => {
  const isTrainDay = sortedDays.includes(dayCode);
  if(!isTrainDay) return {dayCode, dayName:dayNames[dayCode], isRest:true};
- // Assign grupamento cyclically
  const trainIdx = sortedDays.indexOf(dayCode);
  const modelDayKey = shuffledModelDays[trainIdx % shuffledModelDays.length];
  const dayData = model[modelDayKey];
@@ -3466,6 +3466,9 @@ function buildCyclePreview(){
  groups: dayData.groups
  };
  });
+
+ // Salva a ordem embaralhada no builtCycle para uso consistente em todo o app
+ builtCycle._shuffledModelDays = shuffledModelDays;
 
  // Render preview
  renderCyclePreview();
@@ -3556,6 +3559,7 @@ function confirmCycle(){
  period: twPeriod,
  startDate: new Date().toDateString(),
  builtCycle: builtCycle,
+ shuffledModelDays: builtCycle._shuffledModelDays || null,
  selectedDays: selectedDays
  };
  lastAutoDate = new Date().toDateString();
@@ -3588,15 +3592,23 @@ function getTodayWorkoutDay(){
  // Progressive rotation: shift grupamentos by weekNum
  const model = modelMap[autoSchedule.model];
  if(!model) return {dayKey:todayEntry.modelDayKey, dayData:todayEntry.dayData, isRest:false};
- const modelDays = Object.keys(model);
+ // Usa a ordem embaralhada salva no ciclo — mesma da prévia e do Ver Semana
+ const modelDays = autoSchedule.shuffledModelDays || Object.keys(model);
  const trainDays = autoSchedule.builtCycle.filter(d=>!d.isRest);
  const trainIdx = trainDays.findIndex(d=>d.dayCode===todayCode);
  if(trainIdx < 0) return {isRest:true};
 
  // Shift by weekNum so each week starts from a different grupamento
- const rotatedIdx = (trainIdx + weekNum) % modelDays.length;
- const rotatedDayKey = modelDays[rotatedIdx];
- const rotatedData = model[rotatedDayKey];
+ // Semana 1 (weekNum=0): usa builtCycle diretamente sem rotação
+ let rotatedData, rotatedDayKey;
+ if(weekNum === 0){
+   rotatedData = todayEntry.dayData || model[todayEntry.modelDayKey];
+   rotatedDayKey = todayEntry.modelDayKey;
+ } else {
+   const rotatedIdx = (trainIdx + weekNum) % modelDays.length;
+   rotatedDayKey = modelDays[rotatedIdx];
+   rotatedData = model[rotatedDayKey];
+ }
 
  return {dayKey:rotatedDayKey, dayData:rotatedData, isRest:false, weekNum};
  }
