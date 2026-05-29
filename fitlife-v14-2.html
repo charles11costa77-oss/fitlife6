@@ -2022,7 +2022,7 @@ function openWeekModal(weekOffset){
       const rotatedDayKey = modelDays[rotatedIdx];
       const rotatedData = model[rotatedDayKey];
       if(!rotatedData) return {...d};
-      return {...d, label: rotatedDayKey, groups: rotatedData.groups};
+      return {...d, label: rotatedData.label || rotatedDayKey, groups: rotatedData.groups};
     });
   }
 
