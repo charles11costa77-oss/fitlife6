@@ -4536,7 +4536,9 @@ window.loginComGoogle = function() {
           localStorage.removeItem('fitlife_onboarding_done_' + uid);
           localStorage.removeItem('fitlife_profile_' + uid);
           localStorage.removeItem('fitlife_tw_config_' + uid);
+          localStorage.removeItem('fitlife_auto_schedule_' + uid);
         }
+        localStorage.removeItem('fitlife_done_days');
         // Reseta variáveis globais de estado
         todayPickedCache = {};
         autoSchedule = null;
