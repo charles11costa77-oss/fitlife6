@@ -3252,6 +3252,8 @@ function renderTodayWorkout(){
  const hasConfig = !!(activeModel && activeDiff);
  if(btnShuffle) btnShuffle.style.display = 'block';
  if(autoBadge) autoBadge.style.display = (autoSchedule && (autoSchedule.period === 'monthly' || autoSchedule.period === 'trimester')) ? 'flex' : 'none';
+ var btnVerSemana = document.getElementById('btnVerSemana');
+ if(btnVerSemana) btnVerSemana.style.display = (autoSchedule && (autoSchedule.period === 'monthly' || autoSchedule.period === 'trimester')) ? 'inline-block' : 'none';
 
  // Get today info once — used for rest check and week number display
  const todayInfo = getTodayWorkoutDay();
@@ -4545,6 +4547,8 @@ window.loginComGoogle = function() {
         builtCycle = null;
         selectedDays = [];
         twModel = ''; twPeriod = ''; twDiff = 'easy'; currentDiff = 'easy';
+        var btnVS = document.getElementById('btnVerSemana');
+        if(btnVS) btnVS.style.display = 'none';
         // Reseta perfil em memória para evitar nome antigo no próximo login
         userProfile = {name:'', age:'', weight:'', health:[], goal:'', gender:''};
         // Reseta UI do perfil
