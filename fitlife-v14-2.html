@@ -4464,8 +4464,44 @@ window.loginComGoogle = function() {
       }, 500);
     }
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
-    auth.onAuthStateChanged(function(user) { authReady = true; authUser = user;
-      tryHideSplash();
+    auth.onAuthStateChanged(function(user) {
+      authReady = true; authUser = user;
+      // Se o splash já passou, trata o estado diretamente
+      if(splashReady && !isLoggingOut){
+        var splash = document.getElementById('splash');
+        if(splash) splash.style.display = 'none';
+        if(user){
+          var uid = user.uid;
+          var onboardingKey = 'fitlife_onboarding_done_' + uid;
+          var profileKey = 'fitlife_profile_' + uid;
+          var onboardingDone = localStorage.getItem(onboardingKey);
+          var savedProfile = localStorage.getItem(profileKey);
+          document.getElementById('authScreen').style.display = 'none';
+          if(onboardingDone && savedProfile){
+            // Onboarding completo — entra direto
+            entrarNoApp();
+          } else {
+            // Logado mas sem onboarding — força onboarding
+            var appEl = document.getElementById('app');
+            if(appEl){ appEl.style.display = 'none'; appEl.classList.remove('visible'); }
+            var onb = document.getElementById('onboarding');
+            onb.style.display = 'flex';
+            onb.style.zIndex = '90';
+            currentLang = 'pt'; applyLang();
+            document.querySelectorAll('.lang-card').forEach(function(c){ c.classList.remove('selected'); });
+            var ptCard = document.querySelector('.lang-card[onclick*="Português"]');
+            if(ptCard) ptCard.classList.add('selected');
+          }
+        } else {
+          // Não logado — mostra authScreen
+          var appEl = document.getElementById('app');
+          if(appEl){ appEl.style.display = 'none'; appEl.classList.remove('visible'); }
+          document.getElementById('onboarding').style.display = 'none';
+          document.getElementById('authScreen').style.display = 'flex';
+        }
+      } else {
+        tryHideSplash();
+      }
     });
 
     document.getElementById('btnEntrar').addEventListener('click', function() {
