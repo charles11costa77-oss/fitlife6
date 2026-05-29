@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -4319,14 +4319,8 @@ window.loginComGoogle = function() {
   auth.signInWithPopup(provider)
     .then(function(result) {
       resetBtn();
-      var user = result.user;
-      if(!localStorage.getItem('fitlife_onboarding_done')) {
-        var profile = JSON.parse(localStorage.getItem('fitlife_profile') || '{}');
-        if(!profile.name && user.displayName) {
-          profile.name = user.displayName.split(' ')[0];
-          localStorage.setItem('fitlife_profile', JSON.stringify(profile));
-        }
-      }
+      // Chama entrarNoApp diretamente — ela verifica onboarding por UID
+      entrarNoApp();
     })
     .catch(function(e) {
       resetBtn();
