@@ -3673,28 +3673,11 @@ let todayPickedCache = {}; // cache today's picks so home and modal show SAME ex
 function shuffleExercises(){
   exerciseOffset++;
 
-  // 1. Descobre o activeModel e dayKey reais
-  const activeModel = (autoSchedule && autoSchedule.model) || twModel || 'AB';
-  const dayKey = currentDayKey;
+  // Pega os músculos que estão ATUALMENTE no cache — esses são os que estão na tela
+  const currentMuscles = Object.keys(todayPickedCache);
+  if(currentMuscles.length === 0){ renderTodayWorkout(); return; }
 
-  // 2. Pega os músculos do grupamento atual direto do modelMap
-  let currentMuscles = [];
-  if(dayKey && modelMap[activeModel] && modelMap[activeModel][dayKey]){
-    const dayData = modelMap[activeModel][dayKey];
-    if(dayData && dayData.groups){
-      currentMuscles = dayData.groups.map(g => g.muscle);
-    }
-  }
-
-  // Fallback: usa o cache existente se não conseguiu pelo modelMap
-  if(currentMuscles.length === 0 && todayPickedCache){
-    currentMuscles = Object.keys(todayPickedCache);
-  }
-
-  // 3. Limpa apenas os músculos do grupamento atual
-  currentMuscles.forEach(muscle => { delete todayPickedCache[muscle]; });
-
-  // 4. Gera novos exercícios para os mesmos músculos
+  // Gera novos exercícios para cada músculo atual
   currentMuscles.forEach(muscle => {
     const db = exercisesDB[muscle];
     if(!db) return;
@@ -3707,13 +3690,25 @@ function shuffleExercises(){
     lastPickedExs[muscle] = picked;
   });
 
-  // 5. Atualiza a tela com o grupamento correto
-  if(dayKey && modelMap[activeModel] && modelMap[activeModel][dayKey]){
-    const dayData = modelMap[activeModel][dayKey];
-    updateTodayWithMuscle(dayData.label, '', []);
-  } else {
-    renderTodayWorkout();
-  }
+  // Atualiza APENAS os ex-item na tela sem re-renderizar o grupamento
+  const s = diffSpecs[twDiff||'easy'];
+  const allExItems = document.querySelectorAll('#todayWorkoutBox .ex-item');
+  let itemIdx = 0;
+  currentMuscles.forEach(muscle => {
+    const picked = todayPickedCache[muscle] || [];
+    const gIcon = muscleIcons[muscle] || '';
+    picked.forEach(exName => {
+      const el = allExItems[itemIdx];
+      if(!el) return;
+      const iconEl = el.querySelector('.ex-icon');
+      const nameEl = el.querySelector('.ex-name');
+      const detailEl = el.querySelector('.ex-detail');
+      if(iconEl) iconEl.textContent = exIcons[exName] || gIcon;
+      if(nameEl) nameEl.textContent = tExercise(exName);
+      if(detailEl) detailEl.textContent = `${s.series} ${t[currentLang].seriesLabel} • ${s.reps} ${t[currentLang].repsLabel} • ${s.rest} ${t[currentLang].descansoLabel}`;
+      itemIdx++;
+    });
+  });
 
   showToast(currentLang==='en'?' New exercise combination!':' Nova combinação de exercícios!', '#3bffd8');
 }
