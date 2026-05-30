@@ -569,9 +569,12 @@ input, textarea {
  <div class="chip" onclick="toggleChip(this)">Joelho</div>
  <div class="chip" onclick="toggleChip(this)">Coluna</div>
  <div class="chip" onclick="toggleChip(this)">Cotovelo</div>
+ <div class="chip" onclick="toggleChip(this)">Ombro</div>
+ <div class="chip" onclick="toggleChip(this)">Pulso</div>
+ <div class="chip" onclick="toggleChip(this)">Quadril</div>
+ <div class="chip" onclick="toggleChip(this)">Pescoço</div>
  <div class="chip" onclick="toggleChip(this)">Hipertensão</div>
  <div class="chip" onclick="toggleChip(this)">Diabetes</div>
- <div class="chip" onclick="toggleChip(this)">Ombro</div>
  <div class="chip" onclick="toggleChip(this)">Lesão recente</div>
  </div>
  </div>
@@ -2677,60 +2680,100 @@ function openMuscle(name,icon,exercises){
 // ─── EXERCISES DATABASE ─────────────────────────────────
 const exercisesDB = {
  'Peito': {icon:'', exs:[
- 'Supino Reto','Supino Inclinado','Supino Declinado','Crucifixo Reto',
- 'Crucifixo Inclinado','Flexão de Braço','Flexão Diamante','Cruzamento no Cabo Alto',
- 'Cruzamento no Cabo Baixo','Pullover no Banco — Alongamento','Supino com Halteres','Flexão com Apoio',
- 'Voador (Peck Deck)','Supino Fechado','Flexão Arqueiro — Lateral','Supino 45°',
- 'Crucifixo com Cabo','Flexão Declinada','Supino Unilateral','Cruzamento no Cabo Neutro'
+ {name:'Supino Reto',ci:['ombro','pulso']},{name:'Supino Inclinado',ci:['ombro','pulso']},
+ {name:'Supino Declinado',ci:['ombro','coluna','pulso']},{name:'Crucifixo Reto',ci:['ombro']},
+ {name:'Crucifixo Inclinado',ci:['ombro']},{name:'Flexão de Braço',ci:['pulso','ombro']},
+ {name:'Flexão Diamante',ci:['pulso','cotovelo']},{name:'Cruzamento no Cabo Alto',ci:['ombro']},
+ {name:'Cruzamento no Cabo Baixo',ci:['ombro']},{name:'Pullover no Banco — Alongamento',ci:['ombro','coluna']},
+ {name:'Supino com Halteres',ci:['ombro','pulso']},{name:'Flexão com Apoio',ci:['pulso']},
+ {name:'Voador (Peck Deck)',ci:['ombro']},{name:'Supino Fechado',ci:['pulso','cotovelo']},
+ {name:'Flexão Arqueiro — Lateral',ci:['ombro','pulso']},{name:'Supino 45°',ci:['ombro','pulso']},
+ {name:'Crucifixo com Cabo',ci:['ombro']},{name:'Flexão Declinada',ci:['ombro','pulso','coluna']},
+ {name:'Supino Unilateral',ci:['ombro','pulso']},{name:'Cruzamento no Cabo Neutro',ci:['ombro']}
  ]},
  'Costas': {icon:'', exs:[
- 'Puxada Frontal','Puxada pela Nuca','Remada Curvada','Remada Unilateral',
- 'Barra Fixa','Remada Máquina','Pullover — Costas','Remada Baixa no Cabo',
- 'Remada Fechada','Levantamento Terra','Remada em T','Puxada Neutra',
- 'Remada Alta','Remada Unilateral com Haltere (Serrote)','Remada Cavalinho','Puxada Aberta',
- 'Remada Supinada','Bom Dia (Good Morning)','Remada Sentada','Puxada Unilateral no Cabo'
+ {name:'Puxada Frontal',ci:['ombro','pulso']},{name:'Puxada pela Nuca',ci:['ombro','pescoco']},
+ {name:'Remada Curvada',ci:['coluna']},{name:'Remada Unilateral',ci:['coluna','pulso']},
+ {name:'Barra Fixa',ci:['ombro','pulso']},{name:'Remada Máquina',ci:['coluna']},
+ {name:'Pullover — Costas',ci:['ombro']},{name:'Remada Baixa no Cabo',ci:['coluna']},
+ {name:'Remada Fechada',ci:['coluna','pulso']},{name:'Levantamento Terra',ci:['coluna','joelho','quadril']},
+ {name:'Remada em T',ci:['coluna','pulso']},{name:'Puxada Neutra',ci:['ombro','pulso']},
+ {name:'Remada Alta',ci:['ombro','pulso']},{name:'Remada Unilateral com Haltere (Serrote)',ci:['coluna','pulso']},
+ {name:'Remada Cavalinho',ci:['coluna']},{name:'Puxada Aberta',ci:['ombro','pulso']},
+ {name:'Remada Supinada',ci:['coluna','pulso']},{name:'Bom Dia (Good Morning)',ci:['coluna','quadril']},
+ {name:'Remada Sentada',ci:['coluna']},{name:'Puxada Unilateral no Cabo',ci:['ombro','pulso']}
  ]},
  'Pernas': {icon:'', exs:[
- 'Agachamento Livre','Agachamento Sumô','Leg Press 45°','Leg Press Horizontal',
- 'Extensora','Mesa Flexora','Terra com Pernas Estendidas (Stiff)','Avanço com Halteres',
- 'Panturrilha em Pé','Panturrilha Sentado','Agachamento Búlgaro — Uma Perna','Cadeira Adutora',
- 'Cadeira Abdutora','Agachamento Hack','Leg Press Unilateral','Agachamento Goblet com Haltere',
- 'Subida no Banco (Step Up)','Avanço Caminhando','Agachamento Frontal com Barra','Elevação Pélvica — Glúteo'
+ {name:'Agachamento Livre',ci:['joelho','coluna','quadril']},{name:'Agachamento Sumô',ci:['joelho','quadril']},
+ {name:'Leg Press 45°',ci:['joelho','coluna']},{name:'Leg Press Horizontal',ci:['joelho']},
+ {name:'Extensora',ci:['joelho']},{name:'Mesa Flexora',ci:['joelho','quadril']},
+ {name:'Terra com Pernas Estendidas (Stiff)',ci:['coluna','joelho']},{name:'Avanço com Halteres',ci:['joelho','quadril']},
+ {name:'Panturrilha em Pé',ci:[]},{name:'Panturrilha Sentado',ci:[]},
+ {name:'Agachamento Búlgaro — Uma Perna',ci:['joelho','quadril']},{name:'Cadeira Adutora',ci:['quadril']},
+ {name:'Cadeira Abdutora',ci:['quadril']},{name:'Agachamento Hack',ci:['joelho','coluna']},
+ {name:'Leg Press Unilateral',ci:['joelho']},{name:'Agachamento Goblet com Haltere',ci:['joelho','coluna']},
+ {name:'Subida no Banco (Step Up)',ci:['joelho']},{name:'Avanço Caminhando',ci:['joelho','quadril']},
+ {name:'Agachamento Frontal com Barra',ci:['joelho','coluna','pulso']},{name:'Elevação Pélvica — Glúteo',ci:['quadril','coluna']}
  ]},
  'Ombros': {icon:'', exs:[
- 'Desenvolvimento com Barra','Desenvolvimento com Halteres','Desenvolvimento Arnold','Elevação Lateral',
- 'Elevação Frontal','Remada Alta','Puxada para o Rosto (Face Pull)','Desenvolvimento Militar',
- 'Elevação Lateral Inclinada','Crucifixo Invertido','Desenvolvimento Unilateral','Elevação 90°',
- 'Rotação Externa','Rotação Interna','Elevação com Cabo','Desenvolvimento Scott',
- 'Desenvolvimento no Cabo','Elevação Frontal com Barra','Remada Alta com Barra','Elevação Lateral Cabo'
+ {name:'Desenvolvimento com Barra',ci:['ombro','coluna','pulso']},{name:'Desenvolvimento com Halteres',ci:['ombro','pulso']},
+ {name:'Desenvolvimento Arnold',ci:['ombro','pulso']},{name:'Elevação Lateral',ci:['ombro']},
+ {name:'Elevação Frontal',ci:['ombro','pulso']},{name:'Remada Alta',ci:['ombro','pulso']},
+ {name:'Puxada para o Rosto (Face Pull)',ci:['ombro','pescoco']},{name:'Desenvolvimento Militar',ci:['ombro','coluna','pulso']},
+ {name:'Elevação Lateral Inclinada',ci:['ombro']},{name:'Crucifixo Invertido',ci:['ombro']},
+ {name:'Desenvolvimento Unilateral',ci:['ombro','pulso']},{name:'Elevação 90°',ci:['ombro']},
+ {name:'Rotação Externa',ci:[]},{name:'Rotação Interna',ci:[]},
+ {name:'Elevação com Cabo',ci:['ombro']},{name:'Desenvolvimento Scott',ci:['ombro','pulso']},
+ {name:'Desenvolvimento no Cabo',ci:['ombro','pulso']},{name:'Elevação Frontal com Barra',ci:['ombro','pulso']},
+ {name:'Remada Alta com Barra',ci:['ombro','pulso']},{name:'Elevação Lateral Cabo',ci:['ombro']}
  ]},
  'Bíceps': {icon:'', exs:[
- 'Rosca Direta com Barra','Rosca Alternada','Rosca Martelo','Rosca Concentrada',
- 'Rosca Scott','Rosca 21 — Técnica Avançada','Rosca no Cabo','Rosca Inclinada',
- 'Rosca Inversa','Rosca Zottman — Força Total','Rosca com Barra W','Rosca Unilateral no Cabo',
- 'Rosca Predicador','Rosca Spider — Pico do Bíceps','Rosca com Corda','Rosca Sentado',
- 'Rosca com Supinação','Rosca Isométrica','Rosca Martelo Cruzado','Rosca Alta no Cabo'
+ {name:'Rosca Direta com Barra',ci:['pulso','cotovelo']},{name:'Rosca Alternada',ci:['pulso']},
+ {name:'Rosca Martelo',ci:['pulso','cotovelo']},{name:'Rosca Concentrada',ci:['cotovelo']},
+ {name:'Rosca Scott',ci:['cotovelo','pulso']},{name:'Rosca 21 — Técnica Avançada',ci:['cotovelo','pulso']},
+ {name:'Rosca no Cabo',ci:['pulso']},{name:'Rosca Inclinada',ci:['ombro','cotovelo']},
+ {name:'Rosca Inversa',ci:['pulso','cotovelo']},{name:'Rosca Zottman — Força Total',ci:['pulso','cotovelo']},
+ {name:'Rosca com Barra W',ci:['pulso','cotovelo']},{name:'Rosca Unilateral no Cabo',ci:['pulso']},
+ {name:'Rosca Predicador',ci:['cotovelo']},{name:'Rosca Spider — Pico do Bíceps',ci:['cotovelo']},
+ {name:'Rosca com Corda',ci:['pulso']},{name:'Rosca Sentado',ci:['pulso']},
+ {name:'Rosca com Supinação',ci:['pulso','cotovelo']},{name:'Rosca Isométrica',ci:[]},
+ {name:'Rosca Martelo Cruzado',ci:['pulso','cotovelo']},{name:'Rosca Alta no Cabo',ci:['ombro','pulso']}
  ]},
  'Tríceps': {icon:'', exs:[
- 'Tríceps Pulley','Tríceps Testa','Tríceps Francês — Overhead','Mergulho no Banco',
- 'Extensão Tríceps Inclinado (Coice)','Barra Fechada','Tríceps na Corda','Tríceps Overhead',
- 'Extensão Unilateral','Mergulho entre Bancos','Tríceps com Haltere','Extensão no Cabo',
- 'Tríceps Kickback','Press Fechado','Tríceps Unilateral','Extensão Declinada',
- 'Tríceps Testa com Barra (Skullcrusher)','Tríceps Supinado no Cabo','Flexão Diamante — Tríceps','Tríceps com Barra'
+ {name:'Tríceps Pulley',ci:['pulso','cotovelo']},{name:'Tríceps Testa',ci:['cotovelo','pulso']},
+ {name:'Tríceps Francês — Overhead',ci:['cotovelo','ombro']},{name:'Mergulho no Banco',ci:['ombro','pulso']},
+ {name:'Extensão Tríceps Inclinado (Coice)',ci:['cotovelo']},{name:'Barra Fechada',ci:['pulso','cotovelo']},
+ {name:'Tríceps na Corda',ci:['pulso','cotovelo']},{name:'Tríceps Overhead',ci:['cotovelo','ombro']},
+ {name:'Extensão Unilateral',ci:['cotovelo']},{name:'Mergulho entre Bancos',ci:['ombro','pulso']},
+ {name:'Tríceps com Haltere',ci:['cotovelo','ombro']},{name:'Extensão no Cabo',ci:['cotovelo','pulso']},
+ {name:'Tríceps Kickback',ci:['cotovelo']},{name:'Press Fechado',ci:['pulso','cotovelo']},
+ {name:'Tríceps Unilateral',ci:['cotovelo','pulso']},{name:'Extensão Declinada',ci:['cotovelo','ombro']},
+ {name:'Tríceps Testa com Barra (Skullcrusher)',ci:['cotovelo','pulso']},{name:'Tríceps Supinado no Cabo',ci:['pulso','cotovelo']},
+ {name:'Flexão Diamante — Tríceps',ci:['pulso','cotovelo']},{name:'Tríceps com Barra',ci:['pulso','cotovelo']}
  ]},
  'Abdômen': {icon:'', exs:[
- 'Crunch','Crunch Inverso','Prancha Frontal','Prancha Lateral',
- 'Abdominal Infra','Oblíquo com Haltere','Roda Abdominal','Elevação de Pernas',
- 'Bicicleta Abdominal','Giro Russo com Peso (Russian Twist)','Escalador (Mountain Climber)','Abdominal Completo',
- 'Estabilização Abdominal (Dead Bug)','Abdominal Isométrico (Hollow Hold)','Crunch no Cabo','Abdominal Declinado',
- 'Toque no Pé (Toe Touch)','Prancha Lateral com Elevação','Chutinho Abdominal (Flutter Kick)','Dragon Flag — Avançado'
+ {name:'Crunch',ci:['coluna','pescoco']},{name:'Crunch Inverso',ci:['coluna']},
+ {name:'Prancha Frontal',ci:['pulso','coluna']},{name:'Prancha Lateral',ci:['pulso','coluna']},
+ {name:'Abdominal Infra',ci:['coluna','quadril']},{name:'Oblíquo com Haltere',ci:['coluna','pulso']},
+ {name:'Roda Abdominal',ci:['coluna','pulso','ombro']},{name:'Elevação de Pernas',ci:['coluna','quadril']},
+ {name:'Bicicleta Abdominal',ci:['coluna','pescoco']},{name:'Giro Russo com Peso (Russian Twist)',ci:['coluna','pulso']},
+ {name:'Escalador (Mountain Climber)',ci:['pulso','coluna']},{name:'Abdominal Completo',ci:['coluna','pescoco']},
+ {name:'Estabilização Abdominal (Dead Bug)',ci:[]},{name:'Abdominal Isométrico (Hollow Hold)',ci:['coluna']},
+ {name:'Crunch no Cabo',ci:['coluna','pescoco']},{name:'Abdominal Declinado',ci:['coluna','pescoco']},
+ {name:'Toque no Pé (Toe Touch)',ci:['coluna','pescoco']},{name:'Prancha Lateral com Elevação',ci:['pulso','quadril']},
+ {name:'Chutinho Abdominal (Flutter Kick)',ci:['coluna','quadril']},{name:'Dragon Flag — Avançado',ci:['coluna']}
  ]},
  'Flexões': {icon:'', exs:[
- 'Flexão Normal','Flexão Diamante','Flexão Inclinada','Flexão Declinada',
- 'Flexão Arqueiro — Lateral','Flexão com Palmas','Flexão Lenta','Flexão Explosiva',
- 'Flexão com Rotação','Flexão com Elevação de Perna','Flexão em T com Rotação','Flexão Hindu — Yoga',
- 'Flexão Fechada','Flexão Aberta','Flexão com Apoio nos Joelhos','Flexão Unilateral',
- 'Flexão com Toque no Ombro','Flexão Homem-Aranha','Flexão com Salto Explosivo','Flexão Isométrica'
+ {name:'Flexão Normal',ci:['pulso','ombro']},{name:'Flexão Diamante',ci:['pulso','cotovelo']},
+ {name:'Flexão Inclinada',ci:['pulso']},{name:'Flexão Declinada',ci:['ombro','pulso','coluna']},
+ {name:'Flexão Arqueiro — Lateral',ci:['ombro','pulso']},{name:'Flexão com Palmas',ci:['pulso','ombro']},
+ {name:'Flexão Lenta',ci:['pulso','ombro']},{name:'Flexão Explosiva',ci:['pulso','ombro','joelho']},
+ {name:'Flexão com Rotação',ci:['pulso','ombro']},{name:'Flexão com Elevação de Perna',ci:['pulso','ombro','quadril']},
+ {name:'Flexão em T com Rotação',ci:['pulso','ombro']},{name:'Flexão Hindu — Yoga',ci:['pulso','ombro','coluna']},
+ {name:'Flexão Fechada',ci:['pulso','cotovelo']},{name:'Flexão Aberta',ci:['pulso','ombro']},
+ {name:'Flexão com Apoio nos Joelhos',ci:['joelho','pulso']},{name:'Flexão Unilateral',ci:['pulso','ombro']},
+ {name:'Flexão com Toque no Ombro',ci:['pulso','ombro']},{name:'Flexão Homem-Aranha',ci:['pulso','ombro','quadril']},
+ {name:'Flexão com Salto Explosivo',ci:['pulso','ombro','joelho']},{name:'Flexão Isométrica',ci:['pulso']}
  ]},
 };
 
@@ -3715,24 +3758,35 @@ function shuffleExercises(){
 
 // Pick 4 DIFFERENT exercises from pool — guaranteed to change each tap
 function pickExercises(exsPool, count=4){
- if(exsPool.length <= count) return [...exsPool];
+ // Mapa label → código (chips do onboarding → códigos de contraindicação)
+ const labelToCode = {
+   'Joelho':'joelho','Ombro':'ombro','Coluna':'coluna','Cotovelo':'cotovelo',
+   'Pulso':'pulso','Quadril':'quadril','Pescoço':'pescoco'
+ };
+ const userLimits = (userProfile.health||[]).map(h => labelToCode[h]||h.toLowerCase()).filter(Boolean);
 
- const poolKey = exsPool[0];
+ // Separa seguros e contraindicados
+ const safe = exsPool.filter(ex => {
+   const exCi = typeof ex === 'object' ? (ex.ci||[]) : [];
+   return !exCi.some(ci => userLimits.includes(ci));
+ });
+ const pool = safe.length >= count ? safe : exsPool;
+
+ // Aviso quando exercícios foram adaptados
+ if(userLimits.length > 0 && safe.length < exsPool.length){
+   setTimeout(()=>showToast(
+     currentLang==='en'?'⚠️ Exercises adapted for your limitations':'⚠️ Exercícios adaptados às suas limitações',
+     '#facc15'
+   ), 800);
+ }
+
+ // Embaralha com rotatividade
+ const names = pool.map(ex => typeof ex === 'string' ? ex : ex.name);
+ const poolKey = names[0];
  const lastPicks = lastPickedExs[poolKey] || [];
-
- // Split pool into: exercises NOT shown last time (priority) + shown ones (fallback)
- const fresh = exsPool.filter(e => !lastPicks.includes(e));
- const seen = exsPool.filter(e => lastPicks.includes(e));
-
- // Always pick from fresh first — guarantees new exercises appear
- // Shuffle fresh independently
- const shuffledFresh = [...fresh].sort(() => Math.random() - 0.5);
- const shuffledSeen = [...seen].sort(() => Math.random() - 0.5);
-
- // Take count from fresh, fill remainder from seen if needed
- const picked = [...shuffledFresh, ...shuffledSeen].slice(0, count);
-
- // Save for next time
+ const fresh = names.filter(e => !lastPicks.includes(e));
+ const seen = names.filter(e => lastPicks.includes(e));
+ const picked = [...fresh.sort(()=>Math.random()-.5), ...seen.sort(()=>Math.random()-.5)].slice(0, count);
  lastPickedExs[poolKey] = picked;
  return picked;
 }
