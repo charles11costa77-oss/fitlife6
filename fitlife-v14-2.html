@@ -3758,21 +3758,21 @@ function shuffleExercises(){
 
 // Pick 4 DIFFERENT exercises from pool — guaranteed to change each tap
 function pickExercises(exsPool, count=4){
- // Mapa label → código (chips do onboarding → códigos de contraindicação)
+ // Mapa label → código
  const labelToCode = {
    'Joelho':'joelho','Ombro':'ombro','Coluna':'coluna','Cotovelo':'cotovelo',
    'Pulso':'pulso','Quadril':'quadril','Pescoço':'pescoco'
  };
- const userLimits = (userProfile.health||[]).map(h => labelToCode[h]||h.toLowerCase()).filter(Boolean);
+ const userLimits = (userProfile.health||[]).map(h => labelToCode[h]||null).filter(Boolean);
 
- // Separa seguros e contraindicados
+ // Separa por nível de risco
  const safe = exsPool.filter(ex => {
-   const exCi = typeof ex === 'object' ? (ex.ci||[]) : [];
+   if(typeof ex === 'string') return true; // string antiga — sem info de ci, considera seguro
+   const exCi = ex.ci || [];
    return !exCi.some(ci => userLimits.includes(ci));
  });
- const pool = safe.length >= count ? safe : exsPool;
 
- // Aviso quando exercícios foram adaptados
+ // Se há limitações e exercícios adaptados, avisa
  if(userLimits.length > 0 && safe.length < exsPool.length){
    setTimeout(()=>showToast(
      currentLang==='en'?'⚠️ Exercises adapted for your limitations':'⚠️ Exercícios adaptados às suas limitações',
@@ -3780,9 +3780,22 @@ function pickExercises(exsPool, count=4){
    ), 800);
  }
 
+ // Usa sempre o pool seguro — só completa com menos seguros se absolutamente necessário
+ let pool = safe.length > 0 ? safe : exsPool;
+ if(pool.length < count && safe.length < count){
+   // Ordena os restantes por menor número de CIs que coincidem com limitações do usuário
+   const risky = exsPool.filter(ex => !safe.includes(ex)).sort((a,b)=>{
+     const aScore = typeof a === 'object' ? (a.ci||[]).filter(c=>userLimits.includes(c)).length : 99;
+     const bScore = typeof b === 'object' ? (b.ci||[]).filter(c=>userLimits.includes(c)).length : 99;
+     return aScore - bScore;
+   });
+   pool = [...safe, ...risky];
+ }
+
  // Embaralha com rotatividade
  const names = pool.map(ex => typeof ex === 'string' ? ex : ex.name);
  const poolKey = names[0];
+ if(!poolKey) return [];
  const lastPicks = lastPickedExs[poolKey] || [];
  const fresh = names.filter(e => !lastPicks.includes(e));
  const seen = names.filter(e => lastPicks.includes(e));
