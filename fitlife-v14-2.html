@@ -2353,7 +2353,7 @@ function openMuscleUL(superior, label){
      allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + m.toUpperCase() + '</div>';
      allHtml += picked.map(function(ex){
        return `<div class="ex-detail-card">
-         <h4>${ex}</h4>
+         <h4>${tExercise(ex)}</h4>
          <div class="ex-spec-row">
          <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">${t[currentLang].seriesUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
@@ -2572,7 +2572,7 @@ function openMuscle(name,icon,exercises){
        if(!picked || !picked.length) return;
        allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + tMuscle(m).toUpperCase() + '</div>';
        allHtml += picked.map(ex=>`<div class="ex-detail-card">
-         <h4>${ex}</h4>
+         <h4>${tExercise(ex)}</h4>
          <div class="ex-spec-row">
          <div class="ex-spec"><div class="sv" id="ms-s-${ex.replace(/\s/g,'')}">${s.series}</div><div class="sl">${t[currentLang].seriesUpper}</div>
          <div style="display:flex;gap:4px;margin-top:4px;justify-content:center">
