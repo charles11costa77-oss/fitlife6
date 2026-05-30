@@ -3671,24 +3671,51 @@ let lastPickedExs = {}; // track last picks per muscle to avoid repeats
 let todayPickedCache = {}; // cache today's picks so home and modal show SAME exercises
 
 function shuffleExercises(){
- exerciseOffset++;
- // Preserva apenas os músculos do grupamento atual — não deixa cair em Peito & Tríceps
- const currentMuscles = Object.keys(todayPickedCache);
- todayPickedCache = {};
- // Repopula com novos exercícios para os mesmos músculos
- currentMuscles.forEach(muscle => {
-   if(exercisesDB[muscle]){
-     const pool = exercisesDB[muscle].exs || [];
-     const last = lastPickedExs[pool[0]] || [];
-     const fresh = pool.filter(e => !last.includes(e));
-     const seen = pool.filter(e => last.includes(e));
-     const shuffled = [...fresh.sort(()=>Math.random()-.5), ...seen.sort(()=>Math.random()-.5)];
-     todayPickedCache[muscle] = shuffled.slice(0, 4);
-     lastPickedExs[pool[0]] = todayPickedCache[muscle];
-   }
- });
- renderTodayWorkout();
- showToast(currentLang==='en'?' New exercise combination!':' Nova combinação de exercícios!', '#3bffd8');
+  exerciseOffset++;
+
+  // 1. Descobre o activeModel e dayKey reais
+  const activeModel = (autoSchedule && autoSchedule.model) || twModel || 'AB';
+  const dayKey = currentDayKey;
+
+  // 2. Pega os músculos do grupamento atual direto do modelMap
+  let currentMuscles = [];
+  if(dayKey && modelMap[activeModel] && modelMap[activeModel][dayKey]){
+    const dayData = modelMap[activeModel][dayKey];
+    if(dayData && dayData.groups){
+      currentMuscles = dayData.groups.map(g => g.muscle);
+    }
+  }
+
+  // Fallback: usa o cache existente se não conseguiu pelo modelMap
+  if(currentMuscles.length === 0 && todayPickedCache){
+    currentMuscles = Object.keys(todayPickedCache);
+  }
+
+  // 3. Limpa apenas os músculos do grupamento atual
+  currentMuscles.forEach(muscle => { delete todayPickedCache[muscle]; });
+
+  // 4. Gera novos exercícios para os mesmos músculos
+  currentMuscles.forEach(muscle => {
+    const db = exercisesDB[muscle];
+    if(!db) return;
+    const pool = db.exs || [];
+    const last = lastPickedExs[muscle] || [];
+    const fresh = pool.filter(e => !last.includes(e)).sort(()=>Math.random()-.5);
+    const seen = pool.filter(e => last.includes(e)).sort(()=>Math.random()-.5);
+    const picked = [...fresh, ...seen].slice(0, 4);
+    todayPickedCache[muscle] = picked;
+    lastPickedExs[muscle] = picked;
+  });
+
+  // 5. Atualiza a tela com o grupamento correto
+  if(dayKey && modelMap[activeModel] && modelMap[activeModel][dayKey]){
+    const dayData = modelMap[activeModel][dayKey];
+    updateTodayWithMuscle(dayData.label, '', []);
+  } else {
+    renderTodayWorkout();
+  }
+
+  showToast(currentLang==='en'?' New exercise combination!':' Nova combinação de exercícios!', '#3bffd8');
 }
 
 // Pick 4 DIFFERENT exercises from pool — guaranteed to change each tap
