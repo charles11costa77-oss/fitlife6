@@ -3660,13 +3660,13 @@ function getTodayWorkoutDay(){
  if(trainIdx < 0) return {isRest:true};
 
  // Shift by weekNum so each week starts from a different grupamento
- // Semana 1 (weekNum=0): usa builtCycle diretamente sem rotação
+ // Shift by weekNum so each week starts from a different grupamento
+ // Sempre busca dayData do modelMap — nunca do builtCycle (pode estar corrompido após serialização)
  let rotatedData, rotatedDayKey;
  if(weekNum === 0){
-   rotatedData = todayEntry.dayData || model[todayEntry.modelDayKey];
    rotatedDayKey = todayEntry.modelDayKey;
+   rotatedData = model[rotatedDayKey] || todayEntry.dayData;
  } else {
-   const rotatedIdx = (trainIdx + weekNum) % modelDays.length;
    rotatedDayKey = modelDays[rotatedIdx];
    rotatedData = model[rotatedDayKey];
  }
