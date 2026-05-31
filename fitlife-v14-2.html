@@ -2288,6 +2288,8 @@ function selectModel(model, el){
 
 // Renders the correct grupamento buttons depending on model
 function openMuscleUL(superior, label){
+ // Recalcula o label no momento do clique para garantir idioma correto
+ const liveLabel = tMuscle(superior) + ' & ' + tMuscle('Pernas');
    todayPickedCache = {};
   document.getElementById('todayWorkoutBox').innerHTML = '';
 // Popula cache para superior e pernas
@@ -2323,7 +2325,7 @@ function openMuscleUL(superior, label){
 
    box.innerHTML = `<div class="today-card">
      <div class="tc-header">
-     <div><div class="tc-title">${label}</div>
+     <div><div class="tc-title">${liveLabel}</div>
      <div style="font-size:11px;color:var(--muted);margin-top:3px">Upper · ${currentLang==='en'?'Daily':'Diário'}</div></div>
      <div class="badge ${diffClass}">${diffLabel}</div>
      </div>
@@ -2345,7 +2347,7 @@ function openMuscleUL(superior, label){
  // Abre modal com os dois grupamentos
  const modalTitle = document.getElementById('modalTitle');
  const modalExercises = document.getElementById('modalExercises');
- if(modalTitle) modalTitle.textContent = label;
+ if(modalTitle) modalTitle.textContent = liveLabel;
  if(modalExercises){
    let allHtml = '';
    muscles.forEach(function(m){
