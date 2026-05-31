@@ -3724,8 +3724,9 @@ function shuffleExercises(){
   currentMuscles.forEach(muscle => {
     const db = exercisesDB[muscle];
     if(!db) return;
-    const pool = db.exs || [];
-    const last = lastPickedExs[muscle] || [];
+    // Converte pool para strings (suporte a objetos {name,ci} e strings legadas)
+    const pool = (db.exs || []).map(e => typeof e === 'string' ? e : e.name);
+    const last = (lastPickedExs[muscle] || []).map(e => typeof e === 'string' ? e : e.name);
     const fresh = pool.filter(e => !last.includes(e)).sort(()=>Math.random()-.5);
     const seen = pool.filter(e => last.includes(e)).sort(()=>Math.random()-.5);
     const picked = [...fresh, ...seen].slice(0, 4);
