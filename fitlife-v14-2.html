@@ -4182,12 +4182,17 @@ function filterRecipes(cat, btn){
  renderRecipes(cat);
 }
 
-function renderRecipes(cat){
+function renderRecipes(cat, exactComplexity){
  currentRecipeCat = cat || 'todos';
  const allRecipes = currentNutriGoal==='bulk' ? recipesBulk : recipesCut;
  let list = currentRecipeCat==='todos' ? allRecipes : allRecipes.filter(r=>r.cat===currentRecipeCat);
- if(currentComplexity==='simple') list=list.filter(r=>r.complexity==='simple');
- else if(currentComplexity==='mid') list=list.filter(r=>r.complexity==='simple'||r.complexity==='mid');
+ // Se veio do cardápio com complexity exato, filtra só essa receita
+ if(exactComplexity){
+   list = list.filter(r=>r.complexity===exactComplexity);
+ } else {
+   if(currentComplexity==='simple') list=list.filter(r=>r.complexity==='simple');
+   else if(currentComplexity==='mid') list=list.filter(r=>r.complexity==='simple'||r.complexity==='mid');
+ }
  const rl=document.getElementById('recipesList');
  if(!rl) return;
  if(!list.length){rl.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted)">'+ t[currentLang].nenhumaReceita +'.</div>';return;}
@@ -4284,7 +4289,7 @@ let currentMealPlan = [];
 function openMealRecipe(idx){
  if(!currentMealPlan[idx]) return;
  const meal = currentMealPlan[idx];
- findRecipe(meal.name, meal.cat);
+ findRecipe(meal.name, meal.cat, meal.complexity);
 }
 
 function toggleMealTip(el){
@@ -4292,7 +4297,7 @@ function toggleMealTip(el){
  if(tip) tip.style.display = tip.style.display==='none' ? 'block' : 'none';
 }
 
-function findRecipe(name, cat){
+function findRecipe(name, cat, complexity){
  // Switch to the right category tab and highlight the recipe
  currentRecipeCat = cat;
   document.querySelectorAll('.ingr-tab').forEach(t=>{
@@ -4307,7 +4312,12 @@ function findRecipe(name, cat){
       (cat==='shake'&&txt.includes('shake'))
     );
     });
- renderRecipes(cat);
+ // Se veio do cardápio com complexity definido, renderiza só essa receita
+ if(complexity){
+   renderRecipes(cat, complexity);
+ } else {
+   renderRecipes(cat);
+ }
  // Scroll to recipes section
  setTimeout(()=>{
  const recipesList = document.getElementById('recipesList');
