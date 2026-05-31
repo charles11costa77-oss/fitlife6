@@ -2350,7 +2350,7 @@ function openMuscleUL(superior, label){
    let allHtml = '';
    muscles.forEach(function(m){
      const picked = todayPickedCache[m] || [];
-     allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + m.toUpperCase() + '</div>';
+     allHtml += '<div style="margin:12px 0 6px;font-size:11px;font-weight:800;color:var(--accent);letter-spacing:0.08em">' + tMuscle(m).toUpperCase() + '</div>';
      allHtml += picked.map(function(ex){
        return `<div class="ex-detail-card">
          <h4>${tExercise(ex)}</h4>
