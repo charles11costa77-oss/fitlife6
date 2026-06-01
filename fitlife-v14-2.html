@@ -3338,13 +3338,13 @@ function renderTodayWorkout(){
  dayKey = getTodayDayKey(activeModel);
  dayData = (modelMap[activeModel]||{})[dayKey];
  }
- // Só atualiza currentDayKey se ainda não foi definido ou se o dia mudou
+ // Atualiza currentDayKey diariamente — mas só sobrescreve dayKey para modelos sem builtCycle (daily)
  const _today = new Date().toDateString();
  if(!currentDayKey || window._currentDayKeyDate !== _today){
    currentDayKey = dayKey;
    window._currentDayKeyDate = _today;
- } else {
-   // Mantém o dayKey atual — preserva grupamento ao trocar série
+ } else if(!autoSchedule || !autoSchedule.builtCycle){
+   // Só preserva grupamento via currentDayKey no modo diário (sem rotação semanal)
    dayKey = currentDayKey;
    dayData = (modelMap[activeModel]||{})[dayKey] || dayData;
  }
@@ -3661,8 +3661,8 @@ function getTodayWorkoutDay(){
  if(trainIdx < 0) return {isRest:true};
 
  // Shift by weekNum so each week starts from a different grupamento
- // Shift by weekNum so each week starts from a different grupamento
  // Sempre busca dayData do modelMap — nunca do builtCycle (pode estar corrompido após serialização)
+ const rotatedIdx = (trainIdx + weekNum) % modelDays.length;
  let rotatedData, rotatedDayKey;
  if(weekNum === 0){
    rotatedDayKey = todayEntry.modelDayKey;
