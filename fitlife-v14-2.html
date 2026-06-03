@@ -1733,6 +1733,11 @@ function applyLang() {
  const labelAnot = document.getElementById('labelAnotacoesSpan');
  if(labelAnot) labelAnot.textContent = currentLang==='en'?'Notes':'Anotações';
  localStorage.setItem("fitlife_lang", currentLang);
+ // Re-renderiza home para atualizar traduções dos grupamentos
+ if(typeof renderTodayWorkout === 'function' && document.getElementById('todayWorkoutBox')){
+  todayPickedCache = {};
+  renderTodayWorkout();
+ }
 }
 function toggleChip(el){el.classList.toggle('selected')}
 function toggleGoal(el){el.classList.toggle('selected')}
@@ -1839,7 +1844,7 @@ function updateProfileUI(){
   document.getElementById('pfHealth').textContent=(p.health&&p.health.length?p.health.join(', '):'—');
  document.getElementById('pfGoal').textContent=p.goal||'—';
  // Tema por sexo: Feminino = rosa, demais = amarelo
- var isFem = (p.gender||'').toLowerCase().indexOf('feminino') !== -1;
+ var isFem = (p.gender||'').toLowerCase().indexOf('feminino') !== -1 || (p.gender||'').toLowerCase().indexOf('female') !== -1;
  var banner = document.getElementById('profileBanner');
  var avatar = document.getElementById('sideAvatar');
  var badges = document.querySelectorAll('.profile-badge');
@@ -1858,6 +1863,7 @@ function updateProfileUI(){
 function openSideMenu(){
  document.getElementById('sideMenu').classList.add('open');
  document.getElementById('sideOverlay').classList.add('open');
+ applyLang();
 }
 function closeSideMenu(){
  document.getElementById('sideMenu').classList.remove('open');
