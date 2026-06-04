@@ -1008,6 +1008,80 @@ function showToast(msg, color){
 
 
 // ─── DATA ───────────────────────────────────────────
+// ─── TRADUÇÕES PT DAS RECEITAS ───────────────────────
+const recipesPT = {
+ 'Frango Grelhado com Batata Doce':{ingr:['200g peito de frango','150g batata doce','Azeite, sal, alho'],prep:'Grelhe o frango temperado. Cozinhe a batata doce. Sirva junto.'},
+ 'Macarrão Integral com Frango e Brócolis':{ingr:['180g cubos de frango','80g macarrão integral','100g brócolis','Alho, azeite, sal'],prep:'Cozinhe o macarrão al dente. Grelhe o frango. Refogue alho, brócolis e misture.'},
+ 'Frango ao Curry com Arroz Integral':{ingr:['200g cubos de frango','½ xíc. arroz integral cozido','1 col. sopa curry em pó','100ml leite de coco'],prep:'Refogue cebola e alho. Adicione frango e curry. Coloque leite de coco e cozinhe 10 min.'},
+ 'Wrap de Frango com Hummus':{ingr:['150g frango desfiado','1 wrap integral','2 col. sopa hummus','Alface, tomate, pepino'],prep:'Espalhe o hummus. Adicione frango e vegetais. Enrole.'},
+ 'Frango Ensopado com Mandioquinha':{ingr:['200g frango sem pele','150g mandioquinha','Cebola, alho, tomate','Ervas frescas'],prep:'Refogue os aromáticos. Cozinhe o frango 15 min. Adicione a mandioquinha por mais 15 min.'},
+ 'Mexido Proteico com Ricota':{ingr:['3 ovos inteiros','2 col. sopa ricota','Cebolinha, sal, azeite'],prep:'Bata os ovos. Mexa em fogo baixo. Adicione ricota e ervas.'},
+ 'Salada de Atum com Ovo Cozido':{ingr:['2 ovos cozidos','1 lata atum na água','Alface, tomate, pepino','Azeite e limão'],prep:'Cozinhe os ovos por 8 min. Monte a salada com atum e ovo fatiado.'},
+ 'Ovos Mexidos com Abacate e Torrada':{ingr:['2 ovos','½ abacate','2 fatias pão integral','Sal, limão'],prep:'Mexa os ovos até ficarem cremosos. Amasse o abacate com limão. Sirva na torrada.'},
+ 'Salmão Grelhado com Aspargos':{ingr:['180g filé de salmão','100g aspargos','Azeite, limão, sal'],prep:'Grelhe o salmão 4 min de cada lado. Grelhe os aspargos com azeite.'},
+ 'Atum Grelhado com Macarrão Integral':{ingr:['200g filé de atum fresco','80g macarrão integral','Alho, azeite, tomate cereja'],prep:'Grelhe o atum. Cozinhe o macarrão. Misture com alho, azeite e tomate cereja.'},
+ 'Patinho Moído com Legumes':{ingr:['200g carne moída magra','Cebola, alho, tomate','Cenoura e abobrinha'],prep:'Refogue os aromáticos. Adicione a carne e os legumes. Cozinhe 10 min.'},
+ 'Bife de Alcatra com Batata Doce':{ingr:['180g bife de alcatra','150g batata doce assada','Alho, alecrim, sal, azeite'],prep:'Grelhe o bife 3-4 min de cada lado. Asse a batata doce temperada.'},
+ 'Carne Moída com Grão-de-Bico':{ingr:['150g carne moída magra','100g grão-de-bico cozido','Espinafre, tomate','Cebola, alho'],prep:'Refogue a carne. Adicione grão-de-bico e espinafre.'},
+ 'Bowl de Quinoa com Grão-de-Bico':{ingr:['100g quinoa cozida','150g grão-de-bico cozido','Espinafre, tomate','Tahine, limão'],prep:'Monte o bowl. Regue com tahine diluído.'},
+ 'Dhal de Lentilha com Naan Integral':{ingr:['150g lentilha cozida','1 naan integral','Curry, açafrão, leite de coco','Cebola, alho, gengibre'],prep:'Cozinhe o dhal com as especiarias e leite de coco. Sirva com naan.'},
+ 'Shake Pós-Treino de Banana e Aveia':{ingr:['1 banana congelada','30g whey protein','3 col. sopa aveia','200ml leite integral'],prep:'Bata tudo no liquidificador.'},
+ 'Shake de Cacau e Pasta de Amendoim':{ingr:['30g whey chocolate','1 col. sopa pasta de amendoim','1 banana','200ml leite integral'],prep:'Bata tudo. Leite integral para mais calorias.'},
+ 'Shake Massa com Aveia, Mel e Ovo':{ingr:['4 col. sopa aveia','2 claras cruas','1 scoop whey','1 col. sopa mel','250ml leite integral'],prep:'Bata tudo. Consuma após o treino.'},
+ 'Frango com Arroz Integral e Feijão':{ingr:['200g peito de frango grelhado','100g arroz integral','80g feijão cozido','Sal, alho, azeite'],prep:'Grelhe o frango. Sirva com arroz integral e feijão temperados.'},
+ 'Omelete Recheado com Queijo e Presunto':{ingr:['3 ovos inteiros','30g queijo minas','50g presunto magro','Sal, pimenta, azeite'],prep:'Bata os ovos. Cozinhe na frigideira, adicione recheio e dobre.'},
+ 'Picadinho com Ervilhas e Arroz':{ingr:['160g cubos de carne magra','80g ervilhas','80g arroz integral','Cebola, alho, tomate'],prep:'Doure a carne. Adicione as ervilhas. Sirva com arroz.'},
+ 'Tilápia ao Forno com Purê de Batata Doce':{ingr:['200g tilápia','200g batata doce','Alecrim, limão, azeite','Sal e pimenta'],prep:'Asse a tilápia por 20 min. Cozinhe e amasse a batata doce com azeite.'},
+ 'Strogonoff Vegano de Cogumelos':{ingr:['200g cogumelos','80g arroz integral','100ml creme de coco light','Cebola, alho, extrato de tomate'],prep:'Refogue os cogumelos. Adicione o creme de coco e temperos. Sirva com arroz.'},
+ 'Shake de Morango com Iogurte Grego':{ingr:['200g iogurte grego','100g morango congelado','1 col. sopa mel','100ml leite desnatado'],prep:'Bata até ficar cremoso.'},
+ 'Panqueca de Aveia com Frango':{ingr:['100g frango desfiado','½ xíc. aveia em flocos','2 ovos','Sal, pimenta, cebola'],prep:'Misture aveia, ovos e temperos. Frite como panqueca. Recheie com frango.'},
+ 'Tapioca Proteica com Ovo e Queijo':{ingr:['4 col. sopa goma de tapioca','2 ovos mexidos','30g queijo minas','Sal e cebolinha'],prep:'Aqueça a tapioca na frigideira seca. Recheie com ovo e queijo.'},
+ 'Taco Fitness com Carne e Guacamole':{ingr:['150g carne moída magra','2 tortillas integrais','½ abacate amassado','Tomate, limão, coentro'],prep:'Refogue a carne. Monte com guacamole e vegetais.'},
+ 'Moqueca Fitness de Tilápia':{ingr:['200g tilápia','100ml leite de coco light','Tomate, cebola, pimentão','Coentro, urucum, limão'],prep:'Refogue os aromáticos. Adicione o peixe e leite de coco. Cozinhe 12 min.'},
+ 'Macarrão de Grão-de-Bico com Pesto':{ingr:['80g macarrão de grão-de-bico','3 col. sopa pesto','Tomate cereja','Parmesão light'],prep:'Cozinhe o macarrão. Misture com pesto e tomate.'},
+ 'Vitamina de Banana com Pasta de Amendoim':{ingr:['2 bananas','1 col. sopa pasta de amendoim','200g iogurte grego','100ml leite integral'],prep:'Bata tudo. Ótima opção sem suplementos.'},
+ // Cut
+ 'Salada de Frango com Quinoa':{ingr:['150g frango grelhado desfiado','60g quinoa cozida','Folhas verdes, tomate, pepino','Limão e azeite'],prep:'Grelhe e desfie o frango. Cozinhe a quinoa. Misture e tempere.'},
+ 'Frango ao Limão com Aspargos':{ingr:['180g peito de frango','100g aspargos','Limão, alho, ervas, azeite'],prep:'Marine o frango no limão por 10 min. Grelhe com os aspargos.'},
+ 'Wrap Low Carb de Frango com Rúcula':{ingr:['150g frango desfiado','1 wrap low carb','Rúcula, tomate, pepino','Mostarda e limão'],prep:'Monte o wrap com frango e vegetais. Use mostarda como molho.'},
+ 'Sopa de Frango com Legumes':{ingr:['150g frango desfiado','Cenoura, abobrinha, chuchu','Caldo caseiro sem gordura','Sal e ervas'],prep:'Cozinhe os legumes no caldo. Adicione o frango desfiado.'},
+ 'Frango Grelhado com Salada Caprese':{ingr:['180g peito de frango','Tomate, mozzarella light','Manjericão, azeite, sal'],prep:'Grelhe o frango. Monte a caprese ao lado.'},
+ 'Omelete de Claras com Espinafre':{ingr:['4 claras de ovo','1 ovo inteiro','Espinafre, sal, pimenta'],prep:'Bata as claras com o ovo. Refogue o espinafre. Dobre a omelete.'},
+ 'Muffin de Ovo e Vegetais no Forno':{ingr:['4 ovos','Pimentão, tomate, cebola picados','Sal, pimenta, ervas'],prep:'Bata os ovos com os vegetais. Despeje nas forminhas. Asse a 180°C por 15 min.'},
+ 'Salada Niçoise Fitness':{ingr:['2 ovos cozidos','1 lata atum light','Vagem cozida, tomate','Azeite e limão'],prep:'Monte a salada com todos os ingredientes frescos.'},
+ 'Tilápia ao Vapor com Legumes':{ingr:['200g tilápia','Brócolis, cenoura, abobrinha','Gengibre, shoyu light, limão'],prep:'Cozinhe tudo no vapor por 15-18 min.'},
+ 'Ceviche de Tilápia':{ingr:['200g tilápia fresca','Suco de 3 limões','Cebola roxa, tomate, coentro'],prep:'Marine a tilápia no limão por 15 min. Adicione os demais ingredientes.'},
+ 'Atum com Salada de Pepino e Iogurte':{ingr:['1 lata atum na água','1 pepino grande','100g iogurte natural','Endro, limão, sal'],prep:'Misture o atum com iogurte e pepino fatiado. Tempere com endro.'},
+ 'Bifinho Grelhado com Salada Verde':{ingr:['120g carne magra grelhada','Alface, rúcula, tomate','Vinagre balsâmico, mostarda','Sal, pimenta, azeite'],prep:'Grelhe o bife fino. Sirva sobre a salada temperada.'},
+ 'Sopa de Carne Magra com Legumes':{ingr:['120g cubos de carne magra','Cenoura, batata, vagem','Caldo caseiro','Sal, ervas, alho'],prep:'Cozinhe a carne e os legumes no caldo por 25 min.'},
+ 'Taco Lettuce Wrap (Sem Tortilla)':{ingr:['120g carne moída magra','Folhas grandes de alface','Tomate, cebola, pimenta','Limão e coentro'],prep:"Refogue a carne com temperos. Use as folhas de alface como 'tortilla'."},
+ 'Bowl de Brócolis com Hummus e Ovo':{ingr:['200g brócolis cozido','3 col. sopa hummus','1 ovo cozido','Limão e azeite'],prep:'Monte o bowl com brócolis, hummus e ovo fatiado.'},
+ 'Salada de Lentilha com Pepino':{ingr:['120g lentilha cozida','Pepino, tomate, cebola roxa','Salsinha, limão, azeite'],prep:'Misture todos os ingredientes frios.'},
+ 'Espaguete de Abobrinha com Molho de Tomate':{ingr:['2 abobrinhas','Molho de tomate caseiro (sem açúcar)','Alho, azeite, manjericão'],prep:'Espiralize a abobrinha. Refogue no alho. Sirva com o molho.'},
+ 'Smoothie Detox Verde':{ingr:['1 xíc. espinafre','½ banana congelada','1 scoop whey neutro','150ml água de coco'],prep:'Bata até ficar homogêneo.'},
+ 'Shake Proteico de Baunilha e Café':{ingr:['1 scoop whey baunilha','1 espresso gelado','150ml leite desnatado','Gelo'],prep:'Misture tudo com gelo. O café potencializa a queima de gordura.'},
+ 'Shake Citrico de Laranja e Gengibre':{ingr:['1 scoop whey neutro','Suco de 2 laranjas','1 pedaço gengibre fresco','100ml água gelada'],prep:'Bata tudo. O gengibre tem propriedades termogênicas.'},
+ 'Frango com Couve Refogada e Ovo':{ingr:['150g frango grelhado','100g couve refogada','1 ovo mexido','Alho, azeite, sal'],prep:'Grelhe o frango. Refogue a couve com alho. Sirva com ovo.'},
+ 'Salada de Grão-de-Bico com Espinafre':{ingr:['120g grão-de-bico cozido','Espinafre fresco','Tomate cereja, pepino','Azeite, limão, cominho'],prep:'Misture tudo frio. Tempere e sirva.'},
+ 'Smoothie de Mirtilo e Proteína':{ingr:['100g mirtilo congelado','1 scoop whey baunilha','150ml leite desnatado','Hortelã'],prep:'Bata até ficar cremoso.'},
+ 'Shake de Coco com Whey e Chia':{ingr:['1 scoop whey coco','1 col. sopa chia (deixe 10 min de molho)','200ml água de coco','Gelo'],prep:'Deixe a chia de molho. Bata com os demais ingredientes.'},
+ 'Caldo de Frango com Macarrão Konjac':{ingr:['150g frango desfiado','100g macarrão konjac','Caldo caseiro','Cebolinha e gengibre'],prep:'Prepare um caldo rico. Adicione frango e macarrão konjac.'},
+ 'Salada de Ovo com Iogurte e Mostarda':{ingr:['3 ovos cozidos picados','2 col. sopa iogurte grego','1 col. sopa mostarda Dijon','Salsão, cebola, sal'],prep:'Misture os ovos picados com iogurte e mostarda. Adicione os vegetais.'},
+ 'Frango Cozido Desfiado com Salada':{ingr:['150g frango cozido desfiado','Alface, tomate, pepino','Sal, limão e azeite'],prep:'Tempere o frango desfiado com sal e limão. Monte a salada e coloque o frango por cima.'},
+ 'Frango com Abobrinha Refogada':{ingr:['150g tiras de frango','1 abobrinha média fatiada','Alho, sal e azeite'],prep:'Tempere o frango. Grelhe na frigideira. Na mesma frigideira, refogue a abobrinha com alho.'},
+ 'Ovo Cozido com Sal':{ingr:['2 ovos','Água e sal'],prep:'Cozinhe os ovos em água fervente por 8-10 min para gema dura. Descasque e sirva com sal.'},
+ 'Ovo Frito com Repolho na Frigideira':{ingr:['2 ovos','2 folhas de repolho picadas','Alho, sal e óleo'],prep:'Refogue o repolho com alho. Frite os ovos ao lado. Sirva junto.'},
+ 'Filé de Peixe Grelhado com Sal':{ingr:['200g filé de tilápia ou merluza','Sal, alho e limão','Fio de azeite'],prep:'Tempere com sal, alho e limão. Grelhe em frigideira antiaderente com azeite por 4 min de cada lado.'},
+ 'Atum de Lata com Pepino':{ingr:['1 lata atum na água','1 pepino fatiado','Limão e sal'],prep:'Escorra o atum. Sirva sobre as fatias de pepino com limão e sal. Sem cozimento!'},
+ 'Carne Moída com Couve Refogada':{ingr:['100g carne moída magra','2 folhas de couve picadas','Alho, sal e azeite'],prep:'Refogue a carne moída. Na mesma frigideira, adicione a couve com alho. Misture.'},
+ 'Bife Grelhado com Tomate':{ingr:['120g bife magro','1 tomate fatiado','Sal, alho e limão'],prep:'Grelhe o bife temperado. Sirva com tomate fatiado e limão.'},
+ 'Brócolis Cozido com Azeite e Sal':{ingr:['200g brócolis','Água e sal','Fio de azeite e alho'],prep:'Cozinhe o brócolis em água salgada por 5-7 min. Escorra e tempere com azeite e alho.'},
+ 'Cenoura e Beterraba Cozidas':{ingr:['1 cenoura','1 beterraba pequena','Água e sal','Limão para temperar'],prep:'Cozinhe cenoura e beterraba em água salgada até ficarem macias. Sirva com limão.'},
+ 'Iogurte Natural com Banana':{ingr:['1 pote iogurte natural desnatado','1 banana fatiada','1 col. sopa mel (opcional)'],prep:'Fatie a banana em rodelas. Coloque no iogurte. Pronto!'},
+ 'Água com Limão e Gengibre':{ingr:['Suco de 2 limões','1 pedaço pequeno gengibre ralado','500ml água','Adoçante a gosto'],prep:'Misture tudo. Pode servir gelado ou quente.'},
+ 'Vitamina de Banana com Leite':{ingr:['1 banana','1 copo leite integral ou desnatado','1 col. sopa açúcar ou mel (opcional)'],prep:'Bata ou amasse a banana no leite. Pronto!'},
+ 'Achocolatado com Aveia':{ingr:['1 copo leite achocolatado','3 col. sopa aveia em flocos','1 banana (opcional)'],prep:'Misture a aveia no achocolatado. Espere 2 min para absorver. Pronto!'},
+};
 // ─── RECEITAS: GANHAR MASSA ──────────────────────────
 const recipesBulk=[
  {cat:'frango',complexity:'mid',emoji:'',name:'Frango Grelhado com Batata Doce',kcal:480,prot:'42g',carb:'38g',fat:'10g',time:'25 min',ingr:['200g chicken breast','150g sweet potato','Olive oil, salt, garlic'],prep:'Grill seasoned chicken. Cook sweet potato. Serve together.',qty:'200g chicken = 42g protein.'},
@@ -4216,7 +4290,9 @@ function renderRecipes(cat, exactComplexity){
  const cplxColor={simple:'var(--green)',mid:'#f59e0b',hard:'#ef4444'}[r.complexity]||'var(--muted)';
  const cplxLabel={simple:' '+t[currentLang].complexSimples,mid:' '+t[currentLang].complexIntermediario,hard:' '+t[currentLang].complexCompleto}[r.complexity]||'';
  const tagsHTML=(r.tags||[]).map(function(t){return '<span style="background:'+t.bg+';color:'+t.c+';border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">'+t.txt+'</span>';}).join(' ');
- const ingrHTML=(r.ingr||[]).map(function(i){return '<li style="font-size:12px;color:var(--muted);margin-bottom:2px">'+i+'</li>';}).join('');
+ const ingrList = (currentLang==='pt' && recipesPT[r.name]) ? recipesPT[r.name].ingr : (r.ingr||[]);
+ const prepText = (currentLang==='pt' && recipesPT[r.name]) ? recipesPT[r.name].prep : (r.prep||'');
+ const ingrHTML=ingrList.map(function(i){return '<li style="font-size:12px;color:var(--muted);margin-bottom:2px">'+i+'</li>';}).join('');
  html+='<div class="recipe-card" style="background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid var(--border)">'
  +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'
  +(r.emoji ? '<div style="font-size:32px">'+r.emoji+'</div>' : '')
@@ -4231,7 +4307,7 @@ function renderRecipes(cat, exactComplexity){
  +(tagsHTML?'<div style="margin-bottom:8px">'+tagsHTML+'</div>':'')
  +'<div style="font-size:11px;color:var(--muted);margin-bottom:6px">⏱ '+(r.time||'—')+'</div>'
  +(ingrHTML?'<ul style="margin:0;padding-left:16px;margin-bottom:8px">'+ingrHTML+'</ul>':'')
- +(r.prep?'<div style="font-size:12px;color:var(--text);line-height:1.6;border-top:1px solid var(--border);padding-top:8px">'+r.prep+'</div>':'')
+ +(prepText?'<div style="font-size:12px;color:var(--text);line-height:1.6;border-top:1px solid var(--border);padding-top:8px">'+prepText+'</div>':'')
  +'</div>';
  });
  rl.innerHTML=html;
