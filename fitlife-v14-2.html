@@ -3476,7 +3476,7 @@ function renderTodayWorkout(){
  return `
  <div style="margin-bottom:4px">
  <div style="font-size:11px;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px;display:flex;align-items:center;gap:6px">
- <span>${icon}</span><span>${currentLang==='en'?({'Peito':'Chest','Costas':'Back','Pernas':'Legs','Ombros':'Shoulders','Bíceps':'Biceps','Tríceps':'Triceps','Abdômen':'Abs'}[g.muscle]||g.muscle):g.muscle}</span>
+ <span>${icon}</span><span>${tMuscle(g.muscle)}</span>
  </div>
  <div class="exercise-list">${exsHTML}</div>
  </div>`;
