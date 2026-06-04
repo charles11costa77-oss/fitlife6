@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.cs6.fitlife6",
+        "sha256_cert_fingerprints": ["2A:60:9E:32:B4:36:70:C1:6F:19:6A:6A:D6:03:12:BA:81:BE:88:7B:85:A1:48:19:39:75:A6:A8:38:0C:3A:F1"]
+      }
+    }]
