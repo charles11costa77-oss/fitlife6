@@ -1,8 +1,15 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.cs6.fitlife6",
-        "sha256_cert_fingerprints": ["2A:60:9E:32:B4:36:70:C1:6F:19:6A:6A:D6:03:12:BA:81:BE:88:7B:85:A1:48:19:39:75:A6:A8:38:0C:3A:F1"]
-      }
-    }]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.cs6.fitlife6",
+      "sha256_cert_fingerprints": [
+        "2A:60:9E:32:B4:36:70:C1:6F:19:6A:6A:D6:03:12:BA:81:BE:88:7B:85:A1:48:19:39:75:A6:A8:38:0C:3A:F1",
+        "FA:67:A9:CB:71:E8:BB:78:1D:B0:6B:A0:1E:4F:62:60:3E:51:76:8E:17:41:7F:A8:E0:2C:10:C8:DF:E5:3C:6D"
+      ]
+    }
+  }
+]
