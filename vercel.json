@@ -5,6 +5,7 @@
     { "source": "/sw.js", "destination": "/sw.js" },
     { "source": "/icon-192.png", "destination": "/icon-192.png" },
     { "source": "/icon-512.png", "destination": "/icon-512.png" },
+    { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/(.*)", "destination": "/fitlife-v14-2.html" }
   ]
 }
