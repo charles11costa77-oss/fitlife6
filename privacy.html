@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidade – FitLife6</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --surface: #111111;
+      --card: #1a1a1a;
+      --border: #2a2a2a;
+      --gold: #C9A84C;
+      --gold-dim: #9a7a35;
+      --text: #e8e8e8;
+      --muted: #888;
+      --white: #ffffff;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #1a6b3a, #C9A84C);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 1px rgba(201,168,76,0.3);
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--white);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text span {
+      color: var(--gold);
+    }
+
+    /* HERO */
+    .hero {
+      padding: 48px 24px 36px;
+      border-bottom: 1px solid var(--border);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(28px, 6vw, 40px);
+      color: var(--white);
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .hero-meta {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hero-meta strong {
+      color: var(--text);
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--white);
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 18px;
+      background: var(--gold);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 12px;
+    }
+
+    ul li {
+      padding: 6px 0 6px 20px;
+      position: relative;
+      color: var(--text);
+    }
+
+    ul li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--gold-dim);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-top: 16px;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* CONTACT */
+    .contact-block {
+      background: linear-gradient(135deg, #1a1a1a, #1e1a12);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 28px 24px;
+      margin-top: 8px;
+    }
+
+    .contact-block p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .contact-block strong {
+      display: block;
+      font-size: 16px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer span {
+      color: var(--gold-dim);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-mark">F<span style="color:#C9A84C">⚡</span></div>
+    <div class="logo-text">FitLife<span>6</span></div>
+  </header>
+
+  <div class="hero">
+    <p class="hero-eyebrow">Transparência & Dados</p>
+    <h1>Política de Privacidade</h1>
+    <p class="hero-meta">
+      Desenvolvido por <strong>C's-6</strong> &nbsp;·&nbsp; Última atualização: <strong>14 de junho de 2026</strong>
+    </p>
+  </div>
+
+  <div class="content">
+
+    <section>
+      <h2>Sobre este documento</h2>
+      <p>Esta Política de Privacidade descreve como o aplicativo <strong>FitLife6</strong>, desenvolvido pela <strong>C's-6</strong>, coleta, usa e protege as informações dos usuários. Ao usar o app, você concorda com as práticas descritas aqui.</p>
+    </section>
+
+    <section>
+      <h2>Informações que coletamos</h2>
+      <p>O FitLife6 pode coletar as seguintes informações:</p>
+      <ul>
+        <li>Nome e endereço de e-mail (ao criar conta ou fazer login)</li>
+        <li>Dados de autenticação via Google (quando o login com Google é utilizado)</li>
+        <li>Informações de perfil de saúde fornecidas voluntariamente (como objetivos de treino, histórico de atividades e contraindicações)</li>
+        <li>Dados de uso do aplicativo (telas visitadas, funcionalidades utilizadas)</li>
+        <li>Informações do dispositivo (modelo, sistema operacional, idioma)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Como usamos suas informações</h2>
+      <p>Utilizamos seus dados exclusivamente para:</p>
+      <ul>
+        <li>Criar e gerenciar sua conta no aplicativo</li>
+        <li>Personalizar planos de treino e recomendações de acordo com seu perfil</li>
+        <li>Melhorar a experiência do usuário e corrigir falhas técnicas</li>
+        <li>Enviar notificações relacionadas ao seu progresso (somente com sua permissão)</li>
+      </ul>
+      <p><strong>Não vendemos, alugamos ou compartilhamos seus dados com terceiros para fins de marketing.</strong></p>
+    </section>
+
+    <section>
+      <h2>Firebase e serviços de terceiros</h2>
+      <p>O FitLife6 utiliza o <strong>Firebase</strong> (Google LLC) para autenticação de usuários e armazenamento de dados. O Firebase segue as políticas de privacidade do Google, disponíveis em <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a>.</p>
+      <div class="card">
+        <p>Os dados armazenados no Firebase são protegidos por criptografia em trânsito e em repouso. Apenas a C's-6 tem acesso ao banco de dados do projeto.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Retenção de dados</h2>
+      <p>Seus dados são mantidos enquanto sua conta estiver ativa. Ao solicitar a exclusão da conta, todos os dados associados serão removidos dos nossos servidores em até 30 dias.</p>
+    </section>
+
+    <section>
+      <h2>Seus direitos</h2>
+      <p>Você tem direito a:</p>
+      <ul>
+        <li>Acessar os dados que temos sobre você</li>
+        <li>Corrigir informações incorretas</li>
+        <li>Solicitar a exclusão da sua conta e dados</li>
+        <li>Revogar permissões concedidas ao app a qualquer momento</li>
+      </ul>
+      <p>Para exercer esses direitos, entre em contato pelo e-mail abaixo.</p>
+    </section>
+
+    <section>
+      <h2>Segurança</h2>
+      <p>Adotamos medidas técnicas e organizacionais para proteger seus dados contra acesso não autorizado, alteração, divulgação ou destruição. Nenhum método de transmissão pela internet é 100% seguro, mas nos comprometemos a usar os melhores meios disponíveis.</p>
+    </section>
+
+    <section>
+      <h2>Crianças</h2>
+      <p>O FitLife6 não é direcionado a crianças menores de 13 anos. Não coletamos intencionalmente dados de menores. Caso identifiquemos dados de uma criança cadastrados sem consentimento, removeremos essas informações imediatamente.</p>
+    </section>
+
+    <section>
+      <h2>Alterações nesta política</h2>
+      <p>Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos os usuários sobre mudanças significativas por meio do próprio app ou por e-mail. O uso continuado do FitLife6 após as alterações implica aceitação da nova versão.</p>
+    </section>
+
+    <section>
+      <h2>Contato</h2>
+      <div class="contact-block">
+        <strong>C's-6 – Desenvolvimento de Aplicativos</strong>
+        <p>Em caso de dúvidas sobre esta política ou sobre seus dados, entre em contato:</p>
+        <p style="margin-top:10px;">📧 <a href="mailto:contato@cs6.app">contato@cs6.app</a></p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    © 2026 <span>C's-6</span>. Todos os direitos reservados. &nbsp;·&nbsp; FitLife6
+  </footer>
+
+</body>
+</html>
