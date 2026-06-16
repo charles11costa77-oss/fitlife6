@@ -4678,18 +4678,17 @@ window.loginComGoogle = function() {
     function tryHideSplash(){
       if(!splashReady || !authReady) return;
       if(isLoggingOut) return;
+      // Decide a tela certa (app ou login) ANTES de iniciar o fade do splash,
+      // para nunca revelar a tela errada por trás da transição
+      handleAuthState(authUser);
       var splash = document.getElementById("splash");
       splash.style.opacity = "0";
       setTimeout(function(){
         splash.style.display = "none";
-        // Delega ao onAuthStateChanged — não duplica lógica aqui
-        handleAuthState(authUser);
       }, 500);
     }
     function handleAuthState(user){
       if(isLoggingOut) return;
-      var splash = document.getElementById('splash');
-      if(splash) splash.style.display = 'none';
       if(user){
         var uid = user.uid;
         var onboardingKey = 'fitlife_onboarding_done_' + uid;
@@ -4732,11 +4731,8 @@ window.loginComGoogle = function() {
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
     auth.onAuthStateChanged(function(user) {
       authReady = true; authUser = user;
-      if(splashReady && !isLoggingOut){
-        handleAuthState(user);
-      } else {
-        tryHideSplash();
-      }
+      if(isLoggingOut) return;
+      tryHideSplash();
     });
 
     document.getElementById('btnEntrar').addEventListener('click', function() {
