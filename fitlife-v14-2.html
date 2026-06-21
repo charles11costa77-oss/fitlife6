@@ -4588,6 +4588,7 @@ window.loginComGoogle = function() {
     if(typeof firebase === 'undefined'){ setTimeout(initFb, 100); return; }
     firebase.initializeApp(_fbConfig);
     var auth = firebase.auth();
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
     function entrarNoApp() {
       document.getElementById('authScreen').style.display = 'none';
