@@ -4588,7 +4588,6 @@ window.loginComGoogle = function() {
     if(typeof firebase === 'undefined'){ setTimeout(initFb, 100); return; }
     firebase.initializeApp(_fbConfig);
     var auth = firebase.auth();
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
     function entrarNoApp() {
       document.getElementById('authScreen').style.display = 'none';
@@ -4730,10 +4729,19 @@ window.loginComGoogle = function() {
       }
     }
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
-    auth.onAuthStateChanged(function(user) {
-      authReady = true; authUser = user;
-      if(isLoggingOut) return;
-      tryHideSplash();
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
+      auth.onAuthStateChanged(function(user) {
+        authReady = true; authUser = user;
+        if(isLoggingOut) return;
+        tryHideSplash();
+      });
+    }).catch(function(e) {
+      // Fallback: registra onAuthStateChanged mesmo se setPersistence falhar
+      auth.onAuthStateChanged(function(user) {
+        authReady = true; authUser = user;
+        if(isLoggingOut) return;
+        tryHideSplash();
+      });
     });
 
     document.getElementById('btnEntrar').addEventListener('click', function() {
