@@ -4729,14 +4729,35 @@ window.loginComGoogle = function() {
       }
     }
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
+    // ─── AUTO-LOGIN: restaura sessão se Firebase perdeu após background ───
+    function tryAutoLogin(callback) {
+      try {
+        var saved = localStorage.getItem('fitlife_saved_session');
+        if (!saved) { if(callback) callback(false); return; }
+        var session = JSON.parse(saved);
+        if (!session.email || !session.pwd) { if(callback) callback(false); return; }
+        auth.signInWithEmailAndPassword(session.email, session.pwd)
+          .then(function() { if(callback) callback(true); })
+          .catch(function() {
+            localStorage.removeItem('fitlife_saved_session');
+            if(callback) callback(false);
+          });
+      } catch(e) { if(callback) callback(false); }
+    }
+
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
       auth.onAuthStateChanged(function(user) {
-        authReady = true; authUser = user;
         if(isLoggingOut) return;
-        tryHideSplash();
+        if (!user) {
+          tryAutoLogin(function(success) {
+            if (!success) { authReady = true; authUser = null; tryHideSplash(); }
+          });
+        } else {
+          authReady = true; authUser = user;
+          tryHideSplash();
+        }
       });
     }).catch(function(e) {
-      // Fallback: registra onAuthStateChanged mesmo se setPersistence falhar
       auth.onAuthStateChanged(function(user) {
         authReady = true; authUser = user;
         if(isLoggingOut) return;
@@ -4751,7 +4772,10 @@ window.loginComGoogle = function() {
       if(!email || !senha){ showToast('⚠️ Preencha e-mail e senha'); return; }
       btn.textContent = 'ENTRANDO...'; btn.disabled = true;
       auth.signInWithEmailAndPassword(email, senha)
-        .then(function(){ btn.textContent = 'ENTRAR →'; btn.disabled = false; })
+        .then(function(){
+          try { localStorage.setItem('fitlife_saved_session', JSON.stringify({email: email, pwd: senha})); } catch(e) {}
+          btn.textContent = 'ENTRAR →'; btn.disabled = false;
+        })
         .catch(function(){ btn.textContent = 'ENTRAR →'; btn.disabled = false; showToast('❌ E-mail ou senha incorretos'); });
     });
 
@@ -4792,6 +4816,7 @@ window.loginComGoogle = function() {
           localStorage.removeItem('fitlife_auto_schedule_' + uid);
         }
         localStorage.removeItem('fitlife_done_days');
+        localStorage.removeItem('fitlife_saved_session'); // Limpa auto-login ao sair
         // Reseta variáveis globais de estado
         todayPickedCache = {};
         autoSchedule = null;
