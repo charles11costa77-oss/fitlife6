@@ -4553,17 +4553,22 @@ function cancelEdit(id){
 // loginComGoogle definida globalmente para estar disponível antes do Firebase carregar
 window.loginComGoogle = function() {
   var btn = document.getElementById('btnGoogleLogin') || document.getElementById('btnGoogleCadastro');
+  var originalHTML = btn ? btn.innerHTML : '';
+  function resetBtn(){ if(btn){ btn.innerHTML = originalHTML; btn.disabled = false; } }
   if(typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length){
     showToast('⚠️ Aguarde e tente novamente'); return;
   }
   var auth = firebase.auth();
   var provider = new firebase.auth.GoogleAuthProvider();
   if(btn){ btn.textContent = 'Aguarde...'; btn.disabled = true; }
-  // signInWithRedirect é mais estável no TWA/Android que signInWithPopup
-  auth.signInWithRedirect(provider)
+  auth.signInWithPopup(provider)
+    .then(function() {
+      resetBtn();
+      // NÃO abre o app aqui — onAuthStateChanged decide o fluxo
+    })
     .catch(function(e) {
-      if(btn){ btn.innerHTML = btn._originalHTML || 'Entrar com Google'; btn.disabled = false; }
-      showToast('❌ Erro ao entrar com Google');
+      resetBtn();
+      if(e.code !== 'auth/popup-closed-by-user') showToast('❌ Erro ao entrar com Google');
     });
 };
 
@@ -4583,13 +4588,6 @@ window.loginComGoogle = function() {
     if(typeof firebase === 'undefined'){ setTimeout(initFb, 100); return; }
     firebase.initializeApp(_fbConfig);
     var auth = firebase.auth();
-
-    // ─── GOOGLE REDIRECT: captura resultado após redirect do Google ───
-    auth.getRedirectResult().then(function(result) {
-      // Resultado já processado pelo onAuthStateChanged — nada a fazer aqui
-    }).catch(function(e) {
-      if(e.code && e.code !== 'auth/no-current-user') showToast('❌ Erro ao entrar com Google');
-    });
 
     function entrarNoApp() {
       document.getElementById('authScreen').style.display = 'none';
