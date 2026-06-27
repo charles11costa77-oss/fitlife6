@@ -4562,8 +4562,19 @@ window.loginComGoogle = function() {
   var provider = new firebase.auth.GoogleAuthProvider();
   if(btn){ btn.textContent = 'Aguarde...'; btn.disabled = true; }
   auth.signInWithPopup(provider)
-    .then(function() {
+    .then(function(result) {
       resetBtn();
+      // Salva refreshToken do Google para renovar sessão automaticamente
+      if(result && result.user) {
+        try {
+          localStorage.setItem('fitlife_saved_session', JSON.stringify({
+            provider: 'google',
+            uid: result.user.uid,
+            email: result.user.email,
+            refreshToken: result.user.refreshToken
+          }));
+        } catch(e) {}
+      }
       // NÃO abre o app aqui — onAuthStateChanged decide o fluxo
     })
     .catch(function(e) {
@@ -4730,11 +4741,44 @@ window.loginComGoogle = function() {
     }
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
     // ─── AUTO-LOGIN: restaura sessão se Firebase perdeu após background ───
+    var _fbApiKey = _fbConfig.apiKey;
+
     function tryAutoLogin(callback) {
       try {
         var saved = localStorage.getItem('fitlife_saved_session');
         if (!saved) { if(callback) callback(false); return; }
         var session = JSON.parse(saved);
+
+        // Google: renova sessão usando refreshToken via API REST do Firebase
+        if (session.provider === 'google' && session.refreshToken) {
+          fetch('https://securetoken.googleapis.com/v1/token?key=' + _fbApiKey, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(session.refreshToken)
+          })
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            if (data.id_token) {
+              // Salva novo refreshToken
+              session.refreshToken = data.refresh_token || session.refreshToken;
+              try { localStorage.setItem('fitlife_saved_session', JSON.stringify(session)); } catch(e) {}
+              // Autentica no Firebase com o novo idToken
+              return auth.signInWithCredential(
+                firebase.auth.GoogleAuthProvider.credential(data.id_token)
+              );
+            } else {
+              throw new Error('no id_token');
+            }
+          })
+          .then(function() { if(callback) callback(true); })
+          .catch(function() {
+            localStorage.removeItem('fitlife_saved_session');
+            if(callback) callback(false);
+          });
+          return;
+        }
+
+        // Email/senha: reutiliza credenciais salvas
         if (!session.email || !session.pwd) { if(callback) callback(false); return; }
         auth.signInWithEmailAndPassword(session.email, session.pwd)
           .then(function() { if(callback) callback(true); })
@@ -4745,6 +4789,16 @@ window.loginComGoogle = function() {
       } catch(e) { if(callback) callback(false); }
     }
 
+    function agendarRenovacaoToken(user) {
+      user.getIdTokenResult().then(function(result) {
+        var expiresIn = new Date(result.expirationTime).getTime() - Date.now();
+        var renovarEm = Math.max(expiresIn - 5 * 60 * 1000, 30 * 1000);
+        setTimeout(function() {
+          if(auth.currentUser) auth.currentUser.getIdToken(true);
+        }, renovarEm);
+      }).catch(function(){});
+    }
+
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(function() {
       auth.onAuthStateChanged(function(user) {
         if(isLoggingOut) return;
@@ -4753,6 +4807,20 @@ window.loginComGoogle = function() {
             if (!success) { authReady = true; authUser = null; tryHideSplash(); }
           });
         } else {
+          // Salva refreshToken mais confiável via stsTokenManager
+          try {
+            var rt = user.refreshToken || (user.stsTokenManager && user.stsTokenManager.refreshToken);
+            if(rt) {
+              var saved = localStorage.getItem('fitlife_saved_session');
+              var session = saved ? JSON.parse(saved) : { provider: 'google' };
+              session.refreshToken = rt;
+              session.uid = user.uid;
+              session.email = user.email;
+              localStorage.setItem('fitlife_saved_session', JSON.stringify(session));
+            }
+          } catch(e) {}
+          // Agenda renovação automática 5min antes de expirar
+          agendarRenovacaoToken(user);
           authReady = true; authUser = user;
           tryHideSplash();
         }
