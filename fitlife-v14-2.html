@@ -4742,50 +4742,67 @@ window.loginComGoogle = function() {
     setTimeout(function(){ splashReady = true; tryHideSplash(); }, 2000);
     // ─── AUTO-LOGIN: restaura sessão se Firebase perdeu após background ───
     var _fbApiKey = _fbConfig.apiKey;
+    var SESSION_KEYS = ['fitlife_saved_session', 'fl6_fb_refresh', 'fitlife_auth_backup'];
+
+    function salvarSessao(session) {
+      // Salva em múltiplas chaves para sobreviver limpezas parciais do Android
+      SESSION_KEYS.forEach(function(k) {
+        try { localStorage.setItem(k, JSON.stringify(session)); } catch(e) {}
+      });
+    }
+
+    function lerSessao() {
+      for(var i = 0; i < SESSION_KEYS.length; i++) {
+        try {
+          var v = localStorage.getItem(SESSION_KEYS[i]);
+          if(v) return JSON.parse(v);
+        } catch(e) {}
+      }
+      return null;
+    }
+
+    function limparSessao() {
+      SESSION_KEYS.forEach(function(k) {
+        try { localStorage.removeItem(k); } catch(e) {}
+      });
+    }
+
+    function renovarTokenGoogle(session, callback) {
+      fetch('https://securetoken.googleapis.com/v1/token?key=' + _fbApiKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(session.refreshToken)
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (!data.id_token) throw new Error('no id_token');
+        session.refreshToken = data.refresh_token || session.refreshToken;
+        salvarSessao(session);
+        return auth.signInWithCredential(
+          firebase.auth.GoogleAuthProvider.credential(data.id_token)
+        );
+      })
+      .then(function() { if(callback) callback(true); })
+      .catch(function() {
+        limparSessao();
+        if(callback) callback(false);
+      });
+    }
 
     function tryAutoLogin(callback) {
       try {
-        var saved = localStorage.getItem('fitlife_saved_session');
-        if (!saved) { if(callback) callback(false); return; }
-        var session = JSON.parse(saved);
+        var session = lerSessao();
+        if (!session) { if(callback) callback(false); return; }
 
-        // Google: renova sessão usando refreshToken via API REST do Firebase
         if (session.provider === 'google' && session.refreshToken) {
-          fetch('https://securetoken.googleapis.com/v1/token?key=' + _fbApiKey, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(session.refreshToken)
-          })
-          .then(function(res) { return res.json(); })
-          .then(function(data) {
-            if (data.id_token) {
-              // Salva novo refreshToken
-              session.refreshToken = data.refresh_token || session.refreshToken;
-              try { localStorage.setItem('fitlife_saved_session', JSON.stringify(session)); } catch(e) {}
-              // Autentica no Firebase com o novo idToken
-              return auth.signInWithCredential(
-                firebase.auth.GoogleAuthProvider.credential(data.id_token)
-              );
-            } else {
-              throw new Error('no id_token');
-            }
-          })
-          .then(function() { if(callback) callback(true); })
-          .catch(function() {
-            localStorage.removeItem('fitlife_saved_session');
-            if(callback) callback(false);
-          });
+          renovarTokenGoogle(session, callback);
           return;
         }
 
-        // Email/senha: reutiliza credenciais salvas
         if (!session.email || !session.pwd) { if(callback) callback(false); return; }
         auth.signInWithEmailAndPassword(session.email, session.pwd)
           .then(function() { if(callback) callback(true); })
-          .catch(function() {
-            localStorage.removeItem('fitlife_saved_session');
-            if(callback) callback(false);
-          });
+          .catch(function() { limparSessao(); if(callback) callback(false); });
       } catch(e) { if(callback) callback(false); }
     }
 
@@ -4807,19 +4824,17 @@ window.loginComGoogle = function() {
             if (!success) { authReady = true; authUser = null; tryHideSplash(); }
           });
         } else {
-          // Salva refreshToken mais confiável via stsTokenManager
+          // Salva sessão em múltiplas chaves ao autenticar
           try {
             var rt = user.refreshToken || (user.stsTokenManager && user.stsTokenManager.refreshToken);
             if(rt) {
-              var saved = localStorage.getItem('fitlife_saved_session');
-              var session = saved ? JSON.parse(saved) : { provider: 'google' };
+              var session = lerSessao() || { provider: 'google' };
               session.refreshToken = rt;
               session.uid = user.uid;
               session.email = user.email;
-              localStorage.setItem('fitlife_saved_session', JSON.stringify(session));
+              salvarSessao(session);
             }
           } catch(e) {}
-          // Agenda renovação automática 5min antes de expirar
           agendarRenovacaoToken(user);
           authReady = true; authUser = user;
           tryHideSplash();
@@ -4884,7 +4899,7 @@ window.loginComGoogle = function() {
           localStorage.removeItem('fitlife_auto_schedule_' + uid);
         }
         localStorage.removeItem('fitlife_done_days');
-        localStorage.removeItem('fitlife_saved_session'); // Limpa auto-login ao sair
+        limparSessao(); // Limpa todas as chaves de sessão ao sair
         // Reseta variáveis globais de estado
         todayPickedCache = {};
         autoSchedule = null;
