@@ -4859,7 +4859,19 @@ window.loginComGoogle = function() {
           try { localStorage.setItem('fitlife_saved_session', JSON.stringify({email: email, pwd: senha})); } catch(e) {}
           btn.textContent = 'ENTRAR →'; btn.disabled = false;
         })
-        .catch(function(){ btn.textContent = 'ENTRAR →'; btn.disabled = false; showToast('❌ E-mail ou senha incorretos'); });
+        .catch(function(){
+          auth.fetchSignInMethodsForEmail(email).then(function(metodos){
+            btn.textContent = 'ENTRAR →'; btn.disabled = false;
+            if (metodos.indexOf('google.com') !== -1 && metodos.indexOf('password') === -1) {
+              showToast('Esse e-mail já está cadastrado. Use o botão Google pra acessar.');
+            } else {
+              showToast('❌ E-mail ou senha incorretos');
+            }
+          }).catch(function(){
+            btn.textContent = 'ENTRAR →'; btn.disabled = false;
+            showToast('❌ E-mail ou senha incorretos');
+          });
+        });
     });
 
     document.getElementById('btnCadastrar').addEventListener('click', function() {
@@ -4874,8 +4886,22 @@ window.loginComGoogle = function() {
       auth.createUserWithEmailAndPassword(email, senha)
         .then(function(){ btn.textContent = 'ENTRAR →'; btn.disabled = false; })
         .catch(function(e){
-          btn.textContent = 'ENTRAR →'; btn.disabled = false;
-          showToast(e.code === 'auth/email-already-in-use' ? '⚠️ E-mail já cadastrado' : '❌ Erro ao cadastrar');
+          if (e.code === 'auth/email-already-in-use') {
+            auth.fetchSignInMethodsForEmail(email).then(function(metodos){
+              btn.textContent = 'ENTRAR →'; btn.disabled = false;
+              if (metodos.indexOf('google.com') !== -1 && metodos.indexOf('password') === -1) {
+                showToast('Esse e-mail já está cadastrado. Use o botão Google pra acessar.');
+              } else {
+                showToast('⚠️ E-mail já cadastrado');
+              }
+            }).catch(function(){
+              btn.textContent = 'ENTRAR →'; btn.disabled = false;
+              showToast('⚠️ E-mail já cadastrado');
+            });
+          } else {
+            btn.textContent = 'ENTRAR →'; btn.disabled = false;
+            showToast('❌ Erro ao cadastrar');
+          }
         });
     });
 
